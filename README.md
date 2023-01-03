@@ -114,3 +114,7 @@ create index vote_value_idx on vote (value);
 - value : 값 필드는 음수 값도 허용하며 적절한 크기인 int로 하였습니다.
 - 투표는 댓글, 퀴즈 모두와 Optional:N 관계를 가질 수 있기 때문에 NULL 값을 허용하였습니다.
 - 얼마 이상의 투표를 받은 퀴즈인지도 확인해야 할 수 있기 때문에 검색을 위해 인덱스를 설정하였습니다.
+
+## API 명세서
+
+API 명세서는 다음 [파일](document/api-spec.xlsx)에서 확인하실 수 있습니다. 또는 해당 [링크](https://docs.google.com/spreadsheets/d/1I_l4VhwKM8RCEsLkSF-ePsi_1EWj8a9Emm32bf8BvMM/edit?usp=sharing)를 통해 웹에서도 확인이 가능합니다.
