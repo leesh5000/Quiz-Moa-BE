@@ -20,7 +20,7 @@ repositories {
 
 dependencies {
 	runtimeOnly("com.h2database:h2")
-	implementation("org.json:json")
+	implementation("org.json:json:20220924")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	compileOnly("org.projectlombok:lombok")
