@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static com.leesh.quiz.common.Constants.encoder;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "Users", indexes = {
@@ -55,5 +57,15 @@ public class User {
     @Override
     public int hashCode() {
         return id.hashCode();
+    }
+
+    private User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
+
+    public static User of(String email, String username, String password) {
+        return new User(email, username, encoder.encode(password));
     }
 }
