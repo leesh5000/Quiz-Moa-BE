@@ -5,12 +5,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static com.leesh.quiz.common.Constants.encoder;
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "Users", indexes = {
-        @Index(columnList = "username"),
+        @Index(columnList = "nickname"),
         @Index(columnList = "email"),
         @Index(columnList = "createdAt")
 })
@@ -21,13 +19,17 @@ public class User {
     private Long id;
 
     @Column(length = 30, unique = true, nullable = false)
-    private String username;
+    private String nickname;
 
     @Column(length = 255, unique = true, nullable = false)
     private String email;
 
     @Column(length = 255, nullable = false)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role = Role.USER;
 
     @Column(nullable = false, updatable = false)
     private Long createdAt;
@@ -59,13 +61,13 @@ public class User {
         return id.hashCode();
     }
 
-    private User(String username, String email, String password) {
-        this.username = username;
+    private User(String nickname, String email, String password) {
+        this.nickname = nickname;
         this.email = email;
         this.password = password;
     }
 
-    public static User of(String email, String username, String password) {
-        return new User(email, username, encoder.encode(password));
+    public static User of(String nickname, String email, String password) {
+        return new User(nickname, email, password);
     }
 }

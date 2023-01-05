@@ -5,6 +5,9 @@ logging:
 ---
 
 spring:
+  security:
+    user:
+      password: test
   config:
     activate:
       on-profile:
