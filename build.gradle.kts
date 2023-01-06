@@ -19,6 +19,18 @@ repositories {
 }
 
 dependencies {
+	runtimeOnly("com.h2database:h2")
+	implementation("org.json:json:20220924")
+	implementation("org.springframework.boot:spring-boot-starter-security")
+
+	//	JWT START
+	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+	implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
+	implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
+	// JWT END
+
+	testImplementation("org.springframework.security:spring-security-test")
+	implementation("org.springframework.security:spring-security-crypto")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	compileOnly("org.projectlombok:lombok")

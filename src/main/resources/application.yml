@@ -1,0 +1,33 @@
+logging:
+  level:
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+---
+
+spring:
+  security:
+    user:
+      password: test
+  config:
+    activate:
+      on-profile:
+        - local
+        - test
+  datasource:
+    url: jdbc:h2:mem:quizapp;mode=mysql
+    driver-class-name: org.h2.Driver
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: 'create-drop'
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+      hibernate.default_batch_fetch_size: 100
+  sql:
+    init:
+      mode: always
+  h2:
+    console:
+      enabled: true
+  test.database.replace: none
