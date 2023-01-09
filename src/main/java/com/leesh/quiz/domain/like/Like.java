@@ -25,12 +25,12 @@ public class Like {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private User user;
 
-    @JoinColumn(name = "quiz_id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "quiz_id", nullable = true)
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
     private Quiz quiz;
 
-    @JoinColumn(name = "comment_id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "comment_id", nullable = true)
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
     private Comment comment;
 
     @Column(nullable = false, updatable = false)
