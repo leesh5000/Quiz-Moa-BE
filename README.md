@@ -18,7 +18,12 @@ ERD는 다음 [파일](document/erd.svg)에서 확인하실 수 있습니다. �
 ### 테이블 스키마
 
 ```mysql
-create database if not exists quizapp default character set utf8mb4;
+use mysql;
+select host, user from user;
+
+select @@global.time_zone, @@session.time_zone,@@system_time_zone;
+
+create database if not exists quizapp default character set utf8mb4 collate utf8mb4_general_ci;
 
 use quizapp;
 
@@ -58,6 +63,7 @@ create table quiz
 
 create index quiz_title_idx on quiz (title);
 create index quiz_created_at_idx on quiz (created_at);
+create index quiz_user_id_idx on quiz (user_id);
 
 create table comment
 (
@@ -72,13 +78,15 @@ create table comment
     foreign key (quiz_id) references quiz (id)
 )  default character set utf8mb4 collate utf8mb4_general_ci;
 
-create table vote
+create index comment_created_at_idx on comment (created_at);
+create index comment_user_id_idx on comment (user_id);
+
+create table likes
 (
     id          bigint auto_increment,
     user_id     bigint not null,
     quiz_id     bigint null,
     comment_id  bigint null,
-    value       int default 0,
     created_at  bigint not null,
     modified_at bigint not null,
     primary key (id),
@@ -87,7 +95,8 @@ create table vote
     foreign key (comment_id) references comment (id)
 )   default character set utf8mb4 collate utf8mb4_general_ci;
 
-create index vote_value_idx on vote (value);
+create index likes_created_at_idx on likes (created_at);
+create index likes_user_id_idx on likes (user_id);
 ```
 
 #### 공통 요소

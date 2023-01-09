@@ -1,9 +1,15 @@
 package com.leesh.quiz.domain.user;
 
+import com.leesh.quiz.domain.commnet.Comment;
+import com.leesh.quiz.domain.like.Like;
+import com.leesh.quiz.domain.quiz.Quiz;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,6 +42,18 @@ public class User {
 
     @Column(nullable = false)
     private Long modifiedAt;
+
+    @OrderBy("id")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final Set<Quiz> quizzes = ConcurrentHashMap.newKeySet();
+
+    @OrderBy("id")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final Set<Comment> comments = ConcurrentHashMap.newKeySet();
+
+    @OrderBy("id")
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final Set<Like> likes = ConcurrentHashMap.newKeySet();
 
     @PrePersist
     protected void onCreate() {
