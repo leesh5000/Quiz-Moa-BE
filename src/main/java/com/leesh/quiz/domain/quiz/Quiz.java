@@ -73,4 +73,14 @@ public class Quiz {
         return id.hashCode();
     }
 
+    private Quiz(String title, String contents, User user) {
+        this.title = title;
+        this.contents = contents;
+        this.user = user;
+    }
+
+    public static Quiz of(String title, String content, User user) {
+        return new Quiz(title, content, user);
+    }
+
 }
