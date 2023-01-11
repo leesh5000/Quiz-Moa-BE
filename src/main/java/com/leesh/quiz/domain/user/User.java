@@ -52,7 +52,7 @@ public class User {
     private final Set<Comment> comments = ConcurrentHashMap.newKeySet();
 
     @OrderBy("id")
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private final Set<Like> likes = ConcurrentHashMap.newKeySet();
 
     @PrePersist
