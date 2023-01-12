@@ -8,6 +8,7 @@ import com.leesh.quiz.dto.request.CreateQuizRequest;
 import com.leesh.quiz.dto.response.CreateQuizResponse;
 import com.leesh.quiz.security.token.UserInfo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,16 +19,17 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final QuizRepository quizRepository;
+    private final MessageSourceAccessor messageSource;
 
     public CreateQuizResponse createQuiz(CreateQuizRequest request, String username, UserInfo loginUserInfo) {
 
         if (!loginUserInfo.getUsername().equals(username)) {
-            throw new IllegalStateException("퀴즈 생성자와 로그인 사용자가 다릅니다.");
+            throw new IllegalStateException(messageSource.getMessage("username.not.match.login.user"));
         }
 
         User user = userRepository.findByNickname(username)
                 .orElseThrow(
-                        () -> new IllegalStateException("해당 유저가 존재하지 않습니다.")
+                        () -> new IllegalStateException(messageSource.getMessage("user.not.found"))
                 );
 
         Quiz quiz = request.toEntity(user);
