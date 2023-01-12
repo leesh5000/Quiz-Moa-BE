@@ -66,7 +66,7 @@ public class AuthenticationService {
 
     private String generateToken(User user) {
         return tokenService.generateToken(
-                new JwtUserInfo(
+                JwtUserInfo.of(
                         user.getEmail(),
                         user.getNickname(),
                         Set.of(user.getRole())

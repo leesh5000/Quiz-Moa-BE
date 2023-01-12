@@ -20,4 +20,8 @@ public record JwtUserInfo(String userId, String username, Set<Role> authorities)
     public Set<Role> getAuthorities() {
         return authorities;
     }
+
+    public static JwtUserInfo of(String userId, String username, Set<Role> authorities) {
+        return new JwtUserInfo(userId, username, authorities);
+    }
 }

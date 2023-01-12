@@ -2,6 +2,8 @@ package com.leesh.quiz.controller;
 
 import com.leesh.quiz.dto.request.CreateQuizRequest;
 import com.leesh.quiz.dto.response.CreateQuizResponse;
+import com.leesh.quiz.security.token.UserInfo;
+import com.leesh.quiz.security.token.jwt.JwtUserInfo;
 import com.leesh.quiz.service.UserService;
 import org.assertj.core.api.Assertions;
 import org.json.JSONException;
@@ -38,13 +40,14 @@ class UserControllerTest {
         // given :
         CreateQuizRequest request = CreateQuizRequest.of("title", "content");
         String username = "username";
+        UserInfo userInfo = JwtUserInfo.of("userId", "username", null);
 
         // when : createQuiz 메소드가 요청되면,
-        ResponseEntity<CreateQuizResponse> response = sut.createQuiz(request, username);
+        ResponseEntity<CreateQuizResponse> response = sut.createQuiz(userInfo, request, username);
 
         // then : 상태코드 200이 반환되고, userService.createQuiz가 호출된다.
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        then(userService).should().createQuiz(any(CreateQuizRequest.class), any(String.class));
+        then(userService).should().createQuiz(any(CreateQuizRequest.class), any(String.class), any(UserInfo.class));
 
     }
 
