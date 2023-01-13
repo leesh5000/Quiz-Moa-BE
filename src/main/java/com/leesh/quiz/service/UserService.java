@@ -6,7 +6,6 @@ import com.leesh.quiz.domain.user.User;
 import com.leesh.quiz.domain.user.UserRepository;
 import com.leesh.quiz.dto.request.CreateQuizRequest;
 import com.leesh.quiz.dto.response.CreateQuizResponse;
-import com.leesh.quiz.security.token.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
@@ -21,11 +20,7 @@ public class UserService {
     private final QuizRepository quizRepository;
     private final MessageSourceAccessor messageSource;
 
-    public CreateQuizResponse createQuiz(CreateQuizRequest request, String username, UserInfo loginUserInfo) {
-
-        if (!loginUserInfo.getUsername().equals(username)) {
-            throw new IllegalStateException(messageSource.getMessage("username.not.match.login.user"));
-        }
+    public CreateQuizResponse createQuiz(CreateQuizRequest request, String username) {
 
         User user = userRepository.findByNickname(username)
                 .orElseThrow(

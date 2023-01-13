@@ -2,6 +2,7 @@ package com.leesh.quiz.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.server.Encoding;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.MessageSourceAccessor;
@@ -34,7 +35,7 @@ public class MessageConfiguration implements WebMvcConfigurer {
     }
 
     @Bean
-    public ReloadableResourceBundleMessageSource messageSource() {
+    public MessageSource messageSource() {
 
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
 
@@ -48,7 +49,7 @@ public class MessageConfiguration implements WebMvcConfigurer {
 
     @Bean
     public MessageSourceAccessor messageSourceAccessor (
-            @Autowired ReloadableResourceBundleMessageSource messageSource) {
+            @Autowired MessageSource messageSource) {
 
         return new MessageSourceAccessor(messageSource);
     }
