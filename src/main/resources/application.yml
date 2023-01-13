@@ -1,6 +1,6 @@
-logging:
-  level:
-    org.hibernate.type.descriptor.sql.BasicBinder: trace
+logging.level.org.hibernate:
+  SQL: debug
+  type.descriptor.sql.BasicBinder: trace
 
 ---
 
@@ -20,10 +20,10 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: 'create-drop'
-    show-sql: true
     properties:
-      hibernate.format_sql: true
-      hibernate.default_batch_fetch_size: 100
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
   sql:
     init:
       mode: always

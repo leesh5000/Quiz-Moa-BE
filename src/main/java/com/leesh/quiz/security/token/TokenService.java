@@ -2,15 +2,15 @@ package com.leesh.quiz.security.token;
 
 /**
  * 토큰 인증을 위한 인터페이스 <br>
+ * Implementation {@link com.leesh.quiz.security.token.jwt.JwtTokenService}
  * @param <T> 토큰 타입
- * @param <V> 유저 정보 타입
  */
-public interface TokenService<T, V> {
+public interface TokenService<T> {
 
-    T extractUsername(T token);
+    UserInfo extractUserInfo(T token);
 
-    T generateToken(V userInfo);
+    T generateToken(UserInfo userInfo);
 
-    boolean isTokenValid(T token, V userInfo);
+    boolean isTokenValid(T token, UserInfo userInfo);
 
 }
