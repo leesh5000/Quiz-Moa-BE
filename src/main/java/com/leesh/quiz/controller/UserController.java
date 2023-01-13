@@ -5,7 +5,7 @@ import com.leesh.quiz.dto.response.CreateQuizResponse;
 import com.leesh.quiz.security.token.UserInfo;
 import com.leesh.quiz.service.UserService;
 import lombok.RequiredArgsConstructor;
- import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
