@@ -10,6 +10,8 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.NoSuchElementException;
+
 @RequiredArgsConstructor
 @Transactional
 @Service
@@ -23,7 +25,7 @@ public class UserService {
 
         User user = userRepository.findByNickname(username)
                 .orElseThrow(
-                        () -> new IllegalStateException(messageSource.getMessage("user.not.found"))
+                        () -> new NoSuchElementException(messageSource.getMessage("user.not.found"))
                 );
 
         Quiz quiz = request.toEntity(user);
