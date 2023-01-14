@@ -3,8 +3,7 @@ package com.leesh.quiz.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leesh.quiz.config.TestSecurityConfiguration;
 import com.leesh.quiz.domain.user.Role;
-import com.leesh.quiz.dto.request.CreateQuizRequest;
-import com.leesh.quiz.dto.response.CreateQuizResponse;
+import com.leesh.quiz.dto.CreateQuizDto;
 import com.leesh.quiz.security.token.TokenService;
 import com.leesh.quiz.security.token.jwt.JwtUserInfo;
 import com.leesh.quiz.service.UserService;
@@ -60,13 +59,13 @@ class UserControllerTest {
     public void createQuiz_success_test() throws Exception {
 
         // given 1 : CreateQuizRequest 객체 생성
-        var request = CreateQuizRequest.of("title", "content");
+        var request = CreateQuizDto.Request.of("title", "content");
 
         // given 2 : userService.createQuiz() 메소드는 CreateQuizResponse 객체를 반환한다.
         var username = "username";
         var createQuizId = 1L;
         given(userService.createQuiz(request, username))
-                .willReturn(CreateQuizResponse.of(createQuizId));
+                .willReturn(CreateQuizDto.Response.of(createQuizId));
 
         // when & then 1 : createQuiz 메소드가 요청되면, 반환 값에는 200 상태코드와 quiz Id가 존재해야 한다.
         mvc.perform(

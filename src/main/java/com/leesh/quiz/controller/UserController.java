@@ -1,7 +1,6 @@
 package com.leesh.quiz.controller;
 
-import com.leesh.quiz.dto.request.CreateQuizRequest;
-import com.leesh.quiz.dto.response.CreateQuizResponse;
+import com.leesh.quiz.dto.CreateQuizDto;
 import com.leesh.quiz.security.token.UserInfo;
 import com.leesh.quiz.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +18,9 @@ public class UserController {
     private final MessageSourceAccessor messageSource;
 
     @PostMapping("/{username}/quiz")
-    public ResponseEntity<CreateQuizResponse> createQuiz(
+    public ResponseEntity<CreateQuizDto.Response> createQuiz(
             @AuthenticationPrincipal UserInfo loginUserInfo,
-            @RequestBody CreateQuizRequest request,
+            @RequestBody CreateQuizDto.Request request,
             @PathVariable("username") String username) {
 
         if (!loginUserInfo.getUsername().equals(username)) {
