@@ -1,4 +1,4 @@
-package com.leesh.quiz.security.dto;
+package com.leesh.quiz.dto;
 
 public interface RegisterDto {
 
