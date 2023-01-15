@@ -2,6 +2,7 @@ plugins {
 	java
 	id("org.springframework.boot") version "3.0.1"
 	id("io.spring.dependency-management") version "1.1.0"
+	id("org.asciidoctor.jvm.convert") version "3.3.2"
 }
 
 group = "com.leesh"
@@ -14,15 +15,37 @@ configurations {
 	}
 }
 
+val asciidoctorExt by configurations.creating
+
 repositories {
 	mavenCentral()
 }
 
 dependencies {
+
+	// Spring Rest Docs Start
+	asciidoctorExt("org.springframework.restdocs:spring-restdocs-asciidoctor")
+	testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
+	// Spring Rest Docs End
+
+	// H2 Database
 	runtimeOnly("com.h2database:h2")
-	implementation("org.json:json:20220924")
-	implementation("org.springframework.boot:spring-boot-starter-security")
+
+	// Lombok Start
+	compileOnly("org.projectlombok:lombok")
+	annotationProcessor("org.projectlombok:lombok")
+	// Lombok End
+
+	// Spring Validation
 	implementation("org.springframework.boot:spring-boot-starter-validation")
+
+	// Spring Data Jpa
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+	// Spring Boot Start
+	implementation("org.springframework.boot:spring-boot-starter-web")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	// Spring Boot End
 
 	//	JWT START
 	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
@@ -30,13 +53,12 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
 	// JWT END
 
+
+	// Srping Security Start
+	implementation("org.springframework.boot:spring-boot-starter-security")
 	testImplementation("org.springframework.security:spring-security-test")
-	implementation("org.springframework.security:spring-security-crypto")
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	compileOnly("org.projectlombok:lombok")
-	annotationProcessor("org.projectlombok:lombok")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	// Srping Security End
+
 }
 
 tasks.withType<Test> {
