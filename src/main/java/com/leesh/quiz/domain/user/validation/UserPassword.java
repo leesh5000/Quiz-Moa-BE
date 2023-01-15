@@ -45,7 +45,7 @@ public @interface UserPassword {
             }
 
             // 모든 한글 음절, 영어 대/소문자, 숫자만 가능
-            Pattern pattern = Pattern.compile("^(?=.*[a-zA-Z])(?=.*\\\\d)(?=.*\\\\W).{8,30}$");
+            Pattern pattern = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,30}$");
             if (value != null && !pattern.matcher(value).matches()) {
                 context.buildConstraintViolationWithTemplate(
                                 messageSource.getMessage("validation.user.password.invalid"))

@@ -52,9 +52,9 @@ public @interface UserNickname {
                 isValid = false;
             }
 
-            // 모든 한글 음절, 영어 대/소문자, 숫자만 가능
-            Pattern pattern = Pattern.compile("^\uAC00-\uD7A30-9a-zA-Z\\s");
-            if (value != null && !pattern.matcher(value).matches()) {
+            // 특수문자 포함 여부 정규식
+            Pattern pattern = Pattern.compile("[^가-힣0-9a-zA-Z\\s]");
+            if (value != null && pattern.matcher(value).matches()) {
                 context.buildConstraintViolationWithTemplate(
                                 messageSource.getMessage("validation.user.nickname.invalid"))
                         .addConstraintViolation();
