@@ -3,10 +3,10 @@ package com.leesh.quiz.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leesh.quiz.config.TestSecurityConfiguration;
 import com.leesh.quiz.domain.user.Role;
-import com.leesh.quiz.dto.CreateQuizDto;
-import com.leesh.quiz.domain.auth.service.TokenService;
-import com.leesh.quiz.security.token.jwt.JwtUserInfo;
 import com.leesh.quiz.domain.user.service.UserService;
+import com.leesh.quiz.dto.CreateQuizDto;
+import com.leesh.quiz.security.CustomUserDetails;
+import com.leesh.quiz.security.TokenService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +15,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Set;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -49,8 +48,8 @@ class UserControllerTest {
         this.objectMapper = objectMapper;
 
         // JWT 토큰 생성
-        var userInfo = JwtUserInfo.of("userId", "username", Set.of(Role.USER));
-        this.token = tokenService.generateToken(userInfo);
+        UserDetails userDetails = CustomUserDetails.of("username", "password", Role.USER);
+        this.token = tokenService.generateToken(userDetails);
 
     }
 

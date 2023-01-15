@@ -1,13 +1,13 @@
 package com.leesh.quiz.controller;
 
-import com.leesh.quiz.dto.CreateQuizDto;
-import com.leesh.quiz.domain.auth.UserInfo;
 import com.leesh.quiz.domain.user.service.UserService;
+import com.leesh.quiz.dto.CreateQuizDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -20,11 +20,11 @@ public class UserController {
 
     @PostMapping("/{username}/quiz")
     public ResponseEntity<CreateQuizDto.Response> createQuiz(
-            @AuthenticationPrincipal UserInfo loginUserInfo,
+            @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody @Valid CreateQuizDto.Request request,
             @PathVariable("username") String username) {
 
-        if (!loginUserInfo.getUsername().equals(username)) {
+        if (!userDetails.getUsername().equals(username)) {
             throw new IllegalStateException(messageSource.getMessage("username.not.match.login.user"));
         }
 

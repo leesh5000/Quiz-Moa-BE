@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.*;
 
+import static com.leesh.quiz.constant.Constants.ERRORS;
+
 @RestControllerAdvice
 public class ControllerExceptionHandler {
 
@@ -19,7 +21,7 @@ public class ControllerExceptionHandler {
      * @see NoSuchElementException
      * @see IllegalArgumentException
      */
-    @ExceptionHandler({IllegalArgumentException.class, NoSuchElementException.class})
+    @ExceptionHandler({IllegalArgumentException.class, NoSuchElementException.class, RuntimeException.class})
     protected ResponseEntity<Map<String, Object>> businessExceptionHandler(RuntimeException ex) {
 
          var body = createResponseBody(ex.getMessage());
@@ -64,8 +66,7 @@ public class ControllerExceptionHandler {
 
     private HashMap<String, Object> createResponseBody(Object errors) {
         var body = new HashMap<String, Object>();
-        body.put("errors", errors);
+        body.put(ERRORS, errors);
         return body;
     }
-
 }
