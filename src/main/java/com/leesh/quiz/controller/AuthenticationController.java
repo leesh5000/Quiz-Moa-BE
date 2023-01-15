@@ -1,8 +1,8 @@
 package com.leesh.quiz.controller;
 
+import com.leesh.quiz.domain.user.service.AuthenticationService;
 import com.leesh.quiz.dto.AuthenticateDto;
 import com.leesh.quiz.dto.RegisterDto;
-import com.leesh.quiz.domain.auth.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,20 +16,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AuthenticationController {
 
-    private final AuthenticationService service;
+    private final AuthenticationService authenticateService;
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterDto.Response> register(@RequestBody @Valid RegisterDto.Request request) {
+    public ResponseEntity<Void> register(@RequestBody @Valid RegisterDto.Request request) {
 
-        var body = service.register(request);
+        authenticateService.register(request);
 
-        return ResponseEntity.ok(body);
+        return ResponseEntity.ok().build();
+
     }
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticateDto.Response> authenticate(@RequestBody @Valid AuthenticateDto.Request request) {
 
-        var body = service.authenticate(request);
+        var body = authenticateService.authenticate(request);
 
         return ResponseEntity.ok(body);
     }

@@ -3,7 +3,6 @@ package com.leesh.quiz.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leesh.quiz.domain.user.User;
 import com.leesh.quiz.domain.user.UserRepository;
-import com.leesh.quiz.domain.auth.TokenAuthenticationFilter;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.util.HashMap;
 
+import static com.leesh.quiz.constant.Constants.ERRORS;
 import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
@@ -84,7 +84,7 @@ public class SecurityConfiguration {
             response.setCharacterEncoding("UTF-8");
 
             var body = new HashMap<>();
-            body.put("error", exception.getMessage());
+            body.put(ERRORS, exception.getMessage());
 
             objectMapper.writeValue(response.getWriter(), body);
         };
@@ -103,7 +103,7 @@ public class SecurityConfiguration {
             response.setCharacterEncoding("UTF-8");
 
             var body = new HashMap<>();
-            body.put("error", exception.getMessage());
+            body.put(ERRORS, exception.getMessage());
 
             objectMapper.writeValue(response.getWriter(), body);
         };
@@ -117,7 +117,7 @@ public class SecurityConfiguration {
             User user = userRepository.findByEmail(username)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
 
-            return new CustomUserDetails(user);
+            return new CustomUserDetails(user.getNickname(), user.getPassword(), user.getRole());
         };
     }
 

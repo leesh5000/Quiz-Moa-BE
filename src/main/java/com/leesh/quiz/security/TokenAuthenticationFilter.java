@@ -1,4 +1,4 @@
-package com.leesh.quiz.domain.auth;
+package com.leesh.quiz.security;
 
 import jakarta.servlet.Filter;
 

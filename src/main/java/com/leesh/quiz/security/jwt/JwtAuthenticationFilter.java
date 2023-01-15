@@ -1,8 +1,7 @@
-package com.leesh.quiz.security.token.jwt;
+package com.leesh.quiz.security.jwt;
 
-import com.leesh.quiz.domain.auth.TokenAuthenticationFilter;
-import com.leesh.quiz.domain.auth.service.TokenService;
-import com.leesh.quiz.domain.auth.UserInfo;
+import com.leesh.quiz.security.TokenAuthenticationFilter;
+import com.leesh.quiz.security.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,8 +9,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -42,22 +41,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Tok
         final String token = header.split(" ")[1].trim();
 
         // Get user identity and set it on the spring security context
-        final UserInfo userInfo = tokenService.extractUserInfo(token);
+        final UserDetails userDetails = tokenService.extractUserDetails(token);
 
-        if (userInfo != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (userDetails != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            if (tokenService.isTokenValid(token, userInfo)) {
+            if (tokenService.isTokenValid(token, userDetails)) {
 
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userInfo,
-                        null,
-                        userInfo.getAuthorities().stream()
-                                .map(
-                                        role -> new SimpleGrantedAuthority(
-                                                role.name()
-                                        )
-                                )
-                                .toList()
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
+                        userDetails.getAuthorities()
                 );
 
                 authentication.setDetails(
