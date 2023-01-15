@@ -1,11 +1,9 @@
-package com.leesh.quiz.security;
+package com.leesh.quiz.domain.auth.service;
 
 import com.leesh.quiz.domain.user.User;
 import com.leesh.quiz.domain.user.UserRepository;
-import com.leesh.quiz.security.dto.LoginRequest;
-import com.leesh.quiz.security.dto.RegisterRequest;
-import com.leesh.quiz.security.dto.TokenResponse;
-import com.leesh.quiz.security.token.TokenService;
+import com.leesh.quiz.dto.AuthenticateDto;
+import com.leesh.quiz.dto.RegisterDto;
 import com.leesh.quiz.security.token.jwt.JwtUserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,7 +22,7 @@ public class AuthenticationService {
     private final TokenService<String> tokenService;
     private final AuthenticationManager authenticationManager;
 
-    public TokenResponse register(RegisterRequest request) {
+    public RegisterDto.Response register(RegisterDto.Request request) {
 
         userRepository.findByEmail(request.email())
                 .ifPresent(user -> {
@@ -43,10 +41,10 @@ public class AuthenticationService {
 
         var accessToken = generateToken(user);
 
-        return new TokenResponse(accessToken);
+        return RegisterDto.Response.of(accessToken);
     }
 
-    public TokenResponse authenticate(LoginRequest request) {
+    public AuthenticateDto.Response authenticate(AuthenticateDto.Request request) {
 
         // 유저 아이디 및 비밀번호 확인
         authenticationManager.authenticate(
@@ -61,7 +59,7 @@ public class AuthenticationService {
 
         var accessToken = generateToken(user);
 
-        return new TokenResponse(accessToken);
+        return new AuthenticateDto.Response(accessToken);
     }
 
     private String generateToken(User user) {

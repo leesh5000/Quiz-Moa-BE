@@ -1,8 +1,8 @@
 package com.leesh.quiz.security.token.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.leesh.quiz.security.token.TokenService;
-import com.leesh.quiz.security.token.UserInfo;
+import com.leesh.quiz.domain.auth.service.TokenService;
+import com.leesh.quiz.domain.auth.UserInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

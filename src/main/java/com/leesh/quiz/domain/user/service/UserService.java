@@ -1,15 +1,16 @@
-package com.leesh.quiz.service;
+package com.leesh.quiz.domain.user.service;
 
 import com.leesh.quiz.domain.quiz.Quiz;
 import com.leesh.quiz.domain.quiz.QuizRepository;
 import com.leesh.quiz.domain.user.User;
 import com.leesh.quiz.domain.user.UserRepository;
-import com.leesh.quiz.dto.request.CreateQuizRequest;
-import com.leesh.quiz.dto.response.CreateQuizResponse;
+import com.leesh.quiz.dto.CreateQuizDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @Transactional
@@ -20,17 +21,17 @@ public class UserService {
     private final QuizRepository quizRepository;
     private final MessageSourceAccessor messageSource;
 
-    public CreateQuizResponse createQuiz(CreateQuizRequest request, String username) {
+    public CreateQuizDto.Response createQuiz(CreateQuizDto.Request request, String username) {
 
         User user = userRepository.findByNickname(username)
                 .orElseThrow(
-                        () -> new IllegalStateException(messageSource.getMessage("user.not.found"))
+                        () -> new NoSuchElementException(messageSource.getMessage("user.not.found"))
                 );
 
         Quiz quiz = request.toEntity(user);
 
         quizRepository.save(quiz);
 
-        return CreateQuizResponse.of(quiz.getId());
+        return CreateQuizDto.Response.of(quiz.getId());
     }
 }

@@ -22,6 +22,7 @@ dependencies {
 	runtimeOnly("com.h2database:h2")
 	implementation("org.json:json:20220924")
 	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
 
 	//	JWT START
 	implementation("io.jsonwebtoken:jjwt-api:0.11.5")

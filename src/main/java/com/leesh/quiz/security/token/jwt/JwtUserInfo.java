@@ -1,7 +1,7 @@
 package com.leesh.quiz.security.token.jwt;
 
 import com.leesh.quiz.domain.user.Role;
-import com.leesh.quiz.security.token.UserInfo;
+import com.leesh.quiz.domain.auth.UserInfo;
 
 import java.util.Set;
 
