@@ -3,7 +3,7 @@ package com.leesh.quiz.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leesh.quiz.domain.user.User;
 import com.leesh.quiz.domain.user.UserRepository;
-import com.leesh.quiz.security.token.TokenAuthenticationFilter;
+import com.leesh.quiz.domain.auth.TokenAuthenticationFilter;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

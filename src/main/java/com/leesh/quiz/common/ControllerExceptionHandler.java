@@ -1,15 +1,11 @@
 package com.leesh.quiz.common;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @RestControllerAdvice
 public class ControllerExceptionHandler {
@@ -41,14 +37,25 @@ public class ControllerExceptionHandler {
      * @see MethodArgumentNotValidException
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ResponseEntity<Map<String, String>> validationFailureExHandler(MethodArgumentNotValidException ex) {
+    protected ResponseEntity<Map<String, List<String>>> validationFailureExHandler(MethodArgumentNotValidException ex) {
 
-        var body = new HashMap<String, String>();
+        var body = new HashMap<String, List<String>>();
 
-        List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
-        fieldErrors.forEach(
-                e -> body.put(e.getField(), e.getDefaultMessage())
-        );
+        for (var error : ex.getBindingResult().getFieldErrors()) {
+
+            String key = error.getField();
+            String message = Optional.ofNullable(
+                    error.getDefaultMessage())
+                    .orElse("");
+
+            if (body.containsKey(key)) {
+                List<String> errors = body.get(key);
+                errors.add(message);
+            } else {
+                body.put(key, new ArrayList<>(List.of(message)));
+            }
+
+        }
 
         return ResponseEntity.badRequest().body(body);
     }

@@ -1,8 +1,9 @@
 package com.leesh.quiz.controller;
 
 import com.leesh.quiz.dto.CreateQuizDto;
-import com.leesh.quiz.security.token.UserInfo;
-import com.leesh.quiz.service.UserService;
+import com.leesh.quiz.domain.auth.UserInfo;
+import com.leesh.quiz.domain.user.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class UserController {
     @PostMapping("/{username}/quiz")
     public ResponseEntity<CreateQuizDto.Response> createQuiz(
             @AuthenticationPrincipal UserInfo loginUserInfo,
-            @RequestBody CreateQuizDto.Request request,
+            @RequestBody @Valid CreateQuizDto.Request request,
             @PathVariable("username") String username) {
 
         if (!loginUserInfo.getUsername().equals(username)) {

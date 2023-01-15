@@ -1,11 +1,12 @@
 package com.leesh.quiz.dto;
 
 import com.leesh.quiz.domain.quiz.Quiz;
+import com.leesh.quiz.domain.quiz.validation.QuizTitle;
 import com.leesh.quiz.domain.user.User;
 
 public interface CreateQuizDto {
 
-    record Request(String title, String content) {
+    record Request(@QuizTitle String title, String content) {
         public static Request of(String title, String content) {
             return new Request(title, content);
         }

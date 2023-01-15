@@ -37,7 +37,7 @@ set foreign_key_checks = 1;
 create table users
 (
     id          bigint auto_increment,
-    username    varchar(30)  not null unique,
+    nickname    varchar(30)  not null unique,
     email       varchar(255) not null unique,
     password    varchar(255) not null,
     created_at  bigint       not null,
@@ -45,7 +45,7 @@ create table users
     primary key (id)
 ) default character set utf8mb4 collate utf8mb4_general_ci;
 
-create index users_username_idx on users (username);
+create index users_nickname_idx on users (nickname);
 create index users_email_idx on users (email);
 create index users_created_at_idx on users (created_at);
 
@@ -104,7 +104,7 @@ create index likes_user_id_idx on likes (user_id);
 - created_at, modified_at : 생성일, 수정일은 모든 테이블에 존재하는 메타데이터입니다. 애플리케이션 레벨에서 타임존을 고려하기 위해 unix time을 넣어주도록 bigint 타입으로 설정하였습니다.
 
 #### 유저 테이블 
-- username : 닉네임은 적당한 크기인 30으로 하였으며 유저를 식별할 수 있는 값이어야 하므로 unique 속성을 주었습니다.
+- nickname : 닉네임은 적당한 크기인 30으로 하였으며 유저를 식별할 수 있는 값이어야 하므로 unique 속성을 주었습니다.
 - email : 이메일은 회원가입 및 로그인 시 유저가 입력하는 정보입니다.
 - password : 비밀번호는 암호화까지 고려하여 255 크기를 설정하였습니다.
 - username, email, created_at 은 검색이 빈번하게 발생하는 요소라고 생각되어 인덱스를 설정하였습니다.

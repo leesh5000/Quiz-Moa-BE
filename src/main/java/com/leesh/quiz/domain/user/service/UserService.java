@@ -1,4 +1,4 @@
-package com.leesh.quiz.service;
+package com.leesh.quiz.domain.user.service;
 
 import com.leesh.quiz.domain.quiz.Quiz;
 import com.leesh.quiz.domain.quiz.QuizRepository;

@@ -1,8 +1,11 @@
 package com.leesh.quiz.dto;
 
+import com.leesh.quiz.domain.user.validation.UserEmail;
+import com.leesh.quiz.domain.user.validation.UserPassword;
+
 public interface AuthenticateDto {
 
-    record Request(String email, String password) {
+    record Request(@UserEmail String email, @UserPassword String password) {
         public static Request of(String email, String password) {
             return new Request(email, password);
         }
