@@ -1,6 +1,7 @@
 package com.leesh.quiz.common;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -21,7 +22,7 @@ public class ControllerExceptionHandler {
      * @see NoSuchElementException
      * @see IllegalArgumentException
      */
-    @ExceptionHandler({IllegalArgumentException.class, NoSuchElementException.class, RuntimeException.class})
+    @ExceptionHandler({IllegalArgumentException.class, NoSuchElementException.class, RuntimeException.class, IllegalArgumentException.class})
     protected ResponseEntity<Map<String, Object>> businessExceptionHandler(RuntimeException ex) {
 
          var body = createResponseBody(ex.getMessage());

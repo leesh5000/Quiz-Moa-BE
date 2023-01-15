@@ -25,7 +25,9 @@ public class UserController {
             @PathVariable("username") String username) {
 
         if (!userDetails.getUsername().equals(username)) {
-            throw new IllegalStateException(messageSource.getMessage("username.not.match.login.user"));
+            throw new IllegalArgumentException(
+                    messageSource.getMessage("username.not.match.login.user")
+            );
         }
 
         var body = userService.createQuiz(request, username);
