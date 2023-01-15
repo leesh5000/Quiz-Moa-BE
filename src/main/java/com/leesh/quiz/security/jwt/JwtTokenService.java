@@ -1,14 +1,15 @@
-package com.leesh.quiz.security.token.jwt;
+package com.leesh.quiz.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.leesh.quiz.domain.auth.service.TokenService;
-import com.leesh.quiz.domain.auth.UserInfo;
+import com.leesh.quiz.security.TokenService;
+import com.leesh.quiz.security.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -29,26 +30,26 @@ public class JwtTokenService implements TokenService<String> {
     }
 
     @Override
-    public UserInfo extractUserInfo(String token) {
+    public UserDetails extractUserDetails(String token) {
 
         Claims claims = extractAllClaims(token);
 
-        return objectMapper.convertValue(claims, JwtUserInfo.class);
+        return objectMapper.convertValue(claims, CustomUserDetails.class);
     }
 
     @Override
-    public String generateToken(UserInfo userInfo) {
+    public String generateToken(UserDetails userDetails) {
 
-        Map<String, Object> userInfoData = objectMapper.convertValue(userInfo, Map.class);
-        var extraClaims = new HashMap<>(userInfoData);
+        var map = objectMapper.convertValue(userDetails, Map.class);
+        var extraClaims = new HashMap<String, Object>(map);
 
-        return generateToken(extraClaims, userInfo);
+        return generateToken(extraClaims, userDetails);
     }
 
     @Override
-    public boolean isTokenValid(String token, UserInfo userInfo) {
+    public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUserId(token);
-        return (username.equals(userInfo.getUserId()) && !isTokenExpired(token));
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     private boolean isTokenExpired(String token) {
@@ -77,11 +78,11 @@ public class JwtTokenService implements TokenService<String> {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    private String generateToken(Map<String, Object> extraClaims, UserInfo userInfo) {
+    private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
 
         return Jwts.builder()
                 .setClaims(extraClaims)
-                .setSubject(userInfo.getUserId())
+                .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24L))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
