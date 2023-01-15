@@ -24,14 +24,18 @@ public class UserController {
             @RequestBody @Valid CreateQuizDto.Request request,
             @PathVariable("username") String username) {
 
+        validateUsername(userDetails, username);
+
+        var body = userService.createQuiz(request, username);
+        return ResponseEntity.ok(body);
+    }
+
+    private void validateUsername(UserDetails userDetails, String username) {
         if (!userDetails.getUsername().equals(username)) {
             throw new IllegalArgumentException(
                     messageSource.getMessage("username.not.match.login.user")
             );
         }
-
-        var body = userService.createQuiz(request, username);
-        return ResponseEntity.ok(body);
     }
 
 }

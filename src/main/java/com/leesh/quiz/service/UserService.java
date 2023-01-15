@@ -23,15 +23,19 @@ public class UserService {
 
     public CreateQuizDto.Response createQuiz(CreateQuizDto.Request request, String username) {
 
-        User user = userRepository.findByNickname(username)
-                .orElseThrow(
-                        () -> new NoSuchElementException(messageSource.getMessage("user.not.found"))
-                );
+        User user = isExistingUser(username);
 
         Quiz quiz = request.toEntity(user);
 
         quizRepository.save(quiz);
 
         return CreateQuizDto.Response.of(quiz.getId());
+    }
+
+    private User isExistingUser(String username) {
+        return userRepository.findByNickname(username)
+                .orElseThrow(
+                        () -> new NoSuchElementException(messageSource.getMessage("user.not.found"))
+                );
     }
 }

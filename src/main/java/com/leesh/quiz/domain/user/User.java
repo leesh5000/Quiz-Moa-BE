@@ -91,8 +91,4 @@ public class User {
     }
 
     /* Business Logic */
-    /**
-     * 안녕하세요
-     */
-    // 안녕하세요 
 }

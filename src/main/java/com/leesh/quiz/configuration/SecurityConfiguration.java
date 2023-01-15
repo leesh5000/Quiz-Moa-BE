@@ -114,10 +114,10 @@ public class SecurityConfiguration {
 
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
-        return username -> {
+        return email -> {
 
-            User user = userRepository.findByEmail(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + email));
 
             return new CustomUserDetails(user.getNickname(), user.getPassword(), user.getRole());
         };
