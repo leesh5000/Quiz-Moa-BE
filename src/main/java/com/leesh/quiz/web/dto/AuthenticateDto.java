@@ -1,4 +1,4 @@
-package com.leesh.quiz.dto;
+package com.leesh.quiz.web.dto;
 
 import com.leesh.quiz.domain.user.validation.UserEmail;
 import com.leesh.quiz.domain.user.validation.UserPassword;

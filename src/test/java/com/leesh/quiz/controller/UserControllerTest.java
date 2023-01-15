@@ -1,12 +1,13 @@
 package com.leesh.quiz.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.leesh.quiz.config.TestSecurityConfiguration;
+import com.leesh.quiz.configuration.TestSecurityConfiguration;
 import com.leesh.quiz.domain.user.Role;
-import com.leesh.quiz.domain.user.service.UserService;
-import com.leesh.quiz.dto.CreateQuizDto;
-import com.leesh.quiz.security.CustomUserDetails;
-import com.leesh.quiz.security.TokenService;
+import com.leesh.quiz.service.UserService;
+import com.leesh.quiz.web.dto.CreateQuizDto;
+import com.leesh.quiz.web.controller.UserController;
+import com.leesh.quiz.web.dto.CustomUserDetails;
+import com.leesh.quiz.service.TokenService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

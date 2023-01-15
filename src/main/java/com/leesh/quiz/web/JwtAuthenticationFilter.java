@@ -1,7 +1,7 @@
-package com.leesh.quiz.security.jwt;
+package com.leesh.quiz.web;
 
-import com.leesh.quiz.security.TokenAuthenticationFilter;
-import com.leesh.quiz.security.TokenService;
+import com.leesh.quiz.web.TokenAuthenticationFilter;
+import com.leesh.quiz.service.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

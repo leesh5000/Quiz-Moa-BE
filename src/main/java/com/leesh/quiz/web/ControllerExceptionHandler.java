@@ -1,4 +1,4 @@
-package com.leesh.quiz.common;
+package com.leesh.quiz.web;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;

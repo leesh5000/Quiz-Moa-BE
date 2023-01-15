@@ -1,8 +1,10 @@
-package com.leesh.quiz.security;
+package com.leesh.quiz.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leesh.quiz.domain.user.User;
 import com.leesh.quiz.domain.user.UserRepository;
+import com.leesh.quiz.web.TokenAuthenticationFilter;
+import com.leesh.quiz.web.dto.CustomUserDetails;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

@@ -1,7 +1,7 @@
-package com.leesh.quiz.controller;
+package com.leesh.quiz.web.controller;
 
-import com.leesh.quiz.domain.user.service.UserService;
-import com.leesh.quiz.dto.CreateQuizDto;
+import com.leesh.quiz.service.UserService;
+import com.leesh.quiz.web.dto.CreateQuizDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.MessageSourceAccessor;
