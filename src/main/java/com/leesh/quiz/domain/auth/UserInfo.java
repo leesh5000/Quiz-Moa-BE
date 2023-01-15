@@ -9,7 +9,7 @@ import java.util.Set;
  * <p>
  *     구체적인 기술에 의존하지 않고 추상화에 의존하기 위함
  * </p>
- * Implementation {@link com.leesh.quiz.security.token.jwt.JwtUserInfo}
+ * @see com.leesh.quiz.security.token.jwt.JwtUserInfo
  */
 public interface UserInfo {
 

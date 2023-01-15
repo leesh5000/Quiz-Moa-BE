@@ -23,7 +23,7 @@ public class ControllerExceptionHandler {
     protected ResponseEntity<Map<String, String>> businessExceptionHandler(RuntimeException ex) {
 
         var body = new HashMap<String, String>();
-        body.put("error", ex.getMessage());
+        body.put("errors", ex.getMessage());
 
         return ResponseEntity.badRequest().body(body);
     }
@@ -37,9 +37,9 @@ public class ControllerExceptionHandler {
      * @see MethodArgumentNotValidException
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ResponseEntity<Map<String, List<String>>> validationFailureExHandler(MethodArgumentNotValidException ex) {
+    protected ResponseEntity<Map<String, Object>> validationFailureExHandler(MethodArgumentNotValidException ex) {
 
-        var body = new HashMap<String, List<String>>();
+        var errors = new HashMap<String, List<String>>();
 
         for (var error : ex.getBindingResult().getFieldErrors()) {
 
@@ -48,14 +48,18 @@ public class ControllerExceptionHandler {
                     error.getDefaultMessage())
                     .orElse("");
 
-            if (body.containsKey(key)) {
-                List<String> errors = body.get(key);
-                errors.add(message);
+            if (errors.containsKey(key)) {
+                errors
+                    .get(key)
+                    .add(message);
             } else {
-                body.put(key, new ArrayList<>(List.of(message)));
+                errors.put(key, new ArrayList<>(List.of(message)));
             }
 
         }
+
+        var body = new HashMap<String, Object>();
+        body.put("errors", errors);
 
         return ResponseEntity.badRequest().body(body);
     }
