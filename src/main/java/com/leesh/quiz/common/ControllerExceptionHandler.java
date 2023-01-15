@@ -20,10 +20,9 @@ public class ControllerExceptionHandler {
      * @see IllegalArgumentException
      */
     @ExceptionHandler({IllegalArgumentException.class, NoSuchElementException.class})
-    protected ResponseEntity<Map<String, String>> businessExceptionHandler(RuntimeException ex) {
+    protected ResponseEntity<Map<String, Object>> businessExceptionHandler(RuntimeException ex) {
 
-        var body = new HashMap<String, String>();
-        body.put("errors", ex.getMessage());
+         var body = createResponseBody(ex.getMessage());
 
         return ResponseEntity.badRequest().body(body);
     }
@@ -58,10 +57,15 @@ public class ControllerExceptionHandler {
 
         }
 
-        var body = new HashMap<String, Object>();
-        body.put("errors", errors);
+        HashMap<String, Object> body = createResponseBody(errors);
 
         return ResponseEntity.badRequest().body(body);
+    }
+
+    private HashMap<String, Object> createResponseBody(Object errors) {
+        var body = new HashMap<String, Object>();
+        body.put("errors", errors);
+        return body;
     }
 
 }
