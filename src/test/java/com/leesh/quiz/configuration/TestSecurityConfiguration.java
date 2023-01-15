@@ -1,7 +1,6 @@
-package com.leesh.quiz.config;
+package com.leesh.quiz.configuration;
 
 import com.leesh.quiz.domain.user.UserRepository;
-import com.leesh.quiz.security.SecurityConfiguration;
 import org.springframework.boot.autoconfigure.h2.H2ConsoleProperties;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;

@@ -89,4 +89,6 @@ public class User {
     public static User of(String nickname, String email, String password) {
         return new User(nickname, email, password);
     }
+
+    /* Business Logic */
 }

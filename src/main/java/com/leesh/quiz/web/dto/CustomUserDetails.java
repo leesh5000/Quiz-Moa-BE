@@ -1,4 +1,4 @@
-package com.leesh.quiz.security;
+package com.leesh.quiz.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.leesh.quiz.domain.user.Role;

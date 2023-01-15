@@ -1,6 +1,5 @@
-package com.leesh.quiz.security;
+package com.leesh.quiz.service;
 
-import com.leesh.quiz.security.jwt.JwtTokenService;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**

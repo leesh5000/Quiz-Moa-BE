@@ -1,4 +1,4 @@
-package com.leesh.quiz.config;
+package com.leesh.quiz.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.server.Encoding;

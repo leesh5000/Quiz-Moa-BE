@@ -1,8 +1,7 @@
-package com.leesh.quiz.domain.user.service;
+package com.leesh.quiz.service;
 
-import com.leesh.quiz.dto.AuthenticateDto;
-import com.leesh.quiz.dto.RegisterDto;
-import com.leesh.quiz.security.TokenAuthenticationService;
+import com.leesh.quiz.web.dto.AuthenticateDto;
+import com.leesh.quiz.web.dto.RegisterDto;
 
 /**
  * 사용자 인증 및 권한에 관한 비즈니스 로직을 담당하는 서비스

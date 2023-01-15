@@ -1,10 +1,12 @@
-package com.leesh.quiz.security;
+package com.leesh.quiz.service;
 
 import com.leesh.quiz.domain.user.User;
 import com.leesh.quiz.domain.user.UserRepository;
-import com.leesh.quiz.domain.user.service.AuthenticationService;
-import com.leesh.quiz.dto.AuthenticateDto;
-import com.leesh.quiz.dto.RegisterDto;
+import com.leesh.quiz.service.AuthenticationService;
+import com.leesh.quiz.service.TokenService;
+import com.leesh.quiz.web.dto.AuthenticateDto;
+import com.leesh.quiz.web.dto.CustomUserDetails;
+import com.leesh.quiz.web.dto.RegisterDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
