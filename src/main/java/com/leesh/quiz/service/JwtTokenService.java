@@ -1,7 +1,7 @@
 package com.leesh.quiz.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.leesh.quiz.service.TokenService;
 import com.leesh.quiz.web.dto.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -40,8 +40,8 @@ public class JwtTokenService implements TokenService<String> {
     @Override
     public String generateToken(UserDetails userDetails) {
 
-        var map = objectMapper.convertValue(userDetails, Map.class);
-        var extraClaims = new HashMap<String, Object>(map);
+        var map = objectMapper.convertValue(userDetails, new TypeReference<HashMap<String,Object>>() {});
+        var extraClaims = new HashMap<>(map);
 
         return generateToken(extraClaims, userDetails);
     }
