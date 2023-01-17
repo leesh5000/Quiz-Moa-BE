@@ -8,6 +8,7 @@ import com.leesh.quiz.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
@@ -16,6 +17,8 @@ public class InitDatabase implements ApplicationRunner {
 
     private final UserRepository userRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
@@ -23,7 +26,7 @@ public class InitDatabase implements ApplicationRunner {
 
             String username = "test" + i;
             String email = "test" + i + "@gmail.com";
-            String password = "1234ab!@#$";
+            String password = passwordEncoder.encode("1234ab!@#$");
 
             User user = User.of(username, email, password);
 
