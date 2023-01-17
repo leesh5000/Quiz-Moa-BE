@@ -7,6 +7,7 @@ import com.leesh.quiz.web.TokenAuthenticationFilter;
 import com.leesh.quiz.web.dto.CustomUserDetails;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -45,30 +46,37 @@ public class SecurityConfiguration {
 
         http
                 .cors()
-                .and()
+                    .and()
                 .csrf()
-                .disable()
+                    .disable()
                 .exceptionHandling()
-                .authenticationEntryPoint(authenticationEntryPoint())
-                .accessDeniedHandler(accessDeniedHandler())
-                .and()
+                    .authenticationEntryPoint(authenticationEntryPoint())
+                    .accessDeniedHandler(accessDeniedHandler())
+                    .and()
                 .headers()
-                .frameOptions()
-                .disable()
-                .and()
+                    .frameOptions()
+                    .disable()
+                    .and()
                 .authorizeHttpRequests()
-                .requestMatchers(toH2Console())
-                .permitAll()
-                .requestMatchers("/api/v1/auth/**")
-                .permitAll()
+                    .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                    .permitAll()
+                    .requestMatchers(toH2Console())
+                    .permitAll()
+                    .requestMatchers("/docs/**")
+                    .permitAll()
+                    .requestMatchers("/api/v1/auth/**")
+                    .permitAll()
                 .anyRequest()
-                .authenticated()
-                .and()
+                    .authenticated()
+                    .and()
                 .sessionManagement()
-                .sessionCreationPolicy(STATELESS)
-                .and()
-                .authenticationProvider(authenticationProvider(userRepository))
-                .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                    .sessionCreationPolicy(STATELESS)
+                    .and()
+                .authenticationProvider(
+                        authenticationProvider(userRepository))
+                .addFilterBefore(
+                        tokenAuthenticationFilter,
+                        UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
