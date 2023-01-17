@@ -1,19 +1,29 @@
 # quiz-app-be
 퀴즈 애플리케이션 백엔드 프로젝트
 
+## 사용 기술
+
+- Java 17
+- Gradle 7.5.1
+- [Spring Boot 3.0.1](https://spring.io/projects/spring-boot)
+- [Spring Data JPA](https://spring.io/projects/spring-data-jpa)
+- [Spring Security](https://spring.io/projects/spring-security)
+- [Spring Rest Docs](https://spring.io/projects/spring-restdocs)
+- [jjwt](https://github.com/jwtk/jjwt)
+- [Asciidoctor](https://docs.asciidoctor.org/)
+- [H2 Database](https://www.h2database.com/html/main.html)
+
 ## 유즈케이스
+
+[공유 링크](https://viewer.diagrams.net/?tags=%7B%7D&highlight=0000ff&edit=_blank&layers=1&nav=1&title=usecase.svg#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fleesh5000%2Fquiz-app-be%2Fdocument%2F%252329-readme%2Fdocument%2Fusecase.svg)
 
 ![usecase](document/usecase.svg)
 
-유즈케이스는 다음 [파일](document/usecase.svg)에서 확인하실 수 있습니다. 또는 해당 [링크](https://drive.google.com/file/d/1ksMsPCbwD0EGQt4OMXZbUSdhsNuDSa-1/view?usp=sharing)를 통해 웹에서도 확인이 가능합니다.
-
 ## DB 테이블 설계
 
-### ERD
+[공유 링크](https://viewer.diagrams.net/?tags=%7B%7D&highlight=0000ff&edit=_blank&layers=1&nav=1&title=erd.svg#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fleesh5000%2Fquiz-app-be%2Fdocument%2F%252329-readme%2Fdocument%2Ferd.svg)
 
 ![erd](document/erd.svg)
-
-ERD는 다음 [파일](document/erd.svg)에서 확인하실 수 있습니다. 또는 해당 [링크](https://drive.google.com/file/d/1Cll71F_EpyBHmAchRZxpzvd93X9VlEkm/view?usp=sharing)를 통해 웹에서도 확인이 가능합니다.
 
 ### 테이블 스키마
 
@@ -126,4 +136,4 @@ create index likes_user_id_idx on likes (user_id);
 
 ## API 명세서
 
-API 명세서는 다음 [파일](document/api-spec.xlsx)에서 확인하실 수 있습니다. 또는 해당 [링크](https://docs.google.com/spreadsheets/d/1I_l4VhwKM8RCEsLkSF-ePsi_1EWj8a9Emm32bf8BvMM/edit?usp=sharing)를 통해 웹에서도 확인이 가능합니다.
+API 명세서는 다음 [파일](document/api-spec.xlsx)에서 확인하실 수 있습니다. 또는 해당 [공유 링크](https://docs.google.com/spreadsheets/d/1I_l4VhwKM8RCEsLkSF-ePsi_1EWj8a9Emm32bf8BvMM/edit?usp=sharing)를 통해 웹에서도 확인이 가능합니다.
