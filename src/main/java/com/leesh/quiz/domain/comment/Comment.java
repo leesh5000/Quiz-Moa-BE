@@ -71,4 +71,14 @@ public class Comment {
         return Objects.hashCode(id);
     }
 
+    private Comment(String contents, User user, Quiz quiz) {
+        this.contents = contents;
+        this.user = user;
+        this.quiz = quiz;
+    }
+
+    public static Comment of(String contents, User user, Quiz quiz) {
+        return new Comment(contents, user, quiz);
+    }
+
 }

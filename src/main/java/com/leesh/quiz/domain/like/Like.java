@@ -64,4 +64,14 @@ public class Like {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
+    private Like(User user, Quiz quiz, Comment comment) {
+        this.user = user;
+        this.quiz = quiz;
+        this.comment = comment;
+    }
+
+    public static Like of(User user, Quiz quiz, Comment comment) {
+        return new Like(user, quiz, comment);
+    }
 }
