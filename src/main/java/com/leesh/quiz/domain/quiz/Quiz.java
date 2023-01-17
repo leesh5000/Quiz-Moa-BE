@@ -1,6 +1,6 @@
 package com.leesh.quiz.domain.quiz;
 
-import com.leesh.quiz.domain.commnet.Comment;
+import com.leesh.quiz.domain.comment.Comment;
 import com.leesh.quiz.domain.like.Like;
 import com.leesh.quiz.domain.user.User;
 import jakarta.persistence.*;
@@ -80,8 +80,8 @@ public class Quiz {
         this.user = user;
     }
 
-    public static Quiz of(String title, String content, User user) {
-        return new Quiz(title, content, user);
+    public static Quiz of(String title, String contents, User user) {
+        return new Quiz(title, contents, user);
     }
 
 }

@@ -1,6 +1,6 @@
 package com.leesh.quiz.domain.like;
 
-import com.leesh.quiz.domain.commnet.Comment;
+import com.leesh.quiz.domain.comment.Comment;
 import com.leesh.quiz.domain.quiz.Quiz;
 import com.leesh.quiz.domain.user.User;
 import jakarta.persistence.*;

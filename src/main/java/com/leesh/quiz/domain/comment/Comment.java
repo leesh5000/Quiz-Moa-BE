@@ -1,4 +1,4 @@
-package com.leesh.quiz.domain.commnet;
+package com.leesh.quiz.domain.comment;
 
 import com.leesh.quiz.domain.like.Like;
 import com.leesh.quiz.domain.quiz.Quiz;
