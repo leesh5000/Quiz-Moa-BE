@@ -15,13 +15,13 @@
 
 ## 유즈케이스
 
-[공유 링크](https://viewer.diagrams.net/?tags=%7B%7D&highlight=0000ff&edit=_blank&layers=1&nav=1&title=usecase.svg#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fleesh5000%2Fquiz-app-be%2Fdocument%2F%252329-readme%2Fdocument%2Fusecase.svg)
+- 이슈 링크 : [#4](https://github.com/leesh5000/quiz-app-be/issues/4)
 
 ![usecase](document/usecase.svg)
 
 ## DB 테이블 설계
 
-[공유 링크](https://viewer.diagrams.net/?tags=%7B%7D&highlight=0000ff&edit=_blank&layers=1&nav=1&title=erd.svg#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fleesh5000%2Fquiz-app-be%2Fdocument%2F%252329-readme%2Fdocument%2Ferd.svg)
+- 이슈 링크 : [#6](https://github.com/leesh5000/quiz-app-be/issues/6)
 
 ![erd](document/erd.svg)
 
@@ -130,5 +130,7 @@ create index likes_user_id_idx on likes (user_id);
 - 얼마 이상의 투표를 받은 퀴즈인지도 확인해야 할 수 있기 때문에 검색을 위해 인덱스를 설정하였습니다.
 
 ## API 명세서
+
+- 이슈 링크 : [#8](https://github.com/leesh5000/quiz-app-be/issues/8)
 
 API 명세서는 다음 [파일](document/api-spec.xlsx)에서 확인하실 수 있습니다. 또는 해당 [공유 링크](https://docs.google.com/spreadsheets/d/1I_l4VhwKM8RCEsLkSF-ePsi_1EWj8a9Emm32bf8BvMM/edit?usp=sharing)를 통해 웹에서도 확인이 가능합니다.
