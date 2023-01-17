@@ -15,7 +15,7 @@ configurations {
 	}
 }
 
-val asciidoctorExt by configurations.creating
+val asciidoctorExt: Configuration by configurations.creating
 
 repositories {
 	mavenCentral()
@@ -63,4 +63,24 @@ dependencies {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+val snippetsDir by extra {
+	file("build/generated-snippets")
+}
+
+tasks {
+	asciidoctor {
+		dependsOn(test)
+		configurations("asciidoctorExt")
+		baseDirFollowsSourceFile()
+		inputs.dir(snippetsDir)
+	}
+	register<Copy>("copyDocument") {
+		dependsOn(asciidoctor)
+		from(file("build/docs/asciidoc/api-docs.html"))
+		into(file("src/main/resources/static/docs"))
+	}
+	bootJar {
+		dependsOn("copyDocument")
+	}
 }

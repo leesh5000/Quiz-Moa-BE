@@ -1,0 +1,16 @@
+:doctype: book
+:source-highlighter: highlight.js
+:toc: left
+:toclevels: 1
+:sectlinks:
+
+= Quiz-App API
+
+== 유저 API
+
+=== 퀴즈 생성
+
+include::{snippets}/createQuiz/path-parameters.adoc[]
+include::{snippets}/createQuiz/http-request.adoc[]
+include::{snippets}/createQuiz/http-response.adoc[]
+include::{snippets}/createQuiz/response-fields.adoc[]
