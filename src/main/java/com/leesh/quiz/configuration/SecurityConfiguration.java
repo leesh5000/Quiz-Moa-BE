@@ -16,7 +16,6 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -43,15 +42,6 @@ public class SecurityConfiguration {
     private final UserRepository userRepository;
 
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-
-        return web -> web.ignoring().requestMatchers(
-                PathRequest.toStaticResources().atCommonLocations(),
-                toH2Console()
-        );
-    }
-
-    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
@@ -68,6 +58,10 @@ public class SecurityConfiguration {
                     .disable()
                     .and()
                 .authorizeHttpRequests()
+                    .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                    .permitAll()
+                    .requestMatchers(toH2Console())
+                    .permitAll()
                     .requestMatchers("/docs/**")
                     .permitAll()
                     .requestMatchers("/api/v1/auth/**")
