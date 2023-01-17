@@ -8,9 +8,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -38,11 +38,11 @@ public class Quiz {
 
     @OrderBy("id")
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final Set<Comment> comments = ConcurrentHashMap.newKeySet();
+    private final Set<Comment> comments = new LinkedHashSet<>();
 
     @OrderBy("id")
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final Set<Like> likes = ConcurrentHashMap.newKeySet();
+    private final Set<Like> likes = new LinkedHashSet<>();
 
     @Column(nullable = false, updatable = false)
     private Long createdAt;
