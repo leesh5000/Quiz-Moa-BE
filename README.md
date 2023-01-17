@@ -28,11 +28,6 @@
 ### 테이블 스키마
 
 ```mysql
-use mysql;
-select host, user from user;
-
-select @@global.time_zone, @@session.time_zone,@@system_time_zone;
-
 create database if not exists quizapp default character set utf8mb4 collate utf8mb4_general_ci;
 
 use quizapp;
