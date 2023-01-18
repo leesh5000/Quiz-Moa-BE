@@ -1,6 +1,5 @@
-package com.leesh.quiz.domain.comment;
+package com.leesh.quiz.domain.quizvote;
 
-import com.leesh.quiz.domain.like.Like;
 import com.leesh.quiz.domain.quiz.Quiz;
 import com.leesh.quiz.domain.user.User;
 import jakarta.persistence.*;
@@ -8,38 +7,28 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.LinkedHashSet;
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "Comment", indexes = {
+@Table(name = "Quiz_Vote", indexes = {
         @Index(columnList = "user_id"),
         @Index(columnList = "createdAt")
 })
 @Entity
-public class Comment {
+public class QuizVote {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
-    @Column(nullable = false)
-    private String contents;
-
     @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private User user;
 
-    @JoinColumn(name = "quiz_id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "quiz_id", nullable = true)
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
     private Quiz quiz;
-
-    @OrderBy("id")
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final Set<Like> likes = new LinkedHashSet<>();
 
     @Column(nullable = false, updatable = false)
     private Long createdAt;
@@ -61,9 +50,9 @@ public class Comment {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Comment comment)) return false;
+        if (!(o instanceof QuizVote like)) return false;
 
-        return id != null && id.equals(comment.id);
+        return id != null && id.equals(like.id);
     }
 
     @Override
@@ -71,14 +60,12 @@ public class Comment {
         return Objects.hashCode(id);
     }
 
-    private Comment(String contents, User user, Quiz quiz) {
-        this.contents = contents;
+    private QuizVote(User user, Quiz quiz) {
         this.user = user;
         this.quiz = quiz;
     }
 
-    public static Comment of(String contents, User user, Quiz quiz) {
-        return new Comment(contents, user, quiz);
+    public static QuizVote of(User user, Quiz quiz) {
+        return new QuizVote(user, quiz);
     }
-
 }

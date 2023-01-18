@@ -1,48 +1,34 @@
-package com.leesh.quiz.domain.quiz;
+package com.leesh.quiz.domain.answervote;
 
 import com.leesh.quiz.domain.answer.Answer;
-import com.leesh.quiz.domain.quizvote.QuizVote;
 import com.leesh.quiz.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.LinkedHashSet;
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "Quiz", indexes = {
+@Table(name = "Answer_Vote", indexes = {
         @Index(columnList = "user_id"),
-        @Index(columnList = "title"),
         @Index(columnList = "createdAt")
 })
 @Entity
-public class Quiz {
+public class AnswerVote {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(length = 255, nullable = false)
-    private String title;
-
-    @Lob
-    @Column(nullable = false)
-    private String contents;
 
     @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private User user;
 
-    @OrderBy("id")
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final Set<Answer> answers = new LinkedHashSet<>();
-
-    @OrderBy("id")
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final Set<QuizVote> votes = new LinkedHashSet<>();
+    @JoinColumn(name = "quiz_id", nullable = true)
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    private Answer answer;
 
     @Column(nullable = false, updatable = false)
     private Long createdAt;
@@ -64,9 +50,9 @@ public class Quiz {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Quiz quiz)) return false;
+        if (!(o instanceof AnswerVote like)) return false;
 
-        return id != null && id.equals(quiz.id);
+        return id != null && id.equals(like.id);
     }
 
     @Override
@@ -74,14 +60,12 @@ public class Quiz {
         return Objects.hashCode(id);
     }
 
-    private Quiz(String title, String contents, User user) {
-        this.title = title;
-        this.contents = contents;
+    private AnswerVote(User user, Answer answer) {
         this.user = user;
+        this.answer = answer;
     }
 
-    public static Quiz of(String title, String contents, User user) {
-        return new Quiz(title, contents, user);
+    public static AnswerVote of(User user, Answer answer) {
+        return new AnswerVote(user, answer);
     }
-
 }

@@ -33,28 +33,30 @@ create database if not exists quizapp default character set utf8mb4 collate utf8
 use quizapp;
 
 set foreign_key_checks = 0;
-drop table if exists users cascade;
-drop table if exists quiz cascade;
-drop table if exists comment cascade;
-drop table if exists vote cascade;
+drop table if exists Users cascade;
+drop table if exists Quiz cascade;
+drop table if exists Quiz_Vote cascade;
+drop table if exists Answer cascade;
+drop table if exists Answer_Vote cascade;
 set foreign_key_checks = 1;
 
-create table users
+create table Users
 (
     id          bigint auto_increment,
     nickname    varchar(30)  not null unique,
     email       varchar(255) not null unique,
     password    varchar(255) not null,
+    role        varchar(30)  not null,
     created_at  bigint       not null,
     modified_at bigint       not null,
     primary key (id)
 ) default character set utf8mb4 collate utf8mb4_general_ci;
 
-create index users_nickname_idx on users (nickname);
-create index users_email_idx on users (email);
-create index users_created_at_idx on users (created_at);
+create index users_username_idx on Users (nickname);
+create index users_email_idx on Users (email);
+create index users_created_at_idx on Users (created_at);
 
-create table quiz
+create table Quiz
 (
     id          bigint auto_increment,
     user_id     bigint         not null,
@@ -63,14 +65,14 @@ create table quiz
     created_at  bigint         not null,
     modified_at bigint         not null,
     primary key (id),
-    foreign key (user_id) references users (id)
+    foreign key (user_id) references Users (id)
 ) default character set utf8mb4 collate utf8mb4_general_ci;
 
-create index quiz_title_idx on quiz (title);
-create index quiz_created_at_idx on quiz (created_at);
-create index quiz_user_id_idx on quiz (user_id);
+create index quiz_title_idx on Quiz (title);
+create index quiz_created_at_idx on Quiz (created_at);
+create index quiz_user_id_idx on Quiz (user_id);
 
-create table comment
+create table Answer
 (
     id          bigint auto_increment,
     user_id     bigint         not null,
@@ -79,29 +81,46 @@ create table comment
     created_at  bigint         not null,
     modified_at bigint         not null,
     primary key (id),
-    foreign key (user_id) references users (id),
-    foreign key (quiz_id) references quiz (id)
+    foreign key (user_id) references Users (id),
+    foreign key (quiz_id) references Quiz (id)
 )  default character set utf8mb4 collate utf8mb4_general_ci;
 
-create index comment_created_at_idx on comment (created_at);
-create index comment_user_id_idx on comment (user_id);
+create index answer_created_at_idx on Answer (created_at);
+create index answer_user_id_idx on Answer (user_id);
+create index answer_quiz_id_idx on Answer (quiz_id);
 
-create table likes
+create table Answer_Vote
 (
     id          bigint auto_increment,
     user_id     bigint not null,
-    quiz_id     bigint null,
-    comment_id  bigint null,
+    answer_id   bigint null,
+    value       boolean not null,
     created_at  bigint not null,
     modified_at bigint not null,
     primary key (id),
-    foreign key (user_id) references users (id),
-    foreign key (quiz_id) references quiz (id),
-    foreign key (comment_id) references comment (id)
+    foreign key (user_id) references Users (id),
+    foreign key (answer_id) references Answer (id)
 )   default character set utf8mb4 collate utf8mb4_general_ci;
 
-create index likes_created_at_idx on likes (created_at);
-create index likes_user_id_idx on likes (user_id);
+create index answer_vote_user_id_idx on Answer_Vote (user_id);
+create index answer_vote_answer_id_idx on Answer_Vote (answer_id);
+
+create table Quiz_Vote
+(
+    id          bigint auto_increment,
+    user_id     bigint not null,
+    quiz_id   bigint null,
+    value       boolean not null,
+    created_at  bigint not null,
+    modified_at bigint not null,
+    primary key (id),
+    foreign key (user_id) references Users (id),
+    foreign key (quiz_id) references Quiz (id)
+)   default character set utf8mb4 collate utf8mb4_general_ci;
+
+create index answer_vote_user_id_idx on Quiz_Vote (user_id);
+create index answer_vote_quiz_id_idx on Quiz_Vote (quiz_id);
+
 ```
 
 #### 공통 요소
