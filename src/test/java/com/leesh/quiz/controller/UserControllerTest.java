@@ -98,4 +98,47 @@ class UserControllerTest {
 
     }
 
+    @DisplayName("[getMyQuizzes 성공 테스트] getMyQuizzes 메소드가 요청되면, 반환 값에는 200 상태코드와 유저가 작성한 모든 Quiz 목록이 존재해야 한다.")
+    @Test
+    public void getMyQuizzes_success_test() throws Exception {
+
+        // given 1 : CreateQuizRequest 객체 생성
+        var request = CreateQuizDto.Request.of("title", "content");
+
+        // given 2 : userService.createQuiz() 메소드는 CreateQuizResponse 객체를 반환한다.
+        var username = "test";
+        var createQuizId = 1L;
+        given(userService.createQuiz(request, username))
+                .willReturn(CreateQuizDto.Response.of(createQuizId));
+
+        // when & then 1 : createQuiz 메소드가 요청되면, 반환 값에는 200 상태코드와 quiz Id가 존재해야 한다.
+        mvc.perform(
+                        post("/api/v1/user/{username}/quiz", username)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header(HttpHeaders.AUTHORIZATION, "Bearer {AccessToken}")
+                                .content(
+                                        objectMapper.writeValueAsString(request)
+                                ))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.createQuizId").value(createQuizId))
+                .andDo(print())
+
+                // API 문서화
+                .andDo(document("createQuiz",
+                        pathParameters(
+                                parameterWithName("username").description("유저 닉네임")),
+                        requestFields(
+                                fieldWithPath("title").type(JsonFieldType.STRING).description("퀴즈 제목"),
+                                fieldWithPath("content").type(JsonFieldType.STRING).description("퀴즈 내용")),
+                        responseFields(
+                                fieldWithPath("createQuizId").type(JsonFieldType.NUMBER).description("생성된 퀴즈 Id")
+                        )));
+        ;
+
+        // then 2 : userService.createQuiz() 메소드가 호출되어야 한다.
+        then(userService).should().createQuiz(request, username);
+
+    }
+
 }

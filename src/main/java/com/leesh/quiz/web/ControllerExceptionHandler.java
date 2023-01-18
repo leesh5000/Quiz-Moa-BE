@@ -1,5 +1,6 @@
 package com.leesh.quiz.web;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,6 +10,7 @@ import java.util.*;
 
 import static com.leesh.quiz.constant.Constants.ERRORS;
 
+@Slf4j
 @RestControllerAdvice
 public class ControllerExceptionHandler {
 
@@ -23,6 +25,8 @@ public class ControllerExceptionHandler {
      */
     @ExceptionHandler({IllegalArgumentException.class, NoSuchElementException.class, RuntimeException.class, IllegalStateException.class})
     protected ResponseEntity<Map<String, Object>> businessExceptionHandler(RuntimeException ex) {
+
+        log.error("{}", ex.getMessage(), ex);
 
          var body = createResponseBody(ex.getMessage());
 

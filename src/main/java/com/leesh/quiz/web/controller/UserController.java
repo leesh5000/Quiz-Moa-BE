@@ -1,10 +1,13 @@
 package com.leesh.quiz.web.controller;
 
+import com.leesh.quiz.service.MyQuizService;
 import com.leesh.quiz.service.UserService;
 import com.leesh.quiz.web.dto.CreateQuizDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +23,8 @@ public class UserController {
     private final UserService userService;
     private final MessageSourceAccessor messageSource;
 
+    private final MyQuizService myQuizService;
+
     @PostMapping(value = "/{username}/quiz", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<CreateQuizDto.Response> createQuiz(
             @AuthenticationPrincipal UserDetails userDetails,
@@ -32,12 +37,21 @@ public class UserController {
         return ResponseEntity.ok(body);
     }
 
-    private void validateUsername(UserDetails userDetails, String username) {
-        if (!userDetails.getUsername().equals(username)) {
+    private void validateUsername(UserDetails userDetails, String userNickname) {
+        if (!userDetails.getUsername().equals(userNickname)) {
             throw new IllegalArgumentException(
                     messageSource.getMessage("username.not.match.login.user")
             );
         }
+    }
+
+    @GetMapping(value = "/{user-nickname}/quizzes", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> findMyQuizzes(@PathVariable("user-nickname") String userNickname,
+                                           @PageableDefault(size = 10) Pageable pageable) {
+
+        myQuizService.findMyQuizzes(userNickname, pageable);
+
+        return null;
     }
 
 }
