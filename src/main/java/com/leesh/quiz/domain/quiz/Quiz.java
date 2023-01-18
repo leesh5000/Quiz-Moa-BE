@@ -1,7 +1,7 @@
 package com.leesh.quiz.domain.quiz;
 
 import com.leesh.quiz.domain.answer.Answer;
-import com.leesh.quiz.domain.like.Like;
+import com.leesh.quiz.domain.quizvote.QuizVote;
 import com.leesh.quiz.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -42,7 +42,7 @@ public class Quiz {
 
     @OrderBy("id")
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final Set<Like> likes = new LinkedHashSet<>();
+    private final Set<QuizVote> votes = new LinkedHashSet<>();
 
     @Column(nullable = false, updatable = false)
     private Long createdAt;

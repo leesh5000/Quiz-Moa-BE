@@ -1,7 +1,6 @@
 package com.leesh.quiz.web.dto;
 
-import com.leesh.quiz.domain.answer.Answer;
-import com.leesh.quiz.domain.like.Like;
+import com.leesh.quiz.domain.quizvote.QuizVote;
 import com.leesh.quiz.domain.quiz.Quiz;
 
 import java.util.Set;
@@ -9,7 +8,7 @@ import java.util.Set;
 public interface FindMyQuizDto {
 
     record Response(Long id, String title, String contents, String author, Long createdAt, Long modifiedAt,
-                    Set<Answer> comments, Set<Like> likes) {
+                    Set<com.leesh.quiz.domain.answer.Answer> comments, Set<QuizVote> likes) {
 
         public static Response from(Quiz entity) {
             return new Response(
@@ -20,7 +19,7 @@ public interface FindMyQuizDto {
                     entity.getCreatedAt(),
                     entity.getModifiedAt(),
                     entity.getAnswers(),
-                    entity.getLikes()
+                    entity.getVotes()
             );
         }
 

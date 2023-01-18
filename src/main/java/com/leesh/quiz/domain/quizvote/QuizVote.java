@@ -1,6 +1,5 @@
-package com.leesh.quiz.domain.like;
+package com.leesh.quiz.domain.quizvote;
 
-import com.leesh.quiz.domain.answer.Answer;
 import com.leesh.quiz.domain.quiz.Quiz;
 import com.leesh.quiz.domain.user.User;
 import jakarta.persistence.*;
@@ -17,7 +16,7 @@ import java.util.Objects;
         @Index(columnList = "createdAt")
 })
 @Entity
-public class Like {
+public class QuizVote {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,10 +29,6 @@ public class Like {
     @JoinColumn(name = "quiz_id", nullable = true)
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     private Quiz quiz;
-
-    @JoinColumn(name = "answer_id", nullable = true)
-    @ManyToOne(optional = true, fetch = FetchType.LAZY)
-    private Answer answer;
 
     @Column(nullable = false, updatable = false)
     private Long createdAt;
@@ -55,7 +50,7 @@ public class Like {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Like like)) return false;
+        if (!(o instanceof QuizVote like)) return false;
 
         return id != null && id.equals(like.id);
     }
@@ -65,13 +60,12 @@ public class Like {
         return Objects.hashCode(id);
     }
 
-    private Like(User user, Quiz quiz, Answer answer) {
+    private QuizVote(User user, Quiz quiz) {
         this.user = user;
         this.quiz = quiz;
-        this.answer = answer;
     }
 
-    public static Like of(User user, Quiz quiz, Answer comment) {
-        return new Like(user, quiz, comment);
+    public static QuizVote of(User user, Quiz quiz) {
+        return new QuizVote(user, quiz);
     }
 }
