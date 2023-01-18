@@ -1,4 +1,4 @@
-package com.leesh.quiz.global.configuration;
+package com.leesh.quiz.global.configuration.web;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

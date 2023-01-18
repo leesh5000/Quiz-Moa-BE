@@ -1,4 +1,4 @@
-package com.leesh.quiz.global.configuration;
+package com.leesh.quiz.global.configuration.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leesh.quiz.domain.user.User;
