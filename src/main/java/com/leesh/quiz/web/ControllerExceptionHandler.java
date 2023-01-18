@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.*;
 
-import static com.leesh.quiz.constant.Constants.ERRORS;
+import static com.leesh.quiz.global.constant.Constants.ERRORS;
 
 @Slf4j
 @RestControllerAdvice

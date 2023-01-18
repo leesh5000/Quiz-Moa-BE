@@ -2,6 +2,7 @@ package com.leesh.quiz.configuration;
 
 import com.leesh.quiz.domain.user.Role;
 import com.leesh.quiz.domain.user.UserRepository;
+import com.leesh.quiz.global.configuration.SecurityConfiguration;
 import com.leesh.quiz.service.TokenService;
 import com.leesh.quiz.web.dto.CustomUserDetails;
 import org.springframework.boot.autoconfigure.h2.H2ConsoleProperties;

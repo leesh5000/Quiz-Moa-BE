@@ -1,4 +1,4 @@
-package com.leesh.quiz.constant;
+package com.leesh.quiz.global.constant;
 
 public class Constants {
 
