@@ -11,7 +11,7 @@ import java.util.Objects;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "Likes", indexes = {
+@Table(name = "Answer_Vote", indexes = {
         @Index(columnList = "user_id"),
         @Index(columnList = "createdAt")
 })
