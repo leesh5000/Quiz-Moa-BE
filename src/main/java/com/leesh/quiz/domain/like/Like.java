@@ -1,6 +1,6 @@
 package com.leesh.quiz.domain.like;
 
-import com.leesh.quiz.domain.comment.Comment;
+import com.leesh.quiz.domain.answer.Answer;
 import com.leesh.quiz.domain.quiz.Quiz;
 import com.leesh.quiz.domain.user.User;
 import jakarta.persistence.*;
@@ -31,9 +31,9 @@ public class Like {
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     private Quiz quiz;
 
-    @JoinColumn(name = "comment_id", nullable = true)
+    @JoinColumn(name = "answer_id", nullable = true)
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
-    private Comment comment;
+    private Answer answer;
 
     @Column(nullable = false, updatable = false)
     private Long createdAt;
@@ -65,13 +65,13 @@ public class Like {
         return Objects.hashCode(id);
     }
 
-    private Like(User user, Quiz quiz, Comment comment) {
+    private Like(User user, Quiz quiz, Answer answer) {
         this.user = user;
         this.quiz = quiz;
-        this.comment = comment;
+        this.answer = answer;
     }
 
-    public static Like of(User user, Quiz quiz, Comment comment) {
+    public static Like of(User user, Quiz quiz, Answer comment) {
         return new Like(user, quiz, comment);
     }
 }

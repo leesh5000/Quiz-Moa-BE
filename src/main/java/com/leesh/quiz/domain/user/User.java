@@ -1,6 +1,6 @@
 package com.leesh.quiz.domain.user;
 
-import com.leesh.quiz.domain.comment.Comment;
+import com.leesh.quiz.domain.answer.Answer;
 import com.leesh.quiz.domain.like.Like;
 import com.leesh.quiz.domain.quiz.Quiz;
 import jakarta.persistence.*;
@@ -50,7 +50,7 @@ public class User {
 
     @OrderBy("id")
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final Set<Comment> comments = new LinkedHashSet<>();
+    private final Set<Answer> myAnswers = new LinkedHashSet<>();
 
     @OrderBy("id")
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
