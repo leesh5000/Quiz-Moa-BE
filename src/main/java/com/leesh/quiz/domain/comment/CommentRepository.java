@@ -1,4 +1,4 @@
-package com.leesh.quiz.domain.commnet;
+package com.leesh.quiz.domain.comment;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,4 +1,4 @@
-package com.leesh.quiz.domain.commnet;
+package com.leesh.quiz.domain.comment;
 
 import com.leesh.quiz.domain.like.Like;
 import com.leesh.quiz.domain.quiz.Quiz;
@@ -8,9 +8,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,7 +39,7 @@ public class Comment {
 
     @OrderBy("id")
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final Set<Like> likes = ConcurrentHashMap.newKeySet();
+    private final Set<Like> likes = new LinkedHashSet<>();
 
     @Column(nullable = false, updatable = false)
     private Long createdAt;
@@ -69,6 +69,16 @@ public class Comment {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    private Comment(String contents, User user, Quiz quiz) {
+        this.contents = contents;
+        this.user = user;
+        this.quiz = quiz;
+    }
+
+    public static Comment of(String contents, User user, Quiz quiz) {
+        return new Comment(contents, user, quiz);
     }
 
 }

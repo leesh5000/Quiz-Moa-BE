@@ -1,6 +1,6 @@
 package com.leesh.quiz.domain.like;
 
-import com.leesh.quiz.domain.commnet.Comment;
+import com.leesh.quiz.domain.comment.Comment;
 import com.leesh.quiz.domain.quiz.Quiz;
 import com.leesh.quiz.domain.user.User;
 import jakarta.persistence.*;
@@ -63,5 +63,15 @@ public class Like {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    private Like(User user, Quiz quiz, Comment comment) {
+        this.user = user;
+        this.quiz = quiz;
+        this.comment = comment;
+    }
+
+    public static Like of(User user, Quiz quiz, Comment comment) {
+        return new Like(user, quiz, comment);
     }
 }
