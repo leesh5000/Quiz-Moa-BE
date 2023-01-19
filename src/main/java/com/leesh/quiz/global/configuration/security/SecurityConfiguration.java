@@ -1,4 +1,4 @@
-package com.leesh.quiz.configuration;
+package com.leesh.quiz.global.configuration.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leesh.quiz.domain.user.User;
@@ -27,7 +27,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.util.HashMap;
 
-import static com.leesh.quiz.constant.Constants.ERRORS;
+import static com.leesh.quiz.global.constant.Constants.ERRORS;
 import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
@@ -64,7 +64,7 @@ public class SecurityConfiguration {
                     .permitAll()
                     .requestMatchers("/docs/**")
                     .permitAll()
-                    .requestMatchers("/api/v1/auth/**")
+                    .requestMatchers("/api/v1/auth/**", "/api/health")
                     .permitAll()
                 .anyRequest()
                     .authenticated()

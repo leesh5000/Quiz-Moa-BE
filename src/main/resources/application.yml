@@ -1,34 +1,35 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
 logging.level.org.hibernate:
   SQL: debug
   type.descriptor.sql.BasicBinder: trace
 
----
-
 spring:
-  security:
-    user:
-      password: test
-  config:
-    activate:
-      on-profile:
-        - local
-        - test
-  datasource:
-    url: jdbc:h2:mem:quizapp;mode=mysql
-    driver-class-name: org.h2.Driver
-  jpa:
-    defer-datasource-initialization: true
-    open-in-view: false
-    hibernate:
-      ddl-auto: 'create-drop'
-    properties:
-      hibernate:
-        format_sql: true
-        default_batch_fetch_size: 100
-  sql:
-    init:
-      mode: always
+
   h2:
     console:
       enabled: true
-  test.database.replace: none
+      path: /h2-console
+
+  datasource:
+    url: jdbc:h2:mem:test
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 1000 # OneToMany 관계 조회 시, 쿼리 한 번으로 최적화
+    open-in-view: false # 영속성 컨텍스트의 생존 범위를 트랜잭션 범위로 한정
+
+  servlet:
+    multipart:
+      max-file-size: 10MB # 파일 업로드 요청 시, 하나의 파일 크기를 10MB로 제한
+      max-request-size: 100MB # 파일 업로드 요청 시, 전체 요청 크기를 100MB로 제한
