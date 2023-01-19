@@ -17,11 +17,17 @@ configurations {
 
 val asciidoctorExt: Configuration by configurations.creating
 
+extra["springCloudVersion"] = "2022.0.0"
+
 repositories {
 	mavenCentral()
 }
 
 dependencies {
+
+	// OpenFeign Start
+	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+	// OpenFeign End
 
 	// Spring Rest Docs Start
 	asciidoctorExt("org.springframework.restdocs:spring-restdocs-asciidoctor")
@@ -59,6 +65,12 @@ dependencies {
 	testImplementation("org.springframework.security:spring-security-test")
 	// Srping Security End
 
+}
+
+dependencyManagement {
+	imports {
+		mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+	}
 }
 
 tasks.withType<Test> {
