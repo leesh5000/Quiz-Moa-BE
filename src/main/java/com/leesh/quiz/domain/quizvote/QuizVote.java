@@ -6,14 +6,20 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
+
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "Quiz_Vote", indexes = {
         @Index(columnList = "user_id"),
-        @Index(columnList = "createdAt")
+        @Index(columnList = "created_at")
 })
 @Entity
 public class QuizVote {
@@ -30,22 +36,23 @@ public class QuizVote {
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     private Quiz quiz;
 
-    @Column(nullable = false, updatable = false)
-    private Long createdAt;
+    /* Meta Data Start */
+    @CreatedBy
+    @Column(name = "created_by", nullable = false, updatable = false)
+    private String createdBy;
 
-    @Column(nullable = false)
-    private Long modifiedAt;
+    @LastModifiedBy
+    @Column(name = "modified_by", nullable = false)
+    private String modifiedBy;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = System.currentTimeMillis();
-        modifiedAt = System.currentTimeMillis();
-    }
+    @CreatedDate
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
-    @PreUpdate
-    protected void onUpdate() {
-        modifiedAt = System.currentTimeMillis();
-    }
+    @LastModifiedDate
+    @Column(name = "modified_at", nullable = false)
+    private LocalDateTime modifiedAt;
+    /* Meta Data End */
 
     @Override
     public boolean equals(Object o) {

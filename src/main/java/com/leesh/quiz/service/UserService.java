@@ -32,8 +32,8 @@ public class UserService {
         return CreateQuizDto.Response.of(quiz.getId());
     }
 
-    private User isExistingUser(String username) {
-        return userRepository.findByNickname(username)
+    private User isExistingUser(String email) {
+        return userRepository.findByEmail(email)
                 .orElseThrow(
                         () -> new NoSuchElementException(messageSource.getMessage("user.not.found"))
                 );

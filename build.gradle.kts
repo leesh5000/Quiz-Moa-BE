@@ -25,6 +25,10 @@ repositories {
 
 dependencies {
 
+	// Thymeleaf Start
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+	// Thymeleaf End
+
 	// OpenFeign Start
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 	// OpenFeign End

@@ -2,8 +2,6 @@ package com.leesh.quiz.service;
 
 import com.leesh.quiz.domain.user.User;
 import com.leesh.quiz.domain.user.UserRepository;
-import com.leesh.quiz.service.AuthenticationService;
-import com.leesh.quiz.service.TokenService;
 import com.leesh.quiz.web.dto.AuthenticateDto;
 import com.leesh.quiz.web.dto.CustomUserDetails;
 import com.leesh.quiz.web.dto.RegisterDto;

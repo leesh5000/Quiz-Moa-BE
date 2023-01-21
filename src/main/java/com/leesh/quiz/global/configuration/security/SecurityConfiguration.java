@@ -66,6 +66,8 @@ public class SecurityConfiguration {
                     .permitAll()
                     .requestMatchers("/api/v1/auth/**", "/api/health")
                     .permitAll()
+                    .requestMatchers("/login", "/oauth/kakao/callback")
+                    .permitAll()
                 .anyRequest()
                     .authenticated()
                     .and()
@@ -127,7 +129,7 @@ public class SecurityConfiguration {
             User user = userRepository.findByEmail(email)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + email));
 
-            return new CustomUserDetails(user.getNickname(), user.getPassword(), user.getRole());
+            return new CustomUserDetails(user.getUsername(), user.getPassword(), user.getRole());
         };
     }
 

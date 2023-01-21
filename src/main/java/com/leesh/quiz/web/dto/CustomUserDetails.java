@@ -1,7 +1,7 @@
 package com.leesh.quiz.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.leesh.quiz.domain.user.Role;
+import com.leesh.quiz.domain.user.constant.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

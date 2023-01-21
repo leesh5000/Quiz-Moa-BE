@@ -1,6 +1,6 @@
 package com.leesh.quiz.configuration;
 
-import com.leesh.quiz.domain.user.Role;
+import com.leesh.quiz.domain.user.constant.Role;
 import com.leesh.quiz.domain.user.UserRepository;
 import com.leesh.quiz.global.configuration.security.SecurityConfiguration;
 import com.leesh.quiz.service.TokenService;
