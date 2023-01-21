@@ -42,28 +42,36 @@ set foreign_key_checks = 1;
 
 create table Users
 (
-    id          bigint auto_increment,
-    nickname    varchar(30)  not null unique,
-    email       varchar(255) not null unique,
-    password    varchar(255) not null,
-    role        varchar(30)  not null,
-    created_at  bigint       not null,
-    modified_at bigint       not null,
+    id                       bigint auto_increment,
+    username                 varchar(30)  not null unique,
+    email                    varchar(255) not null unique,
+    password                 varchar(255),
+    role                     varchar(10)  not null,
+    user_type                varchar(10)  not null,
+    profile                  varchar(255),
+    refresh_token            varchar(255),
+    refresh_token_expired_at datetime,
+    created_by               varchar(255) not null,
+    modified_by              varchar(255) not null,
+    created_at               datetime     not null,
+    modified_at              datetime     not null,
     primary key (id)
 ) default character set utf8mb4 collate utf8mb4_general_ci;
 
-create index users_username_idx on Users (nickname);
+create index users_username_idx on Users (username);
 create index users_email_idx on Users (email);
 create index users_created_at_idx on Users (created_at);
 
 create table Quiz
 (
     id          bigint auto_increment,
-    user_id     bigint         not null,
-    title       varchar(255)   not null,
-    contents    text not null,
-    created_at  bigint         not null,
-    modified_at bigint         not null,
+    user_id     bigint       not null,
+    title       varchar(255) not null,
+    contents    text         not null,
+    created_by  varchar(255) not null,
+    modified_by varchar(255) not null,
+    created_at  datetime     not null,
+    modified_at datetime     not null,
     primary key (id),
     foreign key (user_id) references Users (id)
 ) default character set utf8mb4 collate utf8mb4_general_ci;
@@ -75,15 +83,17 @@ create index quiz_user_id_idx on Quiz (user_id);
 create table Answer
 (
     id          bigint auto_increment,
-    user_id     bigint         not null,
-    quiz_id     bigint         not null,
-    contents    text not null,
-    created_at  bigint         not null,
-    modified_at bigint         not null,
+    user_id     bigint       not null,
+    quiz_id     bigint       not null,
+    contents    text         not null,
+    created_by  varchar(255) not null,
+    modified_by varchar(255) not null,
+    created_at  datetime     not null,
+    modified_at datetime     not null,
     primary key (id),
     foreign key (user_id) references Users (id),
     foreign key (quiz_id) references Quiz (id)
-)  default character set utf8mb4 collate utf8mb4_general_ci;
+) default character set utf8mb4 collate utf8mb4_general_ci;
 
 create index answer_created_at_idx on Answer (created_at);
 create index answer_user_id_idx on Answer (user_id);
@@ -92,15 +102,17 @@ create index answer_quiz_id_idx on Answer (quiz_id);
 create table Answer_Vote
 (
     id          bigint auto_increment,
-    user_id     bigint not null,
-    answer_id   bigint null,
-    value       boolean not null,
-    created_at  bigint not null,
-    modified_at bigint not null,
+    user_id     bigint       not null,
+    answer_id   bigint       null,
+    value       boolean      not null,
+    created_by  varchar(255) not null,
+    modified_by varchar(255) not null,
+    created_at  datetime     not null,
+    modified_at datetime     not null,
     primary key (id),
     foreign key (user_id) references Users (id),
     foreign key (answer_id) references Answer (id)
-)   default character set utf8mb4 collate utf8mb4_general_ci;
+) default character set utf8mb4 collate utf8mb4_general_ci;
 
 create index answer_vote_user_id_idx on Answer_Vote (user_id);
 create index answer_vote_answer_id_idx on Answer_Vote (answer_id);
@@ -108,15 +120,17 @@ create index answer_vote_answer_id_idx on Answer_Vote (answer_id);
 create table Quiz_Vote
 (
     id          bigint auto_increment,
-    user_id     bigint not null,
-    quiz_id   bigint null,
-    value       boolean not null,
-    created_at  bigint not null,
-    modified_at bigint not null,
+    user_id     bigint       not null,
+    quiz_id     bigint       null,
+    value       boolean      not null,
+    created_by  varchar(255) not null,
+    modified_by varchar(255) not null,
+    created_at  datetime     not null,
+    modified_at datetime     not null,
     primary key (id),
     foreign key (user_id) references Users (id),
     foreign key (quiz_id) references Quiz (id)
-)   default character set utf8mb4 collate utf8mb4_general_ci;
+) default character set utf8mb4 collate utf8mb4_general_ci;
 
 create index answer_vote_user_id_idx on Quiz_Vote (user_id);
 create index answer_vote_quiz_id_idx on Quiz_Vote (quiz_id);
