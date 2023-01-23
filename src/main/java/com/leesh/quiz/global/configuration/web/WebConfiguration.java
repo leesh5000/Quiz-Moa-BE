@@ -21,8 +21,7 @@ public class WebConfiguration implements WebMvcConfigurer {
                         HttpMethod.PUT.name(),
                         HttpMethod.PATCH.name(),
                         HttpMethod.DELETE.name(),
-                        HttpMethod.OPTIONS.name()
-                )
+                        HttpMethod.OPTIONS.name())
                 .maxAge(3600);
 
     }

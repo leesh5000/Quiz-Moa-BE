@@ -63,12 +63,6 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
 	// JWT END
 
-
-	// Srping Security Start
-	implementation("org.springframework.boot:spring-boot-starter-security")
-	testImplementation("org.springframework.security:spring-security-test")
-	// Srping Security End
-
 }
 
 dependencyManagement {

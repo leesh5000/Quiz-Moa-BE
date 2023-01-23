@@ -4,7 +4,7 @@ import com.leesh.quiz.domain.answer.Answer;
 import com.leesh.quiz.domain.quiz.Quiz;
 import com.leesh.quiz.domain.quizvote.QuizVote;
 import com.leesh.quiz.domain.user.constant.Role;
-import com.leesh.quiz.domain.user.constant.UserType;
+import com.leesh.quiz.domain.user.constant.Oauth2Type;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -46,8 +46,8 @@ public class User {
     private Role role;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "user_type", nullable = false, length = 10)
-    private UserType userType = UserType.KAKAO;
+    @Column(name = "oauth2_type", nullable = false, length = 10)
+    private Oauth2Type oauth2Type;
 
     @Column(name = "profile", length = 255, nullable = true)
     private String profile;
@@ -60,11 +60,11 @@ public class User {
 
     /* Meta Data Start */
     @CreatedBy
-    @Column(name = "created_by", nullable = false, updatable = false)
+    @Column(name = "created_by", nullable = false, updatable = false, length = 255)
     private String createdBy;
 
     @LastModifiedBy
-    @Column(name = "modified_by", nullable = false)
+    @Column(name = "modified_by", nullable = false, length = 255)
     private String modifiedBy;
 
     @CreatedDate
@@ -101,15 +101,4 @@ public class User {
         return Objects.hashCode(id);
     }
 
-    private User(String username, String email, String password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-    }
-
-    public static User of(String username, String email, String password) {
-        return new User(username, email, password);
-    }
-
-    /* Business Logic */
 }
