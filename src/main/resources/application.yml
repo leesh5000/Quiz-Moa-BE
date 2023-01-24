@@ -8,31 +8,16 @@ logging.level.org.hibernate:
   type.descriptor.sql.BasicBinder: trace
   com.leesh: debug
 
-feign:
-  client:
-    config:
-      default:
-        connectTimeout: 5000
-        readTimeout: 5000
-
-token:
-  secret: 9c9uJh1XDJMe72tcz8o94Z1pqQxRrUdKaxFAlScPFuIGZtp57tFR3Q== # 임의의 문자열
-  access-token-expiration-time: 900000  # 15분 1000(ms) x 60(s) x 15(m)
-  refresh-token-expiration-time: 1209600000 # 2주 1000(ms) x 60 (s) x 60(m) x 24(h) x 14(d)
-
 spring:
-
   h2:
     console:
       enabled: true
       path: /h2-console
-
   datasource:
     url: jdbc:h2:mem:test
     username: sa
     password:
     driver-class-name: org.h2.Driver
-
   jpa:
     hibernate:
       ddl-auto: create
@@ -41,8 +26,19 @@ spring:
         format_sql: true
         default_batch_fetch_size: 1000 # OneToMany 관계 조회 시, 쿼리 한 번으로 최적화
     open-in-view: false # 영속성 컨텍스트의 생존 범위를 트랜잭션 범위로 한정
-
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connectTimeout: 5000
+            readTimeout: 5000
   servlet:
     multipart:
       max-file-size: 10MB # 파일 업로드 요청 시, 하나의 파일 크기를 10MB로 제한
       max-request-size: 100MB # 파일 업로드 요청 시, 전체 요청 크기를 100MB로 제한
+
+token:
+  secret: 6cywci5sOHNRVa+byfCXfi2y/fn0SzFzLCrKGKL8i1oQuLJ+cpTmHFMdnQ2lFFiWxDqpAQvksxmN6WIcWXoGvA==== # 임의의 문자열
+  access-token-expiration-time: 900000  # 15분 1000(ms) x 60(s) x 15(m)
+  refresh-token-expiration-time: 1209600000 # 2주 1000(ms) x 60 (s) x 60(m) x 24(h) x 14(d)

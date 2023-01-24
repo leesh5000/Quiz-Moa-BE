@@ -5,8 +5,8 @@ import com.leesh.quiz.domain.user.constant.Oauth2Type;
 import com.leesh.quiz.external.oauth2.Oauth2Attributes;
 import org.springframework.util.StringUtils;
 
-public record KakaoUserInfoResponse(String id,
-                                    @JsonProperty("kakao_account") KakaoAccount kakaoAccount) implements Oauth2Attributes {
+public record KakaoUserInfoDto(String id,
+                               @JsonProperty("kakao_account") KakaoAccount kakaoAccount) implements Oauth2Attributes {
 
         public record KakaoAccount(String email, Profile profile) {
 
@@ -33,8 +33,8 @@ public record KakaoUserInfoResponse(String id,
     }
 
     @Override
-    public String getOauth2Type() {
-        return Oauth2Type.KAKAO.name();
+    public Oauth2Type getOauth2Type() {
+        return Oauth2Type.KAKAO;
     }
 
 }

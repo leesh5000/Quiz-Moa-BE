@@ -43,11 +43,11 @@ set foreign_key_checks = 1;
 create table Users
 (
     id                       bigint auto_increment,
-    username                 varchar(30)  not null unique,
+    username                 varchar(30)  not null,
     email                    varchar(255) not null unique,
     password                 varchar(255),
     role                     varchar(10)  not null,
-    user_type                varchar(10)  not null,
+    oauth2_type              varchar(10)  not null,
     profile                  varchar(255),
     refresh_token            varchar(255),
     refresh_token_expired_at datetime,

@@ -1,6 +1,9 @@
 package com.leesh.quiz.global.error;
 
+import com.leesh.quiz.global.error.exception.ExternalException;
 import com.leesh.quiz.global.error.exception.BusinessException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -22,11 +26,11 @@ public class GlobalExceptionHandler {
 
         log.error("handleBindException", e);
 
-        ErrorResponse errorResponse = ErrorResponse.of(
+        var body = ErrorResponse.of(
                 HttpStatus.BAD_REQUEST.toString(), e.getBindingResult());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(errorResponse);
+                .body(body);
     }
 
     /**
@@ -37,11 +41,11 @@ public class GlobalExceptionHandler {
 
         log.error("handleMethodArgumentTypeMismatchException", e);
 
-        ErrorResponse errorResponse = ErrorResponse.of(
+        var body = ErrorResponse.of(
                 HttpStatus.BAD_REQUEST.toString(), e.getMessage());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(errorResponse);
+                .body(body);
     }
 
     /**
@@ -52,7 +56,7 @@ public class GlobalExceptionHandler {
 
         log.error("handleHttpRequestMethodNotSupportedException", e);
 
-        ErrorResponse errorResponse = ErrorResponse.of(
+        var errorResponse = ErrorResponse.of(
                 HttpStatus.METHOD_NOT_ALLOWED.toString(), e.getMessage());
 
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(errorResponse);
@@ -62,12 +66,12 @@ public class GlobalExceptionHandler {
      * 비즈니스 로직 실행 중 오류 발생
      */
     @ExceptionHandler(value = { BusinessException.class })
-    protected ResponseEntity<ErrorResponse> handleConflict(BusinessException e) {
+    protected ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
 
         log.error("BusinessException", e);
 
-        ErrorResponse errorResponse = ErrorResponse.of(
-                e.getErrorCode().getErrorCode(), e.getMessage());
+        var errorResponse = ErrorResponse.of(
+                e.getErrorCode().getCode(), e.getMessage());
 
         return ResponseEntity.status(e.getErrorCode().getHttpStatus())
                 .body(errorResponse);
@@ -81,10 +85,9 @@ public class GlobalExceptionHandler {
 
         log.error("Exception", e);
 
-        ErrorResponse errorResponse = ErrorResponse.of(
-                HttpStatus.INTERNAL_SERVER_ERROR.toString(), e.getMessage());
+        var body = ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR.toString(), e.getMessage());
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
     }
 
 }

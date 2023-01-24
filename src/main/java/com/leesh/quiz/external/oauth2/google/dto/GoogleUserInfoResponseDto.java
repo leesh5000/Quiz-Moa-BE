@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.leesh.quiz.domain.user.constant.Oauth2Type;
 import com.leesh.quiz.external.oauth2.Oauth2Attributes;
 
-public record GoogleUserInfoResponse(String name,
-                                     String email,
-                                     @JsonProperty("picture") String picture
+public record GoogleUserInfoResponseDto(String name,
+                                        String email,
+                                        @JsonProperty("picture") String picture
                              ) implements Oauth2Attributes {
 
     @Override
@@ -25,7 +25,7 @@ public record GoogleUserInfoResponse(String name,
     }
 
     @Override
-    public String getOauth2Type() {
-        return Oauth2Type.GOOGLE.name();
+    public Oauth2Type getOauth2Type() {
+        return Oauth2Type.GOOGLE;
     }
 }

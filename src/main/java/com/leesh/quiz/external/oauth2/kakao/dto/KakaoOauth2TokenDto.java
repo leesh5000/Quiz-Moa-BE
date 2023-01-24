@@ -4,7 +4,7 @@ import com.leesh.quiz.external.oauth2.Oauth2Token;
 import lombok.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class KakaoOauth2Token {
+public class KakaoOauth2TokenDto {
 
     @Getter
     @Builder

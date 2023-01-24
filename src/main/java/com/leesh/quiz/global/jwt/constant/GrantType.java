@@ -1,4 +1,4 @@
-package com.leesh.quiz.global.constant;
+package com.leesh.quiz.global.jwt.constant;
 
 import lombok.Getter;
 

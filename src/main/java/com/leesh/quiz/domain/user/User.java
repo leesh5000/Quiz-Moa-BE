@@ -3,16 +3,19 @@ package com.leesh.quiz.domain.user;
 import com.leesh.quiz.domain.answer.Answer;
 import com.leesh.quiz.domain.quiz.Quiz;
 import com.leesh.quiz.domain.quizvote.QuizVote;
-import com.leesh.quiz.domain.user.constant.Role;
 import com.leesh.quiz.domain.user.constant.Oauth2Type;
+import com.leesh.quiz.domain.user.constant.Role;
+import com.leesh.quiz.external.oauth2.Oauth2ValidateUtils;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
@@ -26,13 +29,14 @@ import java.util.Set;
         @Index(columnList = "email"),
         @Index(columnList = "created_at")
 })
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username", length = 30, unique = true, nullable = false)
+    @Column(name = "username", length = 30, nullable = false)
     private String username;
 
     @Column(name = "email", length = 255, unique = true, nullable = false)
@@ -101,4 +105,22 @@ public class User {
         return Objects.hashCode(id);
     }
 
+    @Builder
+    private User(String username, String email, Role role, Oauth2Type oauth2Type, String profile) {
+        this.username = username;
+        this.email = email;
+        this.role = role;
+        this.oauth2Type = oauth2Type;
+        this.profile = profile;
+    }
+
+    /* Business Logic */
+    public void updateRefreshToken(String refreshToken, LocalDateTime expiredAt) {
+        this.refreshToken = refreshToken;
+        this.refreshTokenExpiredAt = expiredAt;
+    }
+
+    public void isValidOauth2(Oauth2Type userInput) {
+        Oauth2ValidateUtils.isValidOauth2(this.oauth2Type, userInput);
+    }
 }

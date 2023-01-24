@@ -1,12 +1,13 @@
-package com.leesh.quiz.global.configuration.web;
+package com.leesh.quiz.global.configuration;
 
-import org.springframework.context.annotation.Bean;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Configuration
 public class WebConfiguration implements WebMvcConfigurer {
 

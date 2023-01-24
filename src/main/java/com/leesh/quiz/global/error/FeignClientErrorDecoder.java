@@ -8,9 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
 @Slf4j
-public class FeignClientExceptionErrorDecoder implements ErrorDecoder {
+public class FeignClientErrorDecoder implements ErrorDecoder {
 
-    private ErrorDecoder errorDecoder = new Default();
+    private final ErrorDecoder errorDecoder = new Default();
 
     @Override
     public Exception decode(String methodKey, Response response) {

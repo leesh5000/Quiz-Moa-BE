@@ -13,7 +13,7 @@ public enum Oauth2Type {
 
     public static Oauth2Type from(String type) {
 
-        if (!isOauth2Type(type)) {
+        if (!isOauth2Type(type.toUpperCase())) {
             throw new BusinessException(ErrorCode.NOT_SUPPORT_OAUTH2_TYPE);
         }
 

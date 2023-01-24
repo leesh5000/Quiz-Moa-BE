@@ -1,15 +1,18 @@
 package com.leesh.quiz.global.configuration;
 
-import com.leesh.quiz.global.error.FeignClientExceptionErrorDecoder;
+import com.leesh.quiz.global.error.FeignClientErrorDecoder;
 import feign.Logger;
 import feign.Retryer;
 import feign.codec.ErrorDecoder;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.cloud.openfeign.FeignClientsConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Configuration
 @EnableFeignClients(basePackages = "com.leesh.quiz")
 @Import(FeignClientsConfiguration.class)
@@ -22,7 +25,7 @@ public class FeignConfiguration {
 
     @Bean
     public ErrorDecoder errorDecoder() {
-        return new FeignClientExceptionErrorDecoder();
+        return new FeignClientErrorDecoder();
     }
 
     @Bean

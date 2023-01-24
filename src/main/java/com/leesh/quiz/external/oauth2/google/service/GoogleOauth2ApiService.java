@@ -5,13 +5,11 @@ import com.leesh.quiz.external.oauth2.Oauth2Attributes;
 import com.leesh.quiz.external.oauth2.Oauth2Token;
 import com.leesh.quiz.external.oauth2.google.client.GoogleApiClient;
 import com.leesh.quiz.external.oauth2.google.client.GoogleAuthClient;
-import com.leesh.quiz.external.oauth2.google.dto.GoogleOauth2Token;
-import lombok.RequiredArgsConstructor;
+import com.leesh.quiz.external.oauth2.google.dto.GoogleOauth2TokenDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
 @Component
 public class GoogleOauth2ApiService implements Oauth2ApiService {
 
@@ -19,20 +17,27 @@ public class GoogleOauth2ApiService implements Oauth2ApiService {
 
     private final GoogleApiClient apiClient;
 
-    @Value("${oauth2.google.client-id}")
-    private String clientId;
+    private final String clientId;
 
-    @Value("${oauth2.google.client-secret}")
-    private String clientSecret;
+    private final String clientSecret;
 
-    @Value("${oauth2.google.redirect-uri}")
-    private String redirectUri;
+    private final String redirectUri;
 
+    public GoogleOauth2ApiService(GoogleAuthClient authClient, GoogleApiClient apiClient,
+                                  @Value("${oauth2.google.client-id}") String clientId,
+                                  @Value("${oauth2.google.client-secret}") String clientSecret,
+                                  @Value("${oauth2.google.redirect-uri}") String redirectUri) {
+        this.authClient = authClient;
+        this.apiClient = apiClient;
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
+        this.redirectUri = redirectUri;
+    }
 
     @Override
     public Oauth2Token requestToken(String authorizationCode) {
 
-        var request = GoogleOauth2Token.Request.builder()
+        var request = GoogleOauth2TokenDto.Request.builder()
                 .client_id(clientId)
                 .client_secret(clientSecret)
                 .grant_type("authorization_code")
@@ -47,6 +52,5 @@ public class GoogleOauth2ApiService implements Oauth2ApiService {
     public Oauth2Attributes requestUserInfo(String accessToken) {
 
         return apiClient.getUserInfo(MediaType.APPLICATION_JSON_VALUE, accessToken);
-
     }
 }

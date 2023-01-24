@@ -1,5 +1,7 @@
-package com.leesh.quiz.global.configuration.message;
+package com.leesh.quiz.global.configuration;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.server.Encoding;
 import org.springframework.context.MessageSource;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 import java.util.Locale;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Configuration
 public class MessageConfiguration implements WebMvcConfigurer {
 
