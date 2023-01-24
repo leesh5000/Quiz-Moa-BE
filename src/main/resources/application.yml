@@ -6,20 +6,18 @@ server:
 logging.level.org.hibernate:
   SQL: debug
   type.descriptor.sql.BasicBinder: trace
+  com.leesh: debug
 
 spring:
-
   h2:
     console:
       enabled: true
       path: /h2-console
-
   datasource:
     url: jdbc:h2:mem:test
     username: sa
     password:
     driver-class-name: org.h2.Driver
-
   jpa:
     hibernate:
       ddl-auto: create
@@ -28,8 +26,37 @@ spring:
         format_sql: true
         default_batch_fetch_size: 1000 # OneToMany 관계 조회 시, 쿼리 한 번으로 최적화
     open-in-view: false # 영속성 컨텍스트의 생존 범위를 트랜잭션 범위로 한정
-
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connectTimeout: 5000
+            readTimeout: 5000
   servlet:
     multipart:
       max-file-size: 10MB # 파일 업로드 요청 시, 하나의 파일 크기를 10MB로 제한
       max-request-size: 100MB # 파일 업로드 요청 시, 전체 요청 크기를 100MB로 제한
+
+token:
+  secret: ENC(FGY+8GljJ76sBPQHkLWQl+2Lr+jImf1FZ9gFtIzFyFuEwvBCpRl4E3UIdc1Sh9EzU1Dj71FCUTLJUMD/LJwoBkYXcpMtWBhSqzYdJ4aQCMlI02MCJQ6RL//louPwY4pILV3mU0v+CNAlcrK1bQlsFPoMpJgoJgaod9Sa+gv4oUufgVUhqSUtC9WffGrMWzW7)
+  access-token-expiration-time: 900000  # 15분 1000(ms) x 60(s) x 15(m)
+  refresh-token-expiration-time: 1209600000 # 2주 1000(ms) x 60 (s) x 60(m) x 24(h) x 14(d)
+
+oauth2:
+  kakao:
+    client-id: ENC(Yuoj+yO7TCdOLDCQEyfnwPuAKwWjXWDm4Dz+6qx3djuQbQvNq8g/f1y/qgDKPjY2)
+    client-secret: ENC(C0VldimnoF0KRL9DwYQljMGe7rBzrNLad+Vf0r2AdMGVPqgcZ99Mz2bDJphbQXn3)
+    redirect-uri: ENC(H1aJJ/hDNXwtQ5yV/sf1Au9el8dDFxrejVx/LUPmqStWc17cl6LGXSkGwXsfFj8YfEQnOB5SVHA=)
+  google:
+    client-id: ENC(049Ld6JPYVLr9W8ESpPznYvB9pI5BvrEQi1R3RulNP1p04PbJ0mYqCQkSxaeWl/BmvS0N9NRszY9ZDHznqH98ut63PbLZnONB842MeYMp56SEG/8mMG7Eg==)
+    client-secret: ENC(wtG2Nj4sOyWM1I+EQeCCtfgWa+A1L2kqn2McMyByDyXioYSP+fC79SKhZwVutKh+)
+    redirect-uri: ENC(PoEkcySCsc9tP0kHyWFPo041e0NifwO+GMvjiTT6pMvR1TMOocoBfsOZw/cGFgBfluKi0UfXTSk=)
+  naver:
+    client-id: ENC(3JfCPN5tvZ5RBDLZQB7SFWT2pdbB1Xm9OvsxpjVsUgE=)
+    client-secret: ENC(TmIc+eJQp3ioSmpuDwP/BdPbDOO2Labp)
+    redirect-uri: ENC(8LUDNdI3dT9u58xVaDuGKo9fVt/Vkcm83IQsyTKB8gCIGEPu5WJyq/dEzlhBs2qWi8AazHtxIms=)
+
+jasypt:
+  encryptor:
+    password: ${PASSWORD}

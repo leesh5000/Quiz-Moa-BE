@@ -17,11 +17,21 @@ configurations {
 
 val asciidoctorExt: Configuration by configurations.creating
 
+extra["springCloudVersion"] = "2022.0.0"
+
 repositories {
 	mavenCentral()
 }
 
 dependencies {
+
+	// Thymeleaf Start
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+	// Thymeleaf End
+
+	// OpenFeign Start
+	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+	// OpenFeign End
 
 	// Spring Rest Docs Start
 	asciidoctorExt("org.springframework.restdocs:spring-restdocs-asciidoctor")
@@ -53,12 +63,21 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
 	// JWT END
 
-
-	// Srping Security Start
+	// Spring Security Start
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	testImplementation("org.springframework.security:spring-security-test")
-	// Srping Security End
+	// Spring Security End
 
+	// Jasypt Start
+	implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5")
+	// Jasypt End
+
+}
+
+dependencyManagement {
+	imports {
+		mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+	}
 }
 
 tasks.withType<Test> {

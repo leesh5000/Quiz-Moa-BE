@@ -1,1 +1,1 @@
-rootProject.name = "quiz"
+rootProject.name = "quiz-app-be"

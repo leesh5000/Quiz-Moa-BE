@@ -1,2 +1,6 @@
 spring:
   # TODO 운영 DB 연결
+
+logging:
+  level:
+    com.leesh: info
