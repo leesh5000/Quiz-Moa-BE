@@ -1,6 +1,7 @@
 package com.leesh.quiz.global.jwt;
 
 import com.leesh.quiz.domain.user.constant.Role;
+import com.leesh.quiz.global.constant.LoginUser;
 import com.leesh.quiz.global.error.ErrorCode;
 import com.leesh.quiz.global.error.exception.AuthenticationException;
 import com.leesh.quiz.global.jwt.constant.GrantType;
@@ -52,15 +53,23 @@ public class JwtTokenService implements TokenService {
                 .build();
     }
 
-    public Date createAccessTokenExpireTime() {
+    @Override
+    public LoginUser extractUserInfo(String accessToken) throws AuthenticationException {
+        Claims claims = extractAllClaims(accessToken);
+        return LoginUser.of(
+                claims.get("userId", Long.class),
+                Role.valueOf(claims.get("role", String.class)));
+    }
+
+    private Date createAccessTokenExpireTime() {
         return new Date(System.currentTimeMillis() + Long.parseLong(accessTokenExpirationTime));
     }
 
-    public Date createRefreshTokenExpireTime() {
+    private Date createRefreshTokenExpireTime() {
         return new Date(System.currentTimeMillis() + Long.parseLong(refreshTokenExpirationTime));
     }
 
-    public String createAccessToken(Long userId, Role role, Date expirationTime) {
+    private String createAccessToken(Long userId, Role role, Date expirationTime) {
 
         return Jwts.builder()
                 .setSubject(TokenType.ACCESS.name())    // 토큰 제목
@@ -73,7 +82,7 @@ public class JwtTokenService implements TokenService {
                 .compact();
     }
 
-    public String createRefreshToken(Long userId, Date expirationTime) {
+    private String createRefreshToken(Long userId, Date expirationTime) {
 
         return Jwts.builder()
                 .setSubject(TokenType.REFRESH.name())   // 토큰 제목
@@ -85,31 +94,16 @@ public class JwtTokenService implements TokenService {
                 .compact();
     }
 
-    public void isValidToken(String token) {
-        try {
-            Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
-                    .build()
-                    .parseClaimsJws(token);
-        } catch (ExpiredJwtException e) {
-            log.info("token 만료", e);
-            throw new AuthenticationException(ErrorCode.EXPIRED_TOKEN);
-        } catch (Exception e) {
-            log.info("유효하지 않은 token", e);
-            throw new AuthenticationException(ErrorCode.INVALID_TOKEN);
-        }
-    }
-
-    public Claims extractAllClaims(String token) {
-
+    private Claims extractAllClaims(String token) {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(getSigningKey())
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
+        } catch (ExpiredJwtException e) {
+            throw new AuthenticationException(ErrorCode.EXPIRED_TOKEN);
         } catch (Exception e) {
-            log.info("유효하지 않은 token", e);
             throw new AuthenticationException(ErrorCode.INVALID_TOKEN);
         }
     }
@@ -118,7 +112,6 @@ public class JwtTokenService implements TokenService {
         byte[] keyBytes = Decoders.BASE64.decode(tokenSecret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-
 
 }
 
