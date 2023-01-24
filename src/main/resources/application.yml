@@ -39,6 +39,24 @@ spring:
       max-request-size: 100MB # 파일 업로드 요청 시, 전체 요청 크기를 100MB로 제한
 
 token:
-  secret: 6cywci5sOHNRVa+byfCXfi2y/fn0SzFzLCrKGKL8i1oQuLJ+cpTmHFMdnQ2lFFiWxDqpAQvksxmN6WIcWXoGvA==== # 임의의 문자열
+  secret: ENC(FGY+8GljJ76sBPQHkLWQl+2Lr+jImf1FZ9gFtIzFyFuEwvBCpRl4E3UIdc1Sh9EzU1Dj71FCUTLJUMD/LJwoBkYXcpMtWBhSqzYdJ4aQCMlI02MCJQ6RL//louPwY4pILV3mU0v+CNAlcrK1bQlsFPoMpJgoJgaod9Sa+gv4oUufgVUhqSUtC9WffGrMWzW7)
   access-token-expiration-time: 900000  # 15분 1000(ms) x 60(s) x 15(m)
   refresh-token-expiration-time: 1209600000 # 2주 1000(ms) x 60 (s) x 60(m) x 24(h) x 14(d)
+
+oauth2:
+  kakao:
+    client-id: ENC(Yuoj+yO7TCdOLDCQEyfnwPuAKwWjXWDm4Dz+6qx3djuQbQvNq8g/f1y/qgDKPjY2)
+    client-secret: ENC(C0VldimnoF0KRL9DwYQljMGe7rBzrNLad+Vf0r2AdMGVPqgcZ99Mz2bDJphbQXn3)
+    redirect-uri: ENC(H1aJJ/hDNXwtQ5yV/sf1Au9el8dDFxrejVx/LUPmqStWc17cl6LGXSkGwXsfFj8YfEQnOB5SVHA=)
+  google:
+    client-id: ENC(049Ld6JPYVLr9W8ESpPznYvB9pI5BvrEQi1R3RulNP1p04PbJ0mYqCQkSxaeWl/BmvS0N9NRszY9ZDHznqH98ut63PbLZnONB842MeYMp56SEG/8mMG7Eg==)
+    client-secret: ENC(wtG2Nj4sOyWM1I+EQeCCtfgWa+A1L2kqn2McMyByDyXioYSP+fC79SKhZwVutKh+)
+    redirect-uri: ENC(PoEkcySCsc9tP0kHyWFPo041e0NifwO+GMvjiTT6pMvR1TMOocoBfsOZw/cGFgBfluKi0UfXTSk=)
+  naver:
+    client-id: ENC(3JfCPN5tvZ5RBDLZQB7SFWT2pdbB1Xm9OvsxpjVsUgE=)
+    client-secret: ENC(TmIc+eJQp3ioSmpuDwP/BdPbDOO2Labp)
+    redirect-uri: ENC(8LUDNdI3dT9u58xVaDuGKo9fVt/Vkcm83IQsyTKB8gCIGEPu5WJyq/dEzlhBs2qWi8AazHtxIms=)
+
+jasypt:
+  encryptor:
+    password: ${PASSWORD}

@@ -4,14 +4,8 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
-
   jpa:
     defer-datasource-initialization: true
-
   sql:
     init:
       mode: always
-
-  test:
-    database:
-      replace: none

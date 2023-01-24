@@ -68,6 +68,10 @@ dependencies {
 	testImplementation("org.springframework.security:spring-security-test")
 	// Spring Security End
 
+	// Jasypt Start
+	implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5")
+	// Jasypt End
+
 }
 
 dependencyManagement {
