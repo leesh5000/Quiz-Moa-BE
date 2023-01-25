@@ -4,7 +4,7 @@ import com.leesh.quiz.domain.user.constant.Role;
 import com.leesh.quiz.global.constant.LoginUser;
 import com.leesh.quiz.global.error.exception.AuthenticationException;
 
-public interface TokenService {
+public interface TokenProvider {
 
     TokenDto createJwtTokenDto(Long id, Role role);
 

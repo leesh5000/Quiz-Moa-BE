@@ -21,15 +21,15 @@ import java.util.Date;
 
 @Slf4j
 @Service
-public class JwtTokenService implements TokenService {
+public class JwtTokenProvider implements TokenProvider {
 
     private final String accessTokenExpirationTime;
     private final String refreshTokenExpirationTime;
     private final String tokenSecret;
 
-    public JwtTokenService(@Value("${token.access-token-expiration-time}") String accessTokenExpirationTime,
-                           @Value("${token.refresh-token-expiration-time}") String refreshTokenExpirationTime,
-                           @Value("${token.secret}") String tokenSecret) {
+    public JwtTokenProvider(@Value("${token.access-token-expiration-time}") String accessTokenExpirationTime,
+                            @Value("${token.refresh-token-expiration-time}") String refreshTokenExpirationTime,
+                            @Value("${token.secret}") String tokenSecret) {
         this.accessTokenExpirationTime = accessTokenExpirationTime;
         this.refreshTokenExpirationTime = refreshTokenExpirationTime;
         this.tokenSecret = tokenSecret;

@@ -7,7 +7,7 @@ import com.leesh.quiz.external.oauth2.Oauth2ApiService;
 import com.leesh.quiz.external.oauth2.Oauth2Attributes;
 import com.leesh.quiz.external.oauth2.Oauth2Token;
 import com.leesh.quiz.global.jwt.TokenDto;
-import com.leesh.quiz.global.jwt.TokenService;
+import com.leesh.quiz.global.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +23,7 @@ import static com.leesh.quiz.global.util.DateTimeUtils.convertToLocalDateTime;
 public class Oauth2LoginService {
 
     private final UserService userService;
-    private final TokenService tokenService;
+    private final TokenProvider tokenProvider;
 
     public Oauth2LoginDto.Response oauth2Login(Oauth2LoginDto.Request request) {
 
@@ -34,7 +34,7 @@ public class Oauth2LoginService {
         User user = findUserByEmailOrRegister(userInfo);
 
         // jwt 토큰을 생성한다.
-        TokenDto tokenDto = tokenService.createJwtTokenDto(user.getId(), user.getRole());
+        TokenDto tokenDto = tokenProvider.createJwtTokenDto(user.getId(), user.getRole());
 
         // 유저의 refresh token을 업데이트한다.
         user.updateRefreshToken(tokenDto.refreshToken(),

@@ -30,7 +30,7 @@ import java.util.Collections;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-    private final TokenService tokenService;
+    private final TokenProvider tokenProvider;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -52,7 +52,7 @@ public class JwtFilter extends OncePerRequestFilter {
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
 
                 // JWT 토큰으로 부터 유저 정보 추출하기 (실패시 Authentication 예외 발생)
-                LoginUser loginUser = tokenService.extractUserInfo(token);
+                LoginUser loginUser = tokenProvider.extractUserInfo(token);
 
                 // SecurityContext 에 인증 정보 저장하기
                 setSecurity(request, loginUser);
