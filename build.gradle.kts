@@ -74,7 +74,6 @@ dependencies {
 
 	// XSS Protect Start
 	implementation ("org.apache.commons:commons-text:1.10.0")
-	implementation ("com.navercorp.lucy:lucy-xss-servlet:2.0.1")
 	// XSS Protect End
 
 }
