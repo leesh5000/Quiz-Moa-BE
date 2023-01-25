@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,7 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
+import static com.leesh.quiz.global.util.RequestMatchersUtils.getPermitAllRequestMatchers;
 import static org.springframework.security.crypto.factory.PasswordEncoderFactories.createDelegatingPasswordEncoder;
 
 @Slf4j
@@ -70,11 +69,7 @@ public class SecurityConfiguration {
 
                 // 인증이 필요 없는 API
                 .authorizeHttpRequests()
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                .permitAll()
-                .requestMatchers(toH2Console())
-                .permitAll()
-                .requestMatchers("/api/oauth2/**", "/api/health")
+                .requestMatchers(getPermitAllRequestMatchers())
                 .permitAll()
 
                 // 그 외 모두 인증 필요

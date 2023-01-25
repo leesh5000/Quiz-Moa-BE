@@ -11,6 +11,10 @@ public enum GrantType {
         this.type = type;
     }
 
-    private String type;
+    private final String type;
+
+    public static boolean isBearerType(String type) {
+        return GrantType.BEARER.type.equals(type);
+    }
 
 }
