@@ -2,9 +2,9 @@ package com.leesh.quiz.global.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leesh.quiz.global.constant.LoginUser;
+import com.leesh.quiz.global.error.ErrorCode;
 import com.leesh.quiz.global.error.ErrorResponse;
 import com.leesh.quiz.global.error.exception.AuthenticationException;
-import com.leesh.quiz.global.jwt.constant.GrantType;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,12 +18,18 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collections;
+
+import static com.leesh.quiz.global.jwt.constant.GrantType.isBearerType;
+import static com.leesh.quiz.global.util.RequestMatchersUtils.getPermitAllRequestMatchers;
 
 @Slf4j
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
@@ -34,20 +40,24 @@ public class JwtFilter extends OncePerRequestFilter {
     private final ObjectMapper objectMapper;
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+
+        // 현재 요청이 인증 확인이 필요 없는 요청인지 확인하기
+        RequestMatcher[] whitelists = getPermitAllRequestMatchers();
+
+        return Arrays.stream(whitelists)
+                .anyMatch(o -> o.matches(request));
+    }
+
+    @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         try {
 
             final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-            // 인증이 필요한 요청이 아니면, 다음 필터로 이동
-            if (!isRequireAuthenticate(header)) {
-                filterChain.doFilter(request, response);
-                return;
-            }
-
-            // Authorization 헤더가 있으면, JWT 토큰 추출하기
-            final String token = extractToken(header);
+            // 인증 헤더로 부터 토큰 추출 (실패시 Authentication 예외 발생)
+            final String token = extractTokenFromAuthorization(header);
 
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
 
@@ -80,16 +90,24 @@ public class JwtFilter extends OncePerRequestFilter {
         objectMapper.writeValue(response.getWriter(), body);
     }
 
-    private static boolean isRequireAuthenticate(String header) {
-        // Authorization 헤더가 없거나, Bearer 타입이 아니면, 인증이 필요하지 않음
-        return header != null && header.startsWith(GrantType.BEARER.getType());
+    private String extractTokenFromAuthorization(String header) throws AuthenticationException {
+
+        // Authorization 헤더가 없으면 예외 발생
+        if (!StringUtils.hasText(header)) {
+            throw new AuthenticationException(ErrorCode.NOT_EXIST_AUTHORIZATION);
+        }
+
+        String[] authorizations = header.split(" ");
+
+        // Authorization 헤더가 Bearer 타입이 아니면 예외 발생
+        if(authorizations.length < 2 || (!isBearerType(authorizations[0]))) {
+            throw new AuthenticationException(ErrorCode.NOT_BEARER_TYPE_AUTHORIZATION);
+        }
+
+        return authorizations[1];
     }
 
-    private static String extractToken(String header) {
-        return header.split(" ")[1].trim();
-    }
-
-    private static void setSecurity(HttpServletRequest request, LoginUser loginUser) {
+    private void setSecurity(HttpServletRequest request, LoginUser loginUser) {
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 loginUser, null,

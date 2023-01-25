@@ -1,6 +1,5 @@
 package com.leesh.quiz.global.error;
 
-import com.leesh.quiz.global.error.exception.ExternalException;
 import com.leesh.quiz.global.error.exception.BusinessException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
