@@ -20,7 +20,8 @@ public enum ErrorCode {
     NOT_ACCESS_TOKEN_TYPE(UNAUTHORIZED, "A-007", "접근 토큰이 아닙니다."),
     INVALID_REFRESH_TOKEN(UNAUTHORIZED, "A-008", "유효하지 못한 리프레시 토큰입니다. 다시 로그인 해주세요."),
     REFRESH_TOKEN_EXPIRED(UNAUTHORIZED, "A-009", "리프레시 토큰이 만료되었습니다."),
-    NOT_REFRESH_TOKEN_TYPE(UNAUTHORIZED, "A-010", "리프레시 토큰이 아닙니다."),
+    LOGOUT_REFRESH_TOKEN(UNAUTHORIZED, "A-010", "로그아웃 처리된 리프레시 토큰입니다. 다시 로그인 해주세요."),
+    NOT_REFRESH_TOKEN_TYPE(UNAUTHORIZED, "A-011", "리프레시 토큰이 아닙니다."),
 
     /* Oauth2 */
     NOT_SUPPORT_OAUTH2_TYPE(BAD_REQUEST, "O-001", "지원하지 않는 Oauth2 타입입니다."),
@@ -43,10 +44,4 @@ public enum ErrorCode {
         this.message = message;
     }
 
-    ErrorCode(HttpStatus httpStatus, String code, String message, String parameter) {
-        this.httpStatus = httpStatus;
-        this.code = code;
-        this.message = message;
-        this.parameter = parameter;
-    }
-    }
+}

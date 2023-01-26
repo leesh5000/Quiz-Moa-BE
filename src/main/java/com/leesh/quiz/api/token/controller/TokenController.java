@@ -1,7 +1,7 @@
-package com.leesh.quiz.api.tokenrefresh.controller;
+package com.leesh.quiz.api.token.controller;
 
-import com.leesh.quiz.api.tokenrefresh.dto.TokenRefreshDto;
-import com.leesh.quiz.api.tokenrefresh.service.TokenService;
+import com.leesh.quiz.api.token.dto.TokenRefreshDto;
+import com.leesh.quiz.api.token.service.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

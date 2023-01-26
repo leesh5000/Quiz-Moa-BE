@@ -1,4 +1,4 @@
-package com.leesh.quiz.api.tokenrefresh.dto;
+package com.leesh.quiz.api.token.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;

@@ -68,7 +68,7 @@ public class SecurityConfiguration {
                 // Spring Security Filter에 등록되기 위해 빈 주입이 아닌 생성자 호출로 등록
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 
-                // 인증이 필요 없는 API
+                // 인증이 필요 없는 요청 설정
                 .authorizeHttpRequests()
                 .requestMatchers(getPermitAllRequestMatchers())
                 .permitAll()

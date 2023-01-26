@@ -31,7 +31,7 @@ public class Oauth2LoginService {
         var userInfo = getUserInfoFromProvider(request);
 
         // 해당 이메일로 가입된 회원이 있는지 확인하고 없으면 신규 가입을 한다.
-        User user = findUserByEmailOrRegister(userInfo);
+        User user = findUserOrElseRegister(userInfo);
 
         // jwt 토큰을 생성한다.
         TokenDto tokenDto = tokenProvider.createTokenDto(user.getId(), user.getRole());
@@ -43,9 +43,9 @@ public class Oauth2LoginService {
         return Oauth2LoginDto.Response.of(tokenDto);
     }
 
-    private User findUserByEmailOrRegister(Oauth2Attributes userInfo) {
+    private User findUserOrElseRegister(Oauth2Attributes userInfo) {
 
-        Optional<User> optionalUser = userService.findByEmail(userInfo.getEmail());
+        Optional<User> optionalUser = userService.findUserByEmail(userInfo.getEmail());
         User user;
 
         // 해당 이메일로 이미 가입된 회원이라면,

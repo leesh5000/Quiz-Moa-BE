@@ -32,12 +32,12 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> findByEmail(String email) {
+    public Optional<User> findUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
     @Transactional(readOnly = true)
-    public User findByRefreshToken(String refreshToken) {
+    public User findUserByRefreshToken(String refreshToken) {
 
         // 리프레시 토큰을 통해 유저를 찾는다.
         User user = userRepository.findByRefreshToken(refreshToken)
@@ -47,7 +47,7 @@ public class UserService {
         LocalDateTime expiration = user.getRefreshTokenExpiresIn();
         LocalDateTime now = LocalDateTime.now();
         if (now.isAfter(expiration)) {
-            throw new AuthenticationException(ErrorCode.REFRESH_TOKEN_EXPIRED);
+            throw new AuthenticationException(ErrorCode.LOGOUT_REFRESH_TOKEN);
         }
 
         return user;
