@@ -34,11 +34,11 @@ public class Oauth2LoginService {
         User user = findUserByEmailOrRegister(userInfo);
 
         // jwt 토큰을 생성한다.
-        TokenDto tokenDto = tokenProvider.createJwtTokenDto(user.getId(), user.getRole());
+        TokenDto tokenDto = tokenProvider.createTokenDto(user.getId(), user.getRole());
 
         // 유저의 refresh token을 업데이트한다.
         user.updateRefreshToken(tokenDto.refreshToken(),
-                convertToLocalDateTime(tokenDto.refreshTokenExpireTime()));
+                convertToLocalDateTime(tokenDto.refreshTokenExpiresIn()));
 
         return Oauth2LoginDto.Response.of(tokenDto);
     }

@@ -1,6 +1,7 @@
 package com.leesh.quiz.api.login;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +15,7 @@ public class Oauth2LoginController {
 
     private final Oauth2LoginService oauth2LoginService;
 
-    @PostMapping(path = "/login", consumes = "application/json")
+    @PostMapping(path = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Oauth2LoginDto.Response> oauth2Login(@RequestBody Oauth2LoginDto.Request request) {
 
         // TODO authorizationCode, Provider를 유효성 검증할 것

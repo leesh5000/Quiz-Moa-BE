@@ -8,8 +8,8 @@ import java.util.Date;
 @Builder
 public record TokenDto(String grantType, String accessToken, String refreshToken,
                        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-                       Date accessTokenExpireTime,
+                       Date accessTokenExpiresIn,
                        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-                       Date refreshTokenExpireTime) {
+                       Date refreshTokenExpiresIn) {
 
 }

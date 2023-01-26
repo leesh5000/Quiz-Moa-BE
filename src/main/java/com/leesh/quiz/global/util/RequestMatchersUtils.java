@@ -11,6 +11,7 @@ public abstract class RequestMatchersUtils {
     private static final RequestMatcher[] permitAllRequestMatchers = new RequestMatcher[]{
             new AntPathRequestMatcher("/api/oauth2/**"),
             new AntPathRequestMatcher("/api/health"),
+            new AntPathRequestMatcher("/api/access-token/issue"),
             toH2Console(),
             PathRequest.toStaticResources().atCommonLocations()
     };

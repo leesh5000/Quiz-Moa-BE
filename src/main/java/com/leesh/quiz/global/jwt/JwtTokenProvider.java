@@ -36,7 +36,7 @@ public class JwtTokenProvider implements TokenProvider {
     }
 
     @Override
-    public TokenDto createJwtTokenDto(Long userId, Role role) {
+    public TokenDto createTokenDto(Long userId, Role role) {
 
         Date accessTokenExpireTime = createAccessTokenExpireTime();
         Date refreshTokenExpireTime = createRefreshTokenExpireTime();
@@ -47,29 +47,48 @@ public class JwtTokenProvider implements TokenProvider {
         return TokenDto.builder()
                 .grantType(GrantType.BEARER.getType())
                 .accessToken(accessToken)
-                .accessTokenExpireTime(accessTokenExpireTime)
+                .accessTokenExpiresIn(accessTokenExpireTime)
                 .refreshToken(refreshToken)
-                .refreshTokenExpireTime(refreshTokenExpireTime)
+                .refreshTokenExpiresIn(refreshTokenExpireTime)
                 .build();
     }
 
     @Override
     public LoginUser extractUserInfo(String accessToken) throws AuthenticationException {
+
         Claims claims = extractAllClaims(accessToken);
+
+        // 액세스 토큰이 아니면, 예외 던지기
+        if (!TokenType.isAccessToken(claims.getSubject())) {
+            throw new AuthenticationException(ErrorCode.NOT_ACCESS_TOKEN_TYPE);
+        }
+
+        // 현재 로그인 유저 정보 반환
         return LoginUser.of(
                 claims.get("userId", Long.class),
                 Role.valueOf(claims.get("role", String.class)));
     }
 
-    private Date createAccessTokenExpireTime() {
-        return new Date(System.currentTimeMillis() + Long.parseLong(accessTokenExpirationTime));
+    @Override
+    public void validateRefreshToken(String token) throws AuthenticationException {
+
+        Claims claims = extractAllClaims(token);
+
+        // 리프레시 토큰이 아니면, 예외 던지기
+        if (!TokenType.isRefreshToken(claims.getSubject())) {
+            throw new AuthenticationException(ErrorCode.NOT_REFRESH_TOKEN_TYPE);
+        }
+
+        // 토큰 만료 시간이 지났으면, 예외 던지기
+        Date expiration = claims.getExpiration();
+        Date now = new Date();
+        if (now.after(expiration)) {
+            throw new AuthenticationException(ErrorCode.REFRESH_TOKEN_EXPIRED);
+        }
     }
 
-    private Date createRefreshTokenExpireTime() {
-        return new Date(System.currentTimeMillis() + Long.parseLong(refreshTokenExpirationTime));
-    }
-
-    private String createAccessToken(Long userId, Role role, Date expirationTime) {
+    @Override
+    public String createAccessToken(Long userId, Role role, Date expirationTime) {
 
         return Jwts.builder()
                 .setSubject(TokenType.ACCESS.name())    // 토큰 제목
@@ -80,6 +99,15 @@ public class JwtTokenProvider implements TokenProvider {
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512)
                 .setHeaderParam("typ", "JWT")
                 .compact();
+    }
+
+    @Override
+    public Date createAccessTokenExpireTime() {
+        return new Date(System.currentTimeMillis() + Long.parseLong(accessTokenExpirationTime));
+    }
+
+    private Date createRefreshTokenExpireTime() {
+        return new Date(System.currentTimeMillis() + Long.parseLong(refreshTokenExpirationTime));
     }
 
     private String createRefreshToken(Long userId, Date expirationTime) {
@@ -94,7 +122,7 @@ public class JwtTokenProvider implements TokenProvider {
                 .compact();
     }
 
-    private Claims extractAllClaims(String token) {
+    private Claims extractAllClaims(String token) throws AuthenticationException {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(getSigningKey())
@@ -102,9 +130,9 @@ public class JwtTokenProvider implements TokenProvider {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {
-            throw new AuthenticationException(ErrorCode.EXPIRED_TOKEN);
+            throw new AuthenticationException(ErrorCode.EXPIRED_ACCESS_TOKEN);
         } catch (Exception e) {
-            throw new AuthenticationException(ErrorCode.INVALID_TOKEN);
+            throw new AuthenticationException(ErrorCode.INVALID_ACCESS_TOKEN);
         }
     }
 

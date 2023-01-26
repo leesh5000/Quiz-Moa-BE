@@ -26,8 +26,8 @@ public class Oauth2LoginDto {
                     tokenDto.grantType(),
                     tokenDto.accessToken(),
                     tokenDto.refreshToken(),
-                    tokenDto.accessTokenExpireTime(),
-                    tokenDto.refreshTokenExpireTime()
+                    tokenDto.accessTokenExpiresIn(),
+                    tokenDto.refreshTokenExpiresIn()
             );
         }
 

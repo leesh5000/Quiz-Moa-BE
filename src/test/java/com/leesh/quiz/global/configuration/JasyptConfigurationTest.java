@@ -3,8 +3,6 @@ package com.leesh.quiz.global.configuration;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class JasyptConfigurationTest {
 
     @Test

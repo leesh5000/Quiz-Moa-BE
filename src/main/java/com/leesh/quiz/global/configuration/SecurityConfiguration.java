@@ -65,6 +65,7 @@ public class SecurityConfiguration {
                 .authenticationProvider(authenticationProvider())
 
                 // JWT Filter 설정 : Spring Security Filter 보다 이전에 실행되기 위해 여기서 등록
+                // Spring Security Filter에 등록되기 위해 빈 주입이 아닌 생성자 호출로 등록
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 
                 // 인증이 필요 없는 API

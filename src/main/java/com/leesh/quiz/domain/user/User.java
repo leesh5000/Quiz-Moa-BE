@@ -59,8 +59,8 @@ public class User {
     @Column(name = "refresh_token", length = 255, nullable = true)
     private String refreshToken;
 
-    @Column(name = "refresh_token_expired_at", nullable = true)
-    private LocalDateTime refreshTokenExpiredAt;
+    @Column(name = "refresh_token_expires_in", nullable = true)
+    private LocalDateTime refreshTokenExpiresIn;
 
     /* Meta Data Start */
     @CreatedBy
@@ -117,7 +117,7 @@ public class User {
     /* Business Logic */
     public void updateRefreshToken(String refreshToken, LocalDateTime expiredAt) {
         this.refreshToken = refreshToken;
-        this.refreshTokenExpiredAt = expiredAt;
+        this.refreshTokenExpiresIn = expiredAt;
     }
 
     public void isValidOauth2(Oauth2Type userInput) {
