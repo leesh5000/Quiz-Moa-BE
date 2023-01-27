@@ -8,4 +8,8 @@ public enum TokenType {
         return TokenType.ACCESS.name().equals(tokenType);
     }
 
+    public static boolean isRefreshToken(String tokenType) {
+        return TokenType.REFRESH.name().equals(tokenType);
+    }
+
 }

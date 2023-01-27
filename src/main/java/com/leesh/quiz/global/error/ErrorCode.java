@@ -10,15 +10,17 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 public enum ErrorCode {
 
     /* Authentication */
-    EXPIRED_TOKEN(UNAUTHORIZED, "A-001", "토큰이 만료되었습니다."),
-    INVALID_TOKEN(UNAUTHORIZED, "A-002", "토큰이 유효하지 않습니다."),
-
+    EXPIRED_TOKEN(UNAUTHORIZED, "A-001", "만료된 토큰입니다."),
+    INVALID_TOKEN(UNAUTHORIZED, "A-002", "유효하지 않은 토큰입니다."),
     INVALID_AUTHORIZATION_HEADER(UNAUTHORIZED, "A-003", "올바르지 않은 Authorization 헤더입니다."),
     NOT_EXIST_AUTHORIZATION(UNAUTHORIZED, "A-004", "Authorization 헤더가 존재하지 않습니다."),
     NOT_BEARER_TYPE_AUTHORIZATION(UNAUTHORIZED, "A-005", "Bearer 타입의 Authorization 헤더가 아닙니다."),
     ACCESS_TOKEN_NOT_FOUND(UNAUTHORIZED, "A-006", "접근 토큰이 존재하지 않습니다."),
-    REFRESH_TOKEN_NOT_FOUND(UNAUTHORIZED, "A-006", "리프레시 토큰이 존재하지 않습니다."),
-    REFRESH_TOKEN_EXPIRED(UNAUTHORIZED, "A-007", "리프레시 토큰이 만료되었습니다."),
+    NOT_ACCESS_TOKEN_TYPE(UNAUTHORIZED, "A-007", "접근 토큰이 아닙니다."),
+    INVALID_REFRESH_TOKEN(UNAUTHORIZED, "A-008", "유효하지 못한 리프레시 토큰입니다. 다시 로그인 해주세요."),
+    EXPIRED_REFRESH_TOKEN(UNAUTHORIZED, "A-009", "리프레시 토큰이 만료되었습니다."),
+    ALREADY_LOGOUT_USER(UNAUTHORIZED, "A-010", "로그아웃 처리된 리프레시 토큰입니다. 다시 로그인 해주세요."),
+    NOT_REFRESH_TOKEN_TYPE(UNAUTHORIZED, "A-011", "리프레시 토큰이 아닙니다."),
 
     /* Oauth2 */
     NOT_SUPPORT_OAUTH2_TYPE(BAD_REQUEST, "O-001", "지원하지 않는 Oauth2 타입입니다."),
@@ -27,7 +29,8 @@ public enum ErrorCode {
     ALREADY_REGISTERED_FROM_NAVER(BAD_REQUEST, "O-004", "네이버 소셜 계정으로 이미 가입된 이메일 입니다."),
 
     /* User */
-    DUPLICATED_EMAIL(BAD_REQUEST, "M-001", "이미 존재하는 이메일 입니다."),
+    DUPLICATED_USER(BAD_REQUEST, "M-001", "이미 존재하는 유저입니다."),
+    NOT_EXIST_USER(BAD_REQUEST, "M-002", "존재하지 않는 유저입니다."),
     ;
 
     private final HttpStatus httpStatus;
@@ -41,10 +44,4 @@ public enum ErrorCode {
         this.message = message;
     }
 
-    ErrorCode(HttpStatus httpStatus, String code, String message, String parameter) {
-        this.httpStatus = httpStatus;
-        this.code = code;
-        this.message = message;
-        this.parameter = parameter;
-    }
-    }
+}

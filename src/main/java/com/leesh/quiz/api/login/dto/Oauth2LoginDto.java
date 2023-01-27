@@ -1,7 +1,9 @@
-package com.leesh.quiz.api.login;
+package com.leesh.quiz.api.login.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.leesh.quiz.global.jwt.TokenDto;
+import com.leesh.quiz.global.jwt.dto.AccessToken;
+import com.leesh.quiz.global.jwt.dto.RefreshToken;
+import com.leesh.quiz.global.jwt.constant.GrantType;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -20,14 +22,14 @@ public class Oauth2LoginDto {
                            @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
                            Date refreshTokenExpireTime) {
 
-        public static Response of(TokenDto tokenDto) {
+        public static Response from(AccessToken accessToken, RefreshToken refreshToken) {
 
             return new Response(
-                    tokenDto.grantType(),
-                    tokenDto.accessToken(),
-                    tokenDto.refreshToken(),
-                    tokenDto.accessTokenExpireTime(),
-                    tokenDto.refreshTokenExpireTime()
+                    GrantType.BEARER.getType(),
+                    accessToken.accessToken(),
+                    refreshToken.refreshToken(),
+                    accessToken.accessTokenExpiresIn(),
+                    refreshToken.refreshTokenExpiresIn()
             );
         }
 

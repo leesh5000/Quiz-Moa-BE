@@ -87,6 +87,7 @@ dependencyManagement {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
 val snippetsDir by extra {
 	file("build/generated-snippets")
 }

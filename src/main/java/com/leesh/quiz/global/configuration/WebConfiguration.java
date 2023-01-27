@@ -40,6 +40,12 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     }
 
+    // Body의 raw 데이터로 들어오는 XSS 방지
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        converters.add(jsonEscapeConverter());
+    }
+
     // x-www-form-urlencoded 방식의 XSS 방지
     @Bean
     public FilterRegistrationBean<XssFilter> filterRegistrationBean() {
@@ -47,12 +53,6 @@ public class WebConfiguration implements WebMvcConfigurer {
         filterRegistration.addUrlPatterns("/*"); // 모든 요청에 대해 필터 적용
         filterRegistration.setOrder(0);
         return filterRegistration;
-    }
-
-    // Body의 raw 데이터로 들어오는 XSS 방지
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(jsonEscapeConverter());
     }
 
     @Bean

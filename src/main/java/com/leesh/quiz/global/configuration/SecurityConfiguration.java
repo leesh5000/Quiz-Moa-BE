@@ -21,7 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static com.leesh.quiz.global.util.RequestMatchersUtils.getPermitAllRequestMatchers;
+import static com.leesh.quiz.global.util.RequestMatchersUtils.permitAllRequestMatchers;
 import static org.springframework.security.crypto.factory.PasswordEncoderFactories.createDelegatingPasswordEncoder;
 
 @Slf4j
@@ -65,11 +65,12 @@ public class SecurityConfiguration {
                 .authenticationProvider(authenticationProvider())
 
                 // JWT Filter 설정 : Spring Security Filter 보다 이전에 실행되기 위해 여기서 등록
+                // Spring Security Filter에 등록되기 위해 빈 주입이 아닌 생성자 호출로 등록
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 
-                // 인증이 필요 없는 API
+                // 인증이 필요 없는 요청 설정
                 .authorizeHttpRequests()
-                .requestMatchers(getPermitAllRequestMatchers())
+                .requestMatchers(permitAllRequestMatchers)
                 .permitAll()
 
                 // 그 외 모두 인증 필요
@@ -109,6 +110,7 @@ public class SecurityConfiguration {
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return (request, response, exception) -> {
             log.error("AuthenticationEntryPoint Exception Occur", exception);
+            exception.getStackTrace();
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         };
     }

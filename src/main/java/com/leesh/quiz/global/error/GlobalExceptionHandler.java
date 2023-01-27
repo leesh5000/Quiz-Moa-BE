@@ -1,5 +1,6 @@
 package com.leesh.quiz.global.error;
 
+import com.leesh.quiz.global.error.dto.ErrorResponse;
 import com.leesh.quiz.global.error.exception.BusinessException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

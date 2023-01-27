@@ -1,18 +1,18 @@
-package com.leesh.quiz.api.login;
+package com.leesh.quiz.api.login.service;
 
+import com.leesh.quiz.api.login.dto.Oauth2LoginDto;
 import com.leesh.quiz.domain.user.User;
 import com.leesh.quiz.domain.user.constant.Oauth2Type;
 import com.leesh.quiz.domain.user.service.UserService;
 import com.leesh.quiz.external.oauth2.Oauth2ApiService;
 import com.leesh.quiz.external.oauth2.Oauth2Attributes;
 import com.leesh.quiz.external.oauth2.Oauth2Token;
-import com.leesh.quiz.global.jwt.TokenDto;
-import com.leesh.quiz.global.jwt.TokenService;
+import com.leesh.quiz.global.jwt.dto.AccessToken;
+import com.leesh.quiz.global.jwt.dto.RefreshToken;
+import com.leesh.quiz.global.jwt.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 import static com.leesh.quiz.external.oauth2.Oauth2ApiServiceFactory.getOauth2ApiService;
 import static com.leesh.quiz.global.util.DateTimeUtils.convertToLocalDateTime;
@@ -31,36 +31,17 @@ public class Oauth2LoginService {
         var userInfo = getUserInfoFromProvider(request);
 
         // 해당 이메일로 가입된 회원이 있는지 확인하고 없으면 신규 가입을 한다.
-        User user = findUserByEmailOrRegister(userInfo);
+        User user = userService.findUserOrRegister(userInfo);
 
         // jwt 토큰을 생성한다.
-        TokenDto tokenDto = tokenService.createJwtTokenDto(user.getId(), user.getRole());
+        AccessToken accessToken = tokenService.createAccessToken(user.getId(), user.getRole());
+        RefreshToken refreshToken = tokenService.createRefreshToken(user.getId());
 
         // 유저의 refresh token을 업데이트한다.
-        user.updateRefreshToken(tokenDto.refreshToken(),
-                convertToLocalDateTime(tokenDto.refreshTokenExpireTime()));
+        user.updateRefreshToken(refreshToken.refreshToken(),
+                convertToLocalDateTime(refreshToken.refreshTokenExpiresIn()));
 
-        return Oauth2LoginDto.Response.of(tokenDto);
-    }
-
-    private User findUserByEmailOrRegister(Oauth2Attributes userInfo) {
-
-        Optional<User> optionalUser = userService.findByEmail(userInfo.getEmail());
-        User user;
-
-        // 해당 이메일로 이미 가입된 회원이라면,
-        if (optionalUser.isPresent()) {
-
-            user = optionalUser.get();
-            // 현재 로그인 시도한 oauth2 타입과 가입된 회원의 oauth2 타입이 올바른지 검증한다.
-            user.isValidOauth2(userInfo.getOauth2Type());
-
-        } else {
-            // 해당 이메일로 가입된 회원이 없다면, 신규 가입을 한다.
-            user = userService.register(userInfo.toEntity());
-        }
-
-        return user;
+        return Oauth2LoginDto.Response.from(accessToken, refreshToken);
     }
 
     private Oauth2Attributes getUserInfoFromProvider(Oauth2LoginDto.Request request) {

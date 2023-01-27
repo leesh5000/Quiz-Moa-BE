@@ -1,38 +1,34 @@
 package com.leesh.quiz.global.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.leesh.quiz.global.constant.LoginUser;
-import com.leesh.quiz.global.error.ErrorCode;
-import com.leesh.quiz.global.error.ErrorResponse;
+import com.leesh.quiz.domain.user.constant.Role;
+import com.leesh.quiz.global.constant.UserInfo;
+import com.leesh.quiz.global.error.dto.ErrorResponse;
 import com.leesh.quiz.global.error.exception.AuthenticationException;
+import com.leesh.quiz.global.jwt.service.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Collections;
 
-import static com.leesh.quiz.global.jwt.constant.GrantType.isBearerType;
-import static com.leesh.quiz.global.util.RequestMatchersUtils.getPermitAllRequestMatchers;
+import static com.leesh.quiz.global.util.AuthorizationHeaderUtils.extractAuthorization;
+import static com.leesh.quiz.global.util.RequestMatchersUtils.isAllowedRequest;
 
 @Slf4j
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
@@ -41,31 +37,24 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-
-        // 현재 요청이 인증 확인이 필요 없는 요청인지 확인하기
-        RequestMatcher[] whitelists = getPermitAllRequestMatchers();
-
-        return Arrays.stream(whitelists)
-                .anyMatch(o -> o.matches(request));
+        // 허용되는 요청인지 검증
+        return isAllowedRequest(request);
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         try {
-
-            final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-
-            // 인증 헤더로 부터 토큰 추출 (실패시 Authentication 예외 발생)
-            final String token = extractTokenFromAuthorization(header);
+            // Authorization 헤더가 있으면, 헤더 값으로 부터 토큰을 추출 (실패 시 Authentication 예외 발생)
+            String token = extractAuthorization(request);
 
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
 
                 // JWT 토큰으로 부터 유저 정보 추출하기 (실패시 Authentication 예외 발생)
-                LoginUser loginUser = tokenService.extractUserInfo(token);
+                UserInfo userInfo = tokenService.extractUserInfo(token);
 
                 // SecurityContext 에 인증 정보 저장하기
-                setSecurity(request, loginUser);
+                setSecurity(request, userInfo);
             }
 
             filterChain.doFilter(request, response);
@@ -90,28 +79,11 @@ public class JwtFilter extends OncePerRequestFilter {
         objectMapper.writeValue(response.getWriter(), body);
     }
 
-    private String extractTokenFromAuthorization(String header) throws AuthenticationException {
-
-        // Authorization 헤더가 없으면 예외 발생
-        if (!StringUtils.hasText(header)) {
-            throw new AuthenticationException(ErrorCode.NOT_EXIST_AUTHORIZATION);
-        }
-
-        String[] authorizations = header.split(" ");
-
-        // Authorization 헤더가 Bearer 타입이 아니면 예외 발생
-        if(authorizations.length < 2 || (!isBearerType(authorizations[0]))) {
-            throw new AuthenticationException(ErrorCode.NOT_BEARER_TYPE_AUTHORIZATION);
-        }
-
-        return authorizations[1];
-    }
-
-    private void setSecurity(HttpServletRequest request, LoginUser loginUser) {
+    private void setSecurity(HttpServletRequest request, UserInfo userInfo) {
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                loginUser, null,
-                Collections.singleton((GrantedAuthority) () -> loginUser.role().name())
+                userInfo, null,
+                Collections.singleton((GrantedAuthority) () -> userInfo.role().name())
         );
 
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
