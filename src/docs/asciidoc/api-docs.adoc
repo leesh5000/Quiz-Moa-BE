@@ -6,11 +6,10 @@
 
 = Quiz-App API
 
-== 유저 API
+== Health Check API
 
-=== 퀴즈 생성
+include::{snippets}/health-check/http-request.adoc[]
 
-include::{snippets}/createQuiz/path-parameters.adoc[]
-include::{snippets}/createQuiz/http-request.adoc[]
-include::{snippets}/createQuiz/http-response.adoc[]
-include::{snippets}/createQuiz/response-fields.adoc[]
+include::{snippets}/health-check/http-response.adoc[]
+
+include::{snippets}/health-check/response-fields.adoc[]

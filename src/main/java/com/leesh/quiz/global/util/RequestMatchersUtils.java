@@ -15,6 +15,7 @@ public interface RequestMatchersUtils {
             new AntPathRequestMatcher("/api/oauth2/**"),
             new AntPathRequestMatcher("/api/health"),
             new AntPathRequestMatcher("/api/access-token/refresh"),
+            new AntPathRequestMatcher("/docs/**"),
             toH2Console(),
             PathRequest.toStaticResources().atCommonLocations()
     };

@@ -1,6 +1,7 @@
 package com.leesh.quiz.global.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.leesh.quiz.domain.user.constant.Role;
 import com.leesh.quiz.global.constant.UserInfo;
 import com.leesh.quiz.global.error.dto.ErrorResponse;
 import com.leesh.quiz.global.error.exception.AuthenticationException;
@@ -24,10 +25,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
 import static com.leesh.quiz.global.util.AuthorizationHeaderUtils.extractAuthorization;
-import static com.leesh.quiz.global.util.RequestMatchersUtils.*;
+import static com.leesh.quiz.global.util.RequestMatchersUtils.isAllowedRequest;
 
 @Slf4j
-@RequiredArgsConstructor()
+@RequiredArgsConstructor
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
@@ -36,7 +37,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-
         // 허용되는 요청인지 검증
         return isAllowedRequest(request);
     }

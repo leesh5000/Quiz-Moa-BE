@@ -39,23 +39,23 @@ spring:
       max-request-size: 100MB # 파일 업로드 요청 시, 전체 요청 크기를 100MB로 제한
 
 token:
-  secret: ENC(FGY+8GljJ76sBPQHkLWQl+2Lr+jImf1FZ9gFtIzFyFuEwvBCpRl4E3UIdc1Sh9EzU1Dj71FCUTLJUMD/LJwoBkYXcpMtWBhSqzYdJ4aQCMlI02MCJQ6RL//louPwY4pILV3mU0v+CNAlcrK1bQlsFPoMpJgoJgaod9Sa+gv4oUufgVUhqSUtC9WffGrMWzW7)
+  secret: ENC(ZWPxWyobK729VrfW9s8GAqg5yAiHA6Cl7w7P3PQbc9QP9b0BZU0yJLLaRsKZKT45tFwrt/LFNoPeAI6fqRIh5IHDOTtwVEErnRzQsU1zIgIQ/SRzcFA2ZBIQIcgEAAywfbi6GVtRGvykI/W//LsZ1LFVb8WWBRZwc6WrAzxKyUmRrrbUdkl5lGg7FegQHm9W)
   access-token-expiration-time: 900000  # 15분 1000(ms) x 60(s) x 15(m)
   refresh-token-expiration-time: 1209600000 # 2주 1000(ms) x 60 (s) x 60(m) x 24(h) x 14(d)
 
 oauth2:
   kakao:
-    client-id: ENC(Yuoj+yO7TCdOLDCQEyfnwPuAKwWjXWDm4Dz+6qx3djuQbQvNq8g/f1y/qgDKPjY2)
-    client-secret: ENC(C0VldimnoF0KRL9DwYQljMGe7rBzrNLad+Vf0r2AdMGVPqgcZ99Mz2bDJphbQXn3)
-    redirect-uri: ENC(H1aJJ/hDNXwtQ5yV/sf1Au9el8dDFxrejVx/LUPmqStWc17cl6LGXSkGwXsfFj8YfEQnOB5SVHA=)
+    client-id: ENC(+qwXTMtp0ldynQquCCT5E3saeJ8wGyZt8qc8oErTQfidIU/k68jpHgyUbr/Z6vSD)
+    client-secret: ENC(/Ti7JS3XCc9dXqianikAXLkVnYW62cdrgd5MP6VpxuSkuSOKK5BRnwJBu+yMcRPK)
+    redirect-uri: ENC(Q/xHiaIH9MdG3SZ1V+8TN0kurPNNm8zZgBzCNHyv4bcI5M1O+rYS/hmR9yyj5zvq+aeQibnYKSI=)
   google:
-    client-id: ENC(049Ld6JPYVLr9W8ESpPznYvB9pI5BvrEQi1R3RulNP1p04PbJ0mYqCQkSxaeWl/BmvS0N9NRszY9ZDHznqH98ut63PbLZnONB842MeYMp56SEG/8mMG7Eg==)
-    client-secret: ENC(wtG2Nj4sOyWM1I+EQeCCtfgWa+A1L2kqn2McMyByDyXioYSP+fC79SKhZwVutKh+)
-    redirect-uri: ENC(PoEkcySCsc9tP0kHyWFPo041e0NifwO+GMvjiTT6pMvR1TMOocoBfsOZw/cGFgBfluKi0UfXTSk=)
+    client-id: ENC(RbSPR65Q5gbvHn6v8qCjOjbo/rPoU/iVZAWx1o0O6JCWzWfs54JLBkV4i7/OOY0pSY1MY9gSb6abUdL2kJ5pzovFCYZ3H8QBnwOGmLLehUFaNs3N4cSGyA==)
+    client-secret: ENC(3tgUQVepvdHtsXkzm+yGtAFh/X6Wf8l7N0bcODBW5FyPxfG+T203zdzEYFLtE8FS)
+    redirect-uri: ENC(Q/TUiycA/lXt2zV+1JJb7zp1Ct518DxL6uaX8eXi8opWaMtamiHN3c0d9OWrWv0az5tttfslkJ0=)
   naver:
-    client-id: ENC(3JfCPN5tvZ5RBDLZQB7SFWT2pdbB1Xm9OvsxpjVsUgE=)
-    client-secret: ENC(TmIc+eJQp3ioSmpuDwP/BdPbDOO2Labp)
-    redirect-uri: ENC(8LUDNdI3dT9u58xVaDuGKo9fVt/Vkcm83IQsyTKB8gCIGEPu5WJyq/dEzlhBs2qWi8AazHtxIms=)
+    client-id: ENC(T9U9GbshI2M2rxHtb0q1szQ1gWYsaN/z2aDhwabsSOw=)
+    client-secret: ENC(rosNjvu/3I1sS9RkH1WlG/dA/JlS5Kgk)
+    redirect-uri: ENC(CZZFpqwoEZqTXGqOuejBFSENIQaz1bkBGMMPlShljzyP45fLu9O+EbWWAo5QcRtZfdnDIMOgVQ4=)
 
 jasypt:
   encryptor:

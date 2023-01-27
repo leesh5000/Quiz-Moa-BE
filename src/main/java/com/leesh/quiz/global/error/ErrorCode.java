@@ -29,7 +29,7 @@ public enum ErrorCode {
     ALREADY_REGISTERED_FROM_NAVER(BAD_REQUEST, "O-004", "네이버 소셜 계정으로 이미 가입된 이메일 입니다."),
 
     /* User */
-    DUPLICATED_EMAIL(BAD_REQUEST, "M-001", "이미 존재하는 이메일 입니다."),
+    DUPLICATED_USER(BAD_REQUEST, "M-001", "이미 존재하는 유저입니다."),
     NOT_EXIST_USER(BAD_REQUEST, "M-002", "존재하지 않는 유저입니다."),
     ;
 

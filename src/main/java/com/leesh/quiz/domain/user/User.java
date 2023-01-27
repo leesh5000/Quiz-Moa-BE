@@ -124,4 +124,8 @@ public class User {
         // 외부 코드와 의존하지 않기 위해 유틸 클래스를 사용한다.
         Oauth2ValidationUtils.isValidOauth2(this.oauth2Type, userInput);
     }
+
+    public void expireRefreshToken() {
+        this.refreshTokenExpiresIn = LocalDateTime.now();
+    }
 }

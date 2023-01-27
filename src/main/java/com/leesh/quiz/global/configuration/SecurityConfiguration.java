@@ -110,6 +110,7 @@ public class SecurityConfiguration {
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return (request, response, exception) -> {
             log.error("AuthenticationEntryPoint Exception Occur", exception);
+            exception.getStackTrace();
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         };
     }

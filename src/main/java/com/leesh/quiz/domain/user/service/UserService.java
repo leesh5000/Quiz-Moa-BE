@@ -34,7 +34,7 @@ public class UserService {
 
         } else {
             // 해당 이메일로 가입된 회원이 없다면, 신규 가입을 한다.
-            validateEmail(userInfo.getEmail());
+            isDuplicatedUser(userInfo.getEmail());
             user = userRepository.save(userInfo.toEntity());
         }
 
@@ -64,10 +64,10 @@ public class UserService {
         return user;
     }
 
-    private void validateEmail(String email) {
+    private void isDuplicatedUser(String email) {
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if(optionalUser.isPresent()) {
-            throw new BusinessException(ErrorCode.DUPLICATED_EMAIL);
+            throw new BusinessException(ErrorCode.DUPLICATED_USER);
         }
     }
 }
