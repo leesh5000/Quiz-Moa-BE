@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.leesh.quiz.global.util.AuthorizationHeaderUtils.extractToken;
+import static com.leesh.quiz.global.util.AuthorizationHeaderUtils.extractAuthorization;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/access-token")
@@ -21,7 +21,7 @@ public class TokenRefreshController {
     @PostMapping(path = "/refresh")
     public ResponseEntity<TokenRefreshDto> refresh(HttpServletRequest request) {
 
-        String refreshToken = extractToken(request);
+        String refreshToken = extractAuthorization(request);
 
         TokenRefreshDto body = tokenRefreshService.refresh(refreshToken);
 

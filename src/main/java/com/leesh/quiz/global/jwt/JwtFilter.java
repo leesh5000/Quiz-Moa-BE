@@ -5,7 +5,6 @@ import com.leesh.quiz.global.constant.UserInfo;
 import com.leesh.quiz.global.error.dto.ErrorResponse;
 import com.leesh.quiz.global.error.exception.AuthenticationException;
 import com.leesh.quiz.global.jwt.service.TokenService;
-import com.leesh.quiz.global.util.RequestMatchersUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,8 +23,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
-import static com.leesh.quiz.global.util.AuthorizationHeaderUtils.extractToken;
-import static com.leesh.quiz.global.util.AuthorizationHeaderUtils.validateAuthorization;
+import static com.leesh.quiz.global.util.AuthorizationHeaderUtils.extractAuthorization;
 import static com.leesh.quiz.global.util.RequestMatchersUtils.*;
 
 @Slf4j
@@ -47,12 +45,8 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         try {
-
-            // Authorization 헤더 검증
-            validateAuthorization(request);
-
             // Authorization 헤더가 있으면, 헤더 값으로 부터 토큰을 추출 (실패 시 Authentication 예외 발생)
-            String token = extractToken(request);
+            String token = extractAuthorization(request);
 
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
 

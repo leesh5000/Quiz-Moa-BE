@@ -10,7 +10,7 @@ import static com.leesh.quiz.global.jwt.constant.GrantType.isBearerType;
 
 public interface AuthorizationHeaderUtils {
 
-    static String extractToken(HttpServletRequest request) throws AuthenticationException {
+    static String extractAuthorization(HttpServletRequest request) throws AuthenticationException {
 
         // Authorization 헤더가 없으면 예외 발생
         validateAuthorization(request);
