@@ -2,6 +2,7 @@ package com.leesh.quiz.domain.user.service;
 
 import com.leesh.quiz.domain.user.User;
 import com.leesh.quiz.domain.user.UserRepository;
+import com.leesh.quiz.external.oauth2.Oauth2Attributes;
 import com.leesh.quiz.global.error.ErrorCode;
 import com.leesh.quiz.global.error.exception.AuthenticationException;
 import com.leesh.quiz.global.error.exception.BusinessException;
@@ -19,21 +20,31 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User register(User user) {
-        validateDuplicateUser(user);
-        return userRepository.save(user);
-    }
+    public User findUserOrRegister(Oauth2Attributes userInfo) {
 
-    private void validateDuplicateUser(User user) {
-        Optional<User> optionalUser = userRepository.findByEmail(user.getEmail());
-        if(optionalUser.isPresent()) {
-            throw new BusinessException(ErrorCode.DUPLICATED_EMAIL);
+        Optional<User> optionalUser = userRepository.findByEmail(userInfo.getEmail());
+        User user;
+
+        // 해당 이메일로 이미 가입된 회원이라면,
+        if (optionalUser.isPresent()) {
+
+            user = optionalUser.get();
+            // 현재 로그인 시도한 oauth2 타입과 가입된 회원의 oauth2 타입이 올바른지 검증한다.
+            user.isValidOauth2(userInfo.getOauth2Type());
+
+        } else {
+            // 해당 이메일로 가입된 회원이 없다면, 신규 가입을 한다.
+            validateEmail(userInfo.getEmail());
+            user = userRepository.save(userInfo.toEntity());
         }
+
+        return user;
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> findUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public User findUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_USER));
     }
 
     @Transactional(readOnly = true)
@@ -51,5 +62,12 @@ public class UserService {
         }
 
         return user;
+    }
+
+    private void validateEmail(String email) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if(optionalUser.isPresent()) {
+            throw new BusinessException(ErrorCode.DUPLICATED_EMAIL);
+        }
     }
 }

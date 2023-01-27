@@ -71,24 +71,6 @@ public class JwtTokenService implements TokenService {
     }
 
     @Override
-    public void validateAccessToken(String accessToken) throws AuthenticationException {
-
-        Claims claims = extractAllClaims(accessToken);
-
-        // 접근 토큰이 아니면, 예외 던지기
-        if (!TokenType.isAccessToken(claims.getSubject())) {
-            throw new AuthenticationException(ErrorCode.NOT_ACCESS_TOKEN_TYPE);
-        }
-
-        // 토큰 만료 시간이 지났으면, 예외 던지기
-        Date expiration = claims.getExpiration();
-        Date now = new Date();
-        if (now.after(expiration)) {
-            throw new AuthenticationException(ErrorCode.EXPIRED_ACCESS_TOKEN);
-        }
-    }
-
-    @Override
     public AccessToken createAccessToken(Long userId, Role role) {
 
         Date expirationTime = createAccessTokenExpireTime();
@@ -131,6 +113,7 @@ public class JwtTokenService implements TokenService {
         return new Date(System.currentTimeMillis() + Long.parseLong(refreshTokenExpirationTime));
     }
 
+    // 이 메소드의 파라미터인 토큰은 해당 시점에서는 Access Token 또는 Refresh Token 인지 알 수 없다.
     private Claims extractAllClaims(String token) throws AuthenticationException {
         try {
             return Jwts.parserBuilder()
@@ -139,9 +122,9 @@ public class JwtTokenService implements TokenService {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {
-            throw new AuthenticationException(ErrorCode.EXPIRED_ACCESS_TOKEN);
+            throw new AuthenticationException(ErrorCode.EXPIRED_TOKEN);
         } catch (Exception e) {
-            throw new AuthenticationException(ErrorCode.INVALID_ACCESS_TOKEN);
+            throw new AuthenticationException(ErrorCode.INVALID_TOKEN);
         }
     }
 

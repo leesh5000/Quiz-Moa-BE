@@ -14,8 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 import static com.leesh.quiz.external.oauth2.Oauth2ApiServiceFactory.getOauth2ApiService;
 import static com.leesh.quiz.global.util.DateTimeUtils.convertToLocalDateTime;
 
@@ -33,7 +31,7 @@ public class Oauth2LoginService {
         var userInfo = getUserInfoFromProvider(request);
 
         // 해당 이메일로 가입된 회원이 있는지 확인하고 없으면 신규 가입을 한다.
-        User user = findUserOrElseRegister(userInfo);
+        User user = userService.findUserOrRegister(userInfo);
 
         // jwt 토큰을 생성한다.
         AccessToken accessToken = tokenService.createAccessToken(user.getId(), user.getRole());
@@ -44,26 +42,6 @@ public class Oauth2LoginService {
                 convertToLocalDateTime(refreshToken.refreshTokenExpiresIn()));
 
         return Oauth2LoginDto.Response.from(accessToken, refreshToken);
-    }
-
-    private User findUserOrElseRegister(Oauth2Attributes userInfo) {
-
-        Optional<User> optionalUser = userService.findUserByEmail(userInfo.getEmail());
-        User user;
-
-        // 해당 이메일로 이미 가입된 회원이라면,
-        if (optionalUser.isPresent()) {
-
-            user = optionalUser.get();
-            // 현재 로그인 시도한 oauth2 타입과 가입된 회원의 oauth2 타입이 올바른지 검증한다.
-            user.isValidOauth2(userInfo.getOauth2Type());
-
-        } else {
-            // 해당 이메일로 가입된 회원이 없다면, 신규 가입을 한다.
-            user = userService.register(userInfo.toEntity());
-        }
-
-        return user;
     }
 
     private Oauth2Attributes getUserInfoFromProvider(Oauth2LoginDto.Request request) {

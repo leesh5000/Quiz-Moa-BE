@@ -5,7 +5,7 @@ import com.leesh.quiz.domain.quiz.Quiz;
 import com.leesh.quiz.domain.quizvote.QuizVote;
 import com.leesh.quiz.domain.user.constant.Oauth2Type;
 import com.leesh.quiz.domain.user.constant.Role;
-import com.leesh.quiz.external.oauth2.Oauth2ValidateUtils;
+import com.leesh.quiz.external.oauth2.Oauth2ValidationUtils;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -121,6 +121,7 @@ public class User {
     }
 
     public void isValidOauth2(Oauth2Type userInput) {
-        Oauth2ValidateUtils.isValidOauth2(this.oauth2Type, userInput);
+        // 외부 코드와 의존하지 않기 위해 유틸 클래스를 사용한다.
+        Oauth2ValidationUtils.isValidOauth2(this.oauth2Type, userInput);
     }
 }

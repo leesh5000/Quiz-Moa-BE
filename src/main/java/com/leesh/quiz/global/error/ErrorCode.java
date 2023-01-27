@@ -10,9 +10,8 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 public enum ErrorCode {
 
     /* Authentication */
-    EXPIRED_ACCESS_TOKEN(UNAUTHORIZED, "A-001", "접근 토큰이 만료되었습니다."),
-    INVALID_ACCESS_TOKEN(UNAUTHORIZED, "A-002", "접근 토큰이 유효하지 않습니다."),
-
+    EXPIRED_TOKEN(UNAUTHORIZED, "A-001", "만료된 토큰입니다."),
+    INVALID_TOKEN(UNAUTHORIZED, "A-002", "유효하지 않은 토큰입니다."),
     INVALID_AUTHORIZATION_HEADER(UNAUTHORIZED, "A-003", "올바르지 않은 Authorization 헤더입니다."),
     NOT_EXIST_AUTHORIZATION(UNAUTHORIZED, "A-004", "Authorization 헤더가 존재하지 않습니다."),
     NOT_BEARER_TYPE_AUTHORIZATION(UNAUTHORIZED, "A-005", "Bearer 타입의 Authorization 헤더가 아닙니다."),
@@ -31,6 +30,7 @@ public enum ErrorCode {
 
     /* User */
     DUPLICATED_EMAIL(BAD_REQUEST, "M-001", "이미 존재하는 이메일 입니다."),
+    NOT_EXIST_USER(BAD_REQUEST, "M-002", "존재하지 않는 유저입니다."),
     ;
 
     private final HttpStatus httpStatus;
