@@ -1,5 +1,7 @@
-package com.leesh.quiz.api.login;
+package com.leesh.quiz.api.login.controller;
 
+import com.leesh.quiz.api.login.dto.Oauth2LoginDto;
+import com.leesh.quiz.api.login.service.Oauth2LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

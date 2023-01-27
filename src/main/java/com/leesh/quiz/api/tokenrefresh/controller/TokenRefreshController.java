@@ -1,7 +1,7 @@
-package com.leesh.quiz.api.token.controller;
+package com.leesh.quiz.api.tokenrefresh.controller;
 
-import com.leesh.quiz.api.token.dto.TokenRefreshDto;
-import com.leesh.quiz.api.token.service.TokenService;
+import com.leesh.quiz.api.tokenrefresh.dto.TokenRefreshDto;
+import com.leesh.quiz.api.tokenrefresh.service.TokenRefreshService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,18 +12,18 @@ import org.springframework.web.bind.annotation.RestController;
 import static com.leesh.quiz.global.util.AuthorizationHeaderUtils.extractToken;
 
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/access-token")
 @RestController
-public class TokenController {
+public class TokenRefreshController {
 
-    private final TokenService tokenService;
+    private final TokenRefreshService tokenRefreshService;
 
-    @PostMapping(path = "/access-token/issue")
+    @PostMapping(path = "/refresh")
     public ResponseEntity<TokenRefreshDto> refresh(HttpServletRequest request) {
 
         String refreshToken = extractToken(request);
 
-        TokenRefreshDto body = tokenService.refresh(refreshToken);
+        TokenRefreshDto body = tokenRefreshService.refresh(refreshToken);
 
         return ResponseEntity.ok(body);
     }

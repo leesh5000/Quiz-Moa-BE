@@ -1,4 +1,4 @@
-package com.leesh.quiz.global.error;
+package com.leesh.quiz.global.error.dto;
 
 import lombok.Getter;
 import org.springframework.validation.BindingResult;

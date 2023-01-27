@@ -21,7 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static com.leesh.quiz.global.util.RequestMatchersUtils.getPermitAllRequestMatchers;
+import static com.leesh.quiz.global.util.RequestMatchersUtils.permitAllRequestMatchers;
 import static org.springframework.security.crypto.factory.PasswordEncoderFactories.createDelegatingPasswordEncoder;
 
 @Slf4j
@@ -70,7 +70,7 @@ public class SecurityConfiguration {
 
                 // 인증이 필요 없는 요청 설정
                 .authorizeHttpRequests()
-                .requestMatchers(getPermitAllRequestMatchers())
+                .requestMatchers(permitAllRequestMatchers)
                 .permitAll()
 
                 // 그 외 모두 인증 필요

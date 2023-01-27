@@ -1,9 +1,11 @@
 package com.leesh.quiz.global.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.leesh.quiz.global.constant.LoginUser;
-import com.leesh.quiz.global.error.ErrorResponse;
+import com.leesh.quiz.global.constant.UserInfo;
+import com.leesh.quiz.global.error.dto.ErrorResponse;
 import com.leesh.quiz.global.error.exception.AuthenticationException;
+import com.leesh.quiz.global.jwt.service.TokenService;
+import com.leesh.quiz.global.util.RequestMatchersUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,27 +22,25 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Collections;
 
 import static com.leesh.quiz.global.util.AuthorizationHeaderUtils.extractToken;
 import static com.leesh.quiz.global.util.AuthorizationHeaderUtils.validateAuthorization;
-import static com.leesh.quiz.global.util.RequestMatchersUtils.getPermitAllRequestMatchers;
+import static com.leesh.quiz.global.util.RequestMatchersUtils.*;
 
 @Slf4j
 @RequiredArgsConstructor()
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-    private final TokenProvider tokenProvider;
+    private final TokenService tokenService;
     private final ObjectMapper objectMapper;
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
 
-        // permitAll() 설정된 요청은 인증 필터를 거치지 않음
-        return Arrays.stream(getPermitAllRequestMatchers())
-                .anyMatch(requestMatcher -> requestMatcher.matches(request));
+        // 허용되는 요청인지 검증
+        return isAllowedRequest(request);
     }
 
     @Override
@@ -57,10 +57,10 @@ public class JwtFilter extends OncePerRequestFilter {
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
 
                 // JWT 토큰으로 부터 유저 정보 추출하기 (실패시 Authentication 예외 발생)
-                LoginUser loginUser = tokenProvider.extractUserInfo(token);
+                UserInfo userInfo = tokenService.extractUserInfo(token);
 
                 // SecurityContext 에 인증 정보 저장하기
-                setSecurity(request, loginUser);
+                setSecurity(request, userInfo);
             }
 
             filterChain.doFilter(request, response);
@@ -85,11 +85,11 @@ public class JwtFilter extends OncePerRequestFilter {
         objectMapper.writeValue(response.getWriter(), body);
     }
 
-    private void setSecurity(HttpServletRequest request, LoginUser loginUser) {
+    private void setSecurity(HttpServletRequest request, UserInfo userInfo) {
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                loginUser, null,
-                Collections.singleton((GrantedAuthority) () -> loginUser.role().name())
+                userInfo, null,
+                Collections.singleton((GrantedAuthority) () -> userInfo.role().name())
         );
 
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

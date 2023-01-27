@@ -47,7 +47,7 @@ public class UserService {
         LocalDateTime expiration = user.getRefreshTokenExpiresIn();
         LocalDateTime now = LocalDateTime.now();
         if (now.isAfter(expiration)) {
-            throw new AuthenticationException(ErrorCode.LOGOUT_REFRESH_TOKEN);
+            throw new AuthenticationException(ErrorCode.ALREADY_LOGOUT_USER);
         }
 
         return user;
