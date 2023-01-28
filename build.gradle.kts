@@ -76,6 +76,10 @@ dependencies {
 	implementation ("org.apache.commons:commons-text:1.10.0")
 	// XSS Protect End
 
+	// Spring AOP Start
+	implementation("org.springframework.boot:spring-boot-starter-aop:3.0.1")
+	// Spring AOP End
+
 }
 
 dependencyManagement {

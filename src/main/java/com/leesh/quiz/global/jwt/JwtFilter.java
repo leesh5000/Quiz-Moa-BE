@@ -1,7 +1,6 @@
 package com.leesh.quiz.global.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.leesh.quiz.domain.user.constant.Role;
 import com.leesh.quiz.global.constant.UserInfo;
 import com.leesh.quiz.global.error.dto.ErrorResponse;
 import com.leesh.quiz.global.error.exception.AuthenticationException;

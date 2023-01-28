@@ -11,7 +11,7 @@ public class HtmlCharacterEscapes extends CharacterEscapes {
 
     private final int[] asciiEscapes;
 
-    private HtmlCharacterEscapes() {
+    protected HtmlCharacterEscapes() {
         // XSS 방지 처리할 특수 문자 지정
         asciiEscapes = CharacterEscapes.standardAsciiEscapesForJSON();
         asciiEscapes['<'] = CharacterEscapes.ESCAPE_CUSTOM;
