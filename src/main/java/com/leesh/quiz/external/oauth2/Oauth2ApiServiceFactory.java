@@ -10,7 +10,7 @@ public class Oauth2ApiServiceFactory {
 
     private static Map<String, Oauth2ApiService> oauth2ApiServices;
 
-    private Oauth2ApiServiceFactory(Map<String, Oauth2ApiService> oauth2ApiServices) {
+    protected Oauth2ApiServiceFactory(Map<String, Oauth2ApiService> oauth2ApiServices) {
         Oauth2ApiServiceFactory.oauth2ApiServices = oauth2ApiServices;
     }
 
