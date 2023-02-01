@@ -18,7 +18,7 @@ import java.util.Objects;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "Quiz_Vote", indexes = {
+@Table(name = "quiz_vote", indexes = {
         @Index(columnList = "user_id"),
         @Index(columnList = "created_at")
 })
@@ -38,13 +38,16 @@ public class QuizVote {
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     private Quiz quiz;
 
+    @Column(name = "value", nullable = false)
+    private boolean value;
+
     /* Meta Data Start */
     @CreatedBy
-    @Column(name = "created_by", nullable = false, updatable = false)
+    @Column(name = "created_by", nullable = false, updatable = false, length = 255)
     private String createdBy;
 
     @LastModifiedBy
-    @Column(name = "modified_by", nullable = false)
+    @Column(name = "modified_by", nullable = false, length = 255)
     private String modifiedBy;
 
     @CreatedDate
@@ -55,6 +58,7 @@ public class QuizVote {
     @Column(name = "modified_at", nullable = false)
     private LocalDateTime modifiedAt;
     /* Meta Data End */
+
 
     @Override
     public boolean equals(Object o) {

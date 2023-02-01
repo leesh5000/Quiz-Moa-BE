@@ -80,6 +80,10 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-aop:3.0.1")
 	// Spring AOP End
 
+	// Maria DB client Start
+	runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
+	// Maria DB client End
+
 }
 
 dependencyManagement {

@@ -17,7 +17,7 @@ import java.util.Objects;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "Answer_Vote", indexes = {
+@Table(name = "answer_vote", indexes = {
         @Index(columnList = "user_id"),
         @Index(columnList = "created_at")
 })
@@ -33,9 +33,12 @@ public class AnswerVote {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private User user;
 
-    @JoinColumn(name = "quiz_id", nullable = true)
+    @JoinColumn(name = "answer_id", nullable = true)
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     private Answer answer;
+
+    @Column(name = "value", nullable = false)
+    private boolean value;
 
     /* Meta Data Start */
     @CreatedBy

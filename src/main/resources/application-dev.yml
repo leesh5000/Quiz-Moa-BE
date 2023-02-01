@@ -2,3 +2,16 @@ server:
   port: 8081
   servlet:
     context-path: /dev
+
+spring:
+  datasource:
+    url: jdbc:mariadb://localhost:3306/quiz
+    username: ENC(JfqmDoRTUe90HoT6H3f2gw==)
+    password: ENC(JfqmDoRTUe90HoT6H3f2gw==)
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  sql:
+    init:
+      mode: always

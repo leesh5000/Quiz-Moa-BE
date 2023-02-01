@@ -20,7 +20,7 @@ import java.util.Set;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "Answer", indexes = {
+@Table(name = "answer", indexes = {
         @Index(columnList = "user_id"),
         @Index(columnList = "created_at")
 })
@@ -32,8 +32,7 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String contents;
 
     @JoinColumn(name = "user_id", nullable = false)

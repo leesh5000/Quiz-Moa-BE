@@ -24,7 +24,7 @@ import java.util.Set;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "Users", indexes = {
+@Table(name = "users", indexes = {
         @Index(columnList = "username"),
         @Index(columnList = "email"),
         @Index(columnList = "created_at")
