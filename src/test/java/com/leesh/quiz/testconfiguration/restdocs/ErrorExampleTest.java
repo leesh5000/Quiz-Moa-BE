@@ -1,12 +1,9 @@
-package com.leesh.quiz.configuration.restdocs;
+package com.leesh.quiz.testconfiguration.restdocs;
 
 import com.leesh.quiz.api.HomeController;
-import com.leesh.quiz.global.configuration.SecurityConfiguration;
-import com.leesh.quiz.global.jwt.service.JwtTokenService;
-import com.leesh.quiz.global.xss.HtmlCharacterEscapes;
+import com.leesh.quiz.testconfiguration.webmvc.TestControllerConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.h2.H2ConsoleProperties;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -20,7 +17,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 
 @WebMvcTest(HomeController.class)
-@Import({SecurityConfiguration.class, JwtTokenService.class, HtmlCharacterEscapes.class, RestDocsConfiguration.class, H2ConsoleProperties.class})
+@Import(TestControllerConfiguration.class)
 @ActiveProfiles("test")
 @AutoConfigureRestDocs
 public class ErrorExampleTest {

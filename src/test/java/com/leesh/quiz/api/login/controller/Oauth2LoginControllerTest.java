@@ -3,13 +3,12 @@ package com.leesh.quiz.api.login.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leesh.quiz.api.login.dto.Oauth2LoginDto;
 import com.leesh.quiz.api.login.service.Oauth2LoginService;
-import com.leesh.quiz.configuration.restdocs.RestDocsConfiguration;
 import com.leesh.quiz.domain.user.constant.Oauth2Type;
-import com.leesh.quiz.global.configuration.SecurityConfiguration;
+import com.leesh.quiz.global.jwt.constant.GrantType;
 import com.leesh.quiz.global.jwt.dto.AccessToken;
 import com.leesh.quiz.global.jwt.dto.RefreshToken;
-import com.leesh.quiz.global.jwt.service.JwtTokenService;
-import com.leesh.quiz.global.xss.HtmlCharacterEscapes;
+import com.leesh.quiz.testconfiguration.restdocs.RestDocsConfiguration;
+import com.leesh.quiz.testconfiguration.webmvc.TestControllerConfiguration;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("Oauth2 Login API 테스트")
 @WebMvcTest(Oauth2LoginController.class)
-@Import({SecurityConfiguration.class, JwtTokenService.class, HtmlCharacterEscapes.class, RestDocsConfiguration.class})
+@Import(TestControllerConfiguration.class)
 @ActiveProfiles("test")
 @AutoConfigureRestDocs
 class Oauth2LoginControllerTest {
@@ -59,15 +58,12 @@ class Oauth2LoginControllerTest {
                 Oauth2Type.NAVER.name(),
                 "y7iyuzOxjD3AnPOtNDkxlKhVEtdjIBduM7uJboWnDskFxrD9GvitLQpqpnA7fAc4pMvowAo9dJcAAAGGCllssw");
 
-        AccessToken accessToken = AccessToken.of(
-                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBQ0NFU1MiLCJpYXQiOjE2NzUyMTA4NzksImV4cCI6MTY3NTIxMTc3OSwidXNlcklkIjoxLCJyb2xlIjoiVVNFUiJ9.X1AfxGWGUPhC5ovt3hcLv8_6Zb8H0Z4yn8tDxHohrTx_kcgTDWIHPt8yDuTHYo9KmqqqIwTQ7VEtMaVyJdqKrQ",
-                new Date());
-
-        RefreshToken refreshToken = RefreshToken.of(
-                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q",
-                new Date());
-
-        given(service.oauth2Login(request)).willReturn(Oauth2LoginDto.Response.from(accessToken, refreshToken));
+        given(service.oauth2Login(request))
+                .willReturn(
+                        Oauth2LoginDto.Response.from(
+                                AccessToken.of("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBQ0NFU1MiLCJpYXQiOjE2NzUyMTA4NzksImV4cCI6MTY3NTIxMTc3OSwidXNlcklkIjoxLCJyb2xlIjoiVVNFUiJ9.X1AfxGWGUPhC5ovt3hcLv8_6Zb8H0Z4yn8tDxHohrTx_kcgTDWIHPt8yDuTHYo9KmqqqIwTQ7VEtMaVyJdqKrQ", new Date()),
+                                RefreshToken.of("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q", new Date())
+                        ));
 
         // when
         ResultActions result = mvc.perform(post("/api/oauth2/login")
@@ -78,7 +74,7 @@ class Oauth2LoginControllerTest {
         // then
         result
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.grantType").exists())
+                .andExpect(jsonPath("$.grantType").value(GrantType.BEARER.getType()))
                 .andExpect(jsonPath("$.accessToken").exists())
                 .andExpect(jsonPath("$.refreshToken").exists())
                 .andExpect(jsonPath("$.accessTokenExpiresIn").exists())
@@ -98,7 +94,7 @@ class Oauth2LoginControllerTest {
                                 fieldWithPath("authorizationCode").type(JsonFieldType.STRING).description("Oauth2 제공자로부터 받은 인가코드")
                         ),
                         responseFields(
-                                fieldWithPath("grantType").type(JsonFieldType.STRING).description("Grant Type"),
+                                fieldWithPath("grantType").type(JsonFieldType.STRING).description(GrantType.BEARER.getType()),
                                 fieldWithPath("accessToken").type(JsonFieldType.STRING).description("Access Token"),
                                 fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("Refresh Token"),
                                 fieldWithPath("accessTokenExpiresIn").type(JsonFieldType.STRING).description("Access Token 만료 시간"),

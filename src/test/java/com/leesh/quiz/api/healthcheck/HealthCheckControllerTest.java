@@ -1,9 +1,6 @@
 package com.leesh.quiz.api.healthcheck;
 
-import com.leesh.quiz.configuration.restdocs.RestDocsConfiguration;
-import com.leesh.quiz.global.configuration.SecurityConfiguration;
-import com.leesh.quiz.global.jwt.service.JwtTokenService;
-import com.leesh.quiz.global.xss.HtmlCharacterEscapes;
+import com.leesh.quiz.testconfiguration.webmvc.TestControllerConfiguration;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("Health check API 테스트")
 @WebMvcTest(HealthCheckController.class)
-// WebMvcTest에서 자동 등록되지 않는 설정들 추가
-@Import({SecurityConfiguration.class, JwtTokenService.class, HtmlCharacterEscapes.class, RestDocsConfiguration.class})
+@Import(TestControllerConfiguration.class)
 @ActiveProfiles("test")
 @AutoConfigureRestDocs
 class HealthCheckControllerTest {
