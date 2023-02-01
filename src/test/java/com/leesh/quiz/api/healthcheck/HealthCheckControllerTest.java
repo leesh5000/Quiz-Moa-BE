@@ -1,5 +1,6 @@
 package com.leesh.quiz.api.healthcheck;
 
+import com.leesh.quiz.configuration.restdocs.RestDocsConfiguration;
 import com.leesh.quiz.global.configuration.SecurityConfiguration;
 import com.leesh.quiz.global.jwt.service.JwtTokenService;
 import com.leesh.quiz.global.xss.HtmlCharacterEscapes;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -23,7 +25,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("Health check API 테스트")
 @WebMvcTest(HealthCheckController.class)
-@Import({SecurityConfiguration.class, JwtTokenService.class, HtmlCharacterEscapes.class})
+// WebMvcTest에서 자동 등록되지 않는 설정들 추가
+@Import({SecurityConfiguration.class, JwtTokenService.class, HtmlCharacterEscapes.class, RestDocsConfiguration.class})
 @ActiveProfiles("test")
 @AutoConfigureRestDocs
 class HealthCheckControllerTest {
@@ -49,7 +52,7 @@ class HealthCheckControllerTest {
                 andDo(document("health-check",
                         responseFields(
                                 fieldWithPath("health").description("현재 서버의 상태"),
-                                fieldWithPath("activeProfiles").description("현재 서버의 프로파일"))
+                                fieldWithPath("activeProfiles").type(JsonFieldType.ARRAY).description("현재 서버 환경"))
                 ));
     }
 
