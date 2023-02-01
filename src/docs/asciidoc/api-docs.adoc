@@ -1,15 +1,58 @@
 :doctype: book
+:icons: font
 :source-highlighter: highlight.js
 :toc: left
-:toclevels: 1
+:toclevels: 2
 :sectlinks:
 
-= Quiz-App API
+= Quiz-App APIs
 
-== Health Check API
+== 공통
+
+=== HTTP 상태 코드
+
+|===
+| 상태 코드 | 설명
+
+| `200 OK`
+| 성공
+
+| `400 Bad Request`
+| 잘못된 요청
+
+| `401 Unauthorized`
+| 인증 안 됨
+
+| `403 Forbidden`
+| 권한 없음
+
+| `404 Not Found`
+| 존재하지 않는 요청 리소스
+
+| `500 Internal Server Error`
+| 서버 에러
+|===
+
+=== 공통 에러 응답
+
+include::{snippets}/error-example/http-response.adoc[]
+
+include::{snippets}/error-example/response-fields.adoc[]
+
+=== 서버 상태 확인
 
 include::{snippets}/health-check/http-request.adoc[]
 
 include::{snippets}/health-check/http-response.adoc[]
 
 include::{snippets}/health-check/response-fields.adoc[]
+
+== 유저 인증
+
+=== Oauth2 Login
+
+include::{snippets}/oauth2-login/http-request.adoc[]
+
+include::{snippets}/oauth2-login/request-fields.adoc[]
+
+include::{snippets}/oauth2-login/http-response.adoc[]
