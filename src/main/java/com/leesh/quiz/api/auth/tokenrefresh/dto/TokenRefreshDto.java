@@ -1,8 +1,7 @@
-package com.leesh.quiz.api.tokenrefresh.dto;
+package com.leesh.quiz.api.auth.tokenrefresh.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.leesh.quiz.global.jwt.dto.AccessToken;
-import lombok.Builder;
 
 import java.util.Date;
 

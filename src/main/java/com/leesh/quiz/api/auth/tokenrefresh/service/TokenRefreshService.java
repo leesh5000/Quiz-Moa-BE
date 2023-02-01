@@ -1,6 +1,6 @@
-package com.leesh.quiz.api.tokenrefresh.service;
+package com.leesh.quiz.api.auth.tokenrefresh.service;
 
-import com.leesh.quiz.api.tokenrefresh.dto.TokenRefreshDto;
+import com.leesh.quiz.api.auth.tokenrefresh.dto.TokenRefreshDto;
 import com.leesh.quiz.domain.user.User;
 import com.leesh.quiz.domain.user.service.UserService;
 import com.leesh.quiz.global.jwt.dto.AccessToken;

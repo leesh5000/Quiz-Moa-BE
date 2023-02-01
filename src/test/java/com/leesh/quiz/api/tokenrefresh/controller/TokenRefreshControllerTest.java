@@ -1,7 +1,8 @@
 package com.leesh.quiz.api.tokenrefresh.controller;
 
-import com.leesh.quiz.api.tokenrefresh.dto.TokenRefreshDto;
-import com.leesh.quiz.api.tokenrefresh.service.TokenRefreshService;
+import com.leesh.quiz.api.auth.tokenrefresh.controller.TokenRefreshController;
+import com.leesh.quiz.api.auth.tokenrefresh.dto.TokenRefreshDto;
+import com.leesh.quiz.api.auth.tokenrefresh.service.TokenRefreshService;
 import com.leesh.quiz.global.jwt.constant.GrantType;
 import com.leesh.quiz.global.jwt.dto.AccessToken;
 import com.leesh.quiz.global.jwt.dto.RefreshToken;

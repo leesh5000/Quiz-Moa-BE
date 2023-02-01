@@ -1,6 +1,7 @@
 package com.leesh.quiz.api.logout.controller;
 
-import com.leesh.quiz.api.logout.service.LogoutService;
+import com.leesh.quiz.api.auth.logout.controller.LogoutController;
+import com.leesh.quiz.api.auth.logout.service.LogoutService;
 import com.leesh.quiz.domain.user.constant.Role;
 import com.leesh.quiz.global.constant.UserInfo;
 import com.leesh.quiz.global.jwt.dto.AccessToken;

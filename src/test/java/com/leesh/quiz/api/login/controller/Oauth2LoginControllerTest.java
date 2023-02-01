@@ -1,8 +1,9 @@
 package com.leesh.quiz.api.login.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.leesh.quiz.api.login.dto.Oauth2LoginDto;
-import com.leesh.quiz.api.login.service.Oauth2LoginService;
+import com.leesh.quiz.api.auth.login.controller.Oauth2LoginController;
+import com.leesh.quiz.api.auth.login.dto.Oauth2LoginDto;
+import com.leesh.quiz.api.auth.login.service.Oauth2LoginService;
 import com.leesh.quiz.domain.user.constant.Oauth2Type;
 import com.leesh.quiz.global.jwt.constant.GrantType;
 import com.leesh.quiz.global.jwt.dto.AccessToken;

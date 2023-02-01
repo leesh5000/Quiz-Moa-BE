@@ -1,6 +1,6 @@
-package com.leesh.quiz.api.logout.controller;
+package com.leesh.quiz.api.auth.logout.controller;
 
-import com.leesh.quiz.api.logout.service.LogoutService;
+import com.leesh.quiz.api.auth.logout.service.LogoutService;
 import com.leesh.quiz.global.constant.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.leesh.quiz.api.login.dto;
+package com.leesh.quiz.api.auth.login.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.leesh.quiz.global.jwt.constant.GrantType;

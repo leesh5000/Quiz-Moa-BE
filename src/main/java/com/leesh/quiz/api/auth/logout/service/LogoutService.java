@@ -1,4 +1,4 @@
-package com.leesh.quiz.api.logout.service;
+package com.leesh.quiz.api.auth.logout.service;
 
 import com.leesh.quiz.domain.user.User;
 import com.leesh.quiz.domain.user.service.UserService;
