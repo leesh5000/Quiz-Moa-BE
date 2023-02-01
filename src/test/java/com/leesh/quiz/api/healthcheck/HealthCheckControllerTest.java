@@ -1,6 +1,6 @@
 package com.leesh.quiz.api.healthcheck;
 
-import com.leesh.quiz.testconfiguration.webmvc.TestControllerConfiguration;
+import com.leesh.quiz.testconfiguration.webmvc.MvcTestConfiguration;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("Health check API 테스트")
 @WebMvcTest(HealthCheckController.class)
-@Import(TestControllerConfiguration.class)
+@Import(MvcTestConfiguration.class)
 @ActiveProfiles("test")
 @AutoConfigureRestDocs
 class HealthCheckControllerTest {

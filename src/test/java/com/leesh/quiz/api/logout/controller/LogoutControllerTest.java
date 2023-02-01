@@ -5,7 +5,7 @@ import com.leesh.quiz.domain.user.constant.Role;
 import com.leesh.quiz.global.constant.UserInfo;
 import com.leesh.quiz.global.jwt.dto.AccessToken;
 import com.leesh.quiz.global.jwt.service.TokenService;
-import com.leesh.quiz.testconfiguration.webmvc.TestControllerConfiguration;
+import com.leesh.quiz.testconfiguration.webmvc.MvcTestConfiguration;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("로그아웃 API 테스트")
 @WebMvcTest(LogoutController.class)
-@Import(TestControllerConfiguration.class)
+@Import(MvcTestConfiguration.class)
 @ActiveProfiles("test")
 @AutoConfigureRestDocs
 class LogoutControllerTest {

@@ -14,5 +14,5 @@ import org.springframework.context.annotation.Import;
         HtmlCharacterEscapes.class,
         RestDocsConfiguration.class,
         H2ConsoleProperties.class})
-public class TestControllerConfiguration {
+public class MvcTestConfiguration {
 }

@@ -8,7 +8,7 @@ import com.leesh.quiz.global.jwt.constant.GrantType;
 import com.leesh.quiz.global.jwt.dto.AccessToken;
 import com.leesh.quiz.global.jwt.dto.RefreshToken;
 import com.leesh.quiz.testconfiguration.restdocs.RestDocsConfiguration;
-import com.leesh.quiz.testconfiguration.webmvc.TestControllerConfiguration;
+import com.leesh.quiz.testconfiguration.webmvc.MvcTestConfiguration;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("Oauth2 Login API 테스트")
 @WebMvcTest(Oauth2LoginController.class)
-@Import(TestControllerConfiguration.class)
+@Import(MvcTestConfiguration.class)
 @ActiveProfiles("test")
 @AutoConfigureRestDocs
 class Oauth2LoginControllerTest {

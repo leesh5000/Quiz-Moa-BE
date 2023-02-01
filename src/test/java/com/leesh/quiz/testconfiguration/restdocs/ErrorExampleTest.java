@@ -1,7 +1,7 @@
 package com.leesh.quiz.testconfiguration.restdocs;
 
 import com.leesh.quiz.api.HomeController;
-import com.leesh.quiz.testconfiguration.webmvc.TestControllerConfiguration;
+import com.leesh.quiz.testconfiguration.webmvc.MvcTestConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -17,7 +17,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 
 @WebMvcTest(HomeController.class)
-@Import(TestControllerConfiguration.class)
+@Import(MvcTestConfiguration.class)
 @ActiveProfiles("test")
 @AutoConfigureRestDocs
 public class ErrorExampleTest {
