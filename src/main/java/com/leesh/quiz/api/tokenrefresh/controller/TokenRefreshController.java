@@ -4,6 +4,7 @@ import com.leesh.quiz.api.tokenrefresh.dto.TokenRefreshDto;
 import com.leesh.quiz.api.tokenrefresh.service.TokenRefreshService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,7 @@ public class TokenRefreshController {
 
     private final TokenRefreshService tokenRefreshService;
 
-    @PostMapping(path = "/refresh")
+    @PostMapping(path = "/refresh", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TokenRefreshDto> refresh(HttpServletRequest request) {
 
         String refreshToken = extractAuthorization(request);

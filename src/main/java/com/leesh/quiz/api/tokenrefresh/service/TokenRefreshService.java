@@ -3,7 +3,6 @@ package com.leesh.quiz.api.tokenrefresh.service;
 import com.leesh.quiz.api.tokenrefresh.dto.TokenRefreshDto;
 import com.leesh.quiz.domain.user.User;
 import com.leesh.quiz.domain.user.service.UserService;
-import com.leesh.quiz.global.jwt.constant.GrantType;
 import com.leesh.quiz.global.jwt.dto.AccessToken;
 import com.leesh.quiz.global.jwt.service.TokenService;
 import lombok.RequiredArgsConstructor;
@@ -28,11 +27,7 @@ public class TokenRefreshService {
         // 새로운 액세스 토큰을 발급한다.
         AccessToken accessToken = tokenService.createAccessToken(user.getId(), user.getRole());
 
-        return TokenRefreshDto.builder()
-                .grantType(GrantType.BEARER.getType())
-                .accessToken(accessToken.accessToken())
-                .accessTokenExpiresIn(accessToken.accessTokenExpiresIn())
-                .build();
+        return TokenRefreshDto.from(accessToken);
 
     }
 }
