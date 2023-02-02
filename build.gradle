@@ -25,10 +25,6 @@ ext {
 
 dependencies {
 
-	// Thymeleaf Start
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.0.1'
-	// Thymeleaf End
-
 	// OpenFeign Start
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.0'
 	// OpenFeign End
@@ -92,6 +88,7 @@ dependencyManagement {
 	}
 }
 
+// Asciidoctor 설정 시작
 tasks.named('test') {
 	useJUnitPlatform()
 	outputs.dir snippetsDir
@@ -102,7 +99,6 @@ tasks.named('asciidoctor') {
 	dependsOn test
 }
 
-// Asciidoctor 설정 시작
 asciidoctor.doFirst {
 	// 기존에 존재하는 문서 삭제
 	delete file('src/main/resources/static/docs')
