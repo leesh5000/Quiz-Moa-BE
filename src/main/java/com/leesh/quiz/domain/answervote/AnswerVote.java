@@ -38,7 +38,7 @@ public class AnswerVote {
     private Answer answer;
 
     @Column(name = "value", nullable = false)
-    private boolean value;
+    private byte value;
 
     /* Meta Data Start */
     @CreatedBy
