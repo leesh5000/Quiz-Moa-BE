@@ -29,7 +29,6 @@ import static com.leesh.quiz.api.userprofile.dao.UserProfilePagingInfo.from;
 public class UserProfileController {
 
     private final UserProfileDao userProfileDao;
-    private final QuizRepository quizRepository;
 
     // Paging은 Spring Data Jpa에서 제공하는 Pageable 스펙을 사용
     // 다음과 같은 형식 /quizzes?page={page}&size={size}&sort={property,direction}
