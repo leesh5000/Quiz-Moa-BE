@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Import;
 @Import({SecurityConfiguration.class,
         JwtTokenService.class,
         HtmlCharacterEscapes.class,
-        RestDocsConfiguration.class,
-        H2ConsoleProperties.class})
+        RestDocsConfiguration.class})
 public class MvcTestConfiguration {
 }

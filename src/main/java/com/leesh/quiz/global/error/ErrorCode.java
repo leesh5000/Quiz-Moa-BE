@@ -3,8 +3,7 @@ package com.leesh.quiz.global.error;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.http.HttpStatus.*;
 
 @Getter
 public enum ErrorCode {
@@ -31,6 +30,7 @@ public enum ErrorCode {
     /* User */
     DUPLICATED_USER(BAD_REQUEST, "M-001", "이미 존재하는 유저입니다."),
     NOT_EXIST_USER(BAD_REQUEST, "M-002", "존재하지 않는 유저입니다."),
+    NOT_ACCESSIBLE_USER(FORBIDDEN, "M-003", "해당 리소스에 접근할 수 없는 유저입니다."),
     ;
 
     private final HttpStatus httpStatus;

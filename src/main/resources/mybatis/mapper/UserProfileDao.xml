@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.leesh.quiz.api.userprofile.dao.UserProfileDao">
+    <select id="getQuizzesByPaging"
+            parameterType="com.leesh.quiz.api.userprofile.dao.UserProfilePagingInfo"
+            resultType="com.leesh.quiz.api.userprofile.dto.MyQuizDto">
+        select  qua.id                   as 'id',
+                qua.title                as 'title',
+                qua.contents             as 'contents',
+                qua.answer_count,
+                qua.email                as 'author',
+                ifnull(sum(qv.value), 0) as 'votes',
+                qua.created_at,
+                qua.modified_at
+        from (select q.id,
+                     q.title,
+                     q.contents,
+                     q.created_at,
+                     q.modified_at,
+                     u.id        as 'user_id',
+                     u.email,
+                     count(a.id) as 'answer_count'
+              from quiz q
+                       inner join users u on q.user_id = u.id
+                       left outer join answer a on q.id = a.quiz_id
+              where q.user_id = ${userId}
+              group by q.id) as qua
+                 left outer join quiz_vote qv on qua.id = qv.quiz_id
+        group by qua.id
+        <if test="sorted">
+            <trim prefix="order by">
+                <foreach item="order" index="i" collection="orders" separator=", ">
+                    ${order.property} ${order.direction}
+                </foreach>
+            </trim>
+        </if>
+        limit #{offset}, #{pageSize}
+    </select>
+    
+    <select id="getTotalCount"
+            resultType="long">
+        select count(*)
+        from quiz q
+        inner join users u on q.user_id = u.id
+        where u.id = ${userId};
+    </select>
+</mapper>

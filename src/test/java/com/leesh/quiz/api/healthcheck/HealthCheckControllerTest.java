@@ -47,7 +47,7 @@ class HealthCheckControllerTest {
         result.
                 andDo(document("health-check",
                         responseFields(
-                                fieldWithPath("health").description("현재 서버의 상태"),
+                                fieldWithPath("health").description("현재 서버의 상태 zzzzz"),
                                 fieldWithPath("activeProfiles").type(JsonFieldType.ARRAY).description("현재 서버 환경"))
                 ));
     }
