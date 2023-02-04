@@ -1,6 +1,6 @@
 package com.leesh.quiz.api.healthcheck;
 
-import com.leesh.quiz.testconfiguration.webmvc.MvcTestConfiguration;
+import com.leesh.quiz.testconfiguration.MvcTestConfiguration;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

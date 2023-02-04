@@ -1,4 +1,4 @@
-package com.leesh.quiz.testconfiguration.restdocs;
+package com.leesh.quiz.testconfiguration;
 
 import org.springframework.boot.test.autoconfigure.restdocs.RestDocsMockMvcConfigurationCustomizer;
 import org.springframework.boot.test.context.TestConfiguration;

@@ -17,7 +17,7 @@ import java.util.List;
 @Repository
 public interface UserProfileDao {
 
-    List<MyQuizDto> getQuizzesByPaging(UserProfilePagingInfo pagingInfo);
+    List<MyQuizDto> getQuizzesByPaging(PagingRequestInfo pagingInfo);
 
     Long getTotalCount(@Param("userId") Long userId);
 

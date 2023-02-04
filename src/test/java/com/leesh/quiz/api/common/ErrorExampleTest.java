@@ -1,7 +1,7 @@
-package com.leesh.quiz.testconfiguration.restdocs;
+package com.leesh.quiz.api.common;
 
 import com.leesh.quiz.api.HomeController;
-import com.leesh.quiz.testconfiguration.webmvc.MvcTestConfiguration;
+import com.leesh.quiz.testconfiguration.MvcTestConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;

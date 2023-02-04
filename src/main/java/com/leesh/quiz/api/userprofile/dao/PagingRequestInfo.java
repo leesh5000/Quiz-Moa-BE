@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
  * @param offset
  * @param pageSize
  */
-public record UserProfilePagingInfo(boolean sorted, List<Sort.Order> orders, long offset, int pageSize, Long userId) {
+public record PagingRequestInfo(boolean sorted, List<Sort.Order> orders, long offset, int pageSize, Long userId) {
 
-    public static UserProfilePagingInfo from(Pageable pageable, UserInfo userInfo) {
-        return new UserProfilePagingInfo(
+    public static PagingRequestInfo from(Pageable pageable, UserInfo userInfo) {
+        return new PagingRequestInfo(
                 pageable.getSort().isSorted(),
                 pageable.getSort().stream().collect(Collectors.toList()),
                 pageable.getOffset(),

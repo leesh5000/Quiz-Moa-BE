@@ -84,3 +84,19 @@ include::{snippets}/logout/http-request.adoc[]
 include::{snippets}/logout/request-headers.adoc[]
 
 include::{snippets}/logout/http-response.adoc[]
+
+== *유저 프로필* ==
+
+=== *유저가 작성한 퀴즈 목록 조회* ===
+
+include::{snippets}/user-profile/get-quizzes/http-request.adoc[]
+
+include::{snippets}/user-profile/get-quizzes/request-headers.adoc[]
+
+include::{snippets}/user-profile/get-quizzes/query-parameters.adoc[]
+
+include::{snippets}/user-profile/get-quizzes/path-parameters.adoc[]
+
+include::{snippets}/user-profile/get-quizzes/http-response.adoc[]
+
+include::{snippets}/user-profile/get-quizzes/response-fields.adoc[]

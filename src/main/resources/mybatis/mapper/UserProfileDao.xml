@@ -3,7 +3,7 @@
 
 <mapper namespace="com.leesh.quiz.api.userprofile.dao.UserProfileDao">
     <select id="getQuizzesByPaging"
-            parameterType="com.leesh.quiz.api.userprofile.dao.UserProfilePagingInfo"
+            parameterType="com.leesh.quiz.api.userprofile.dao.PagingRequestInfo"
             resultType="com.leesh.quiz.api.userprofile.dto.MyQuizDto">
         select  qua.id                   as 'id',
                 qua.title                as 'title',
