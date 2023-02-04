@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public interface UserInfoValidator {
 
-    static void isAccessible(Long pathParameter, UserInfo userInfo) throws BusinessException {
+    static void validateAccessible(Long pathParameter, UserInfo userInfo) throws BusinessException {
         if (!Objects.equals(pathParameter, userInfo.userId())) {
             throw new BusinessException(ErrorCode.NOT_ACCESSIBLE_USER);
         }

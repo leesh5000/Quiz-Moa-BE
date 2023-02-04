@@ -1,6 +1,7 @@
 package com.leesh.quiz.domain.user;
 
 import com.leesh.quiz.domain.answer.Answer;
+import com.leesh.quiz.domain.answervote.AnswerVote;
 import com.leesh.quiz.domain.quiz.Quiz;
 import com.leesh.quiz.domain.quizvote.QuizVote;
 import com.leesh.quiz.domain.user.constant.Oauth2Type;
@@ -64,15 +65,19 @@ public class User {
 
     @OrderBy("id")
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final Set<Quiz> myQuizzes = new LinkedHashSet<>();
+    private final Set<Quiz> quizzes = new LinkedHashSet<>();
 
     @OrderBy("id")
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final Set<Answer> myAnswers = new LinkedHashSet<>();
+    private final Set<Answer> answers = new LinkedHashSet<>();
 
     @OrderBy("id")
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final Set<QuizVote> myQuizVotes = new LinkedHashSet<>();
+    private final Set<QuizVote> quizVotes = new LinkedHashSet<>();
+
+    @OrderBy("id")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final Set<AnswerVote> answerVotes = new LinkedHashSet<>();
 
     /* Meta Data Start */
     @CreatedBy

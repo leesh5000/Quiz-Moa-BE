@@ -1,5 +1,7 @@
 package com.leesh.quiz.api.userprofile.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.leesh.quiz.api.userprofile.dto.EditMyQuizDto;
 import com.leesh.quiz.api.userprofile.dto.MyQuizDto;
 import com.leesh.quiz.api.userprofile.dto.PagingResponseDto;
 import com.leesh.quiz.api.userprofile.service.UserProfileService;
@@ -27,14 +29,15 @@ import java.util.Date;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -54,17 +57,21 @@ class UserProfileControllerTest {
     @MockBean
     private UserProfileService userProfileService;
 
-    @DisplayName("정상 호출")
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @DisplayName("퀴즈 목록 조회 API 테스트 - 정상 호출")
     @Test
-    void success() throws Exception {
+    void getMyQuizzes_success() throws Exception {
 
         // given
         AccessToken accessToken = AccessToken.of(
                 "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q",
                 new Date());
 
+        long userId = 1L;
         given(tokenService.extractUserInfo(any(String.class)))
-                .willReturn(UserInfo.of(1L, Role.USER));
+                .willReturn(UserInfo.of(userId, Role.USER));
 
         List<MyQuizDto> content = List.of(
                 new MyQuizDto(1L, "test1의 퀴즈", "HTTP 프로토콜의 특징은 무엇인가요?", 5, "test1@gmail.com", 12, LocalDateTime.now(), LocalDateTime.now()),
@@ -83,7 +90,7 @@ class UserProfileControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                get("/api/users/{userId}/quizzes?page={page}&size={size}&sort={property,direction}", 1L, 0, 3, "id,asc")
+                get("/api/users/{userId}/quizzes?page={page}&size={size}&sort={property,direction}", userId, 0, 3, "id,asc")
                         .header(HttpHeaders.AUTHORIZATION, accessToken.grantType() + " " + accessToken.accessToken())
                         .accept(MediaType.APPLICATION_JSON));
 
@@ -141,5 +148,58 @@ class UserProfileControllerTest {
 
     }
 
+    @DisplayName("퀴즈 수정 API 테스트 - 정상 호출")
+    @Test
+    void editMyQuiz_success() throws Exception {
 
+        // given
+        AccessToken accessToken = AccessToken.of(
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q",
+                new Date());
+
+        long quizWriterId = 1L;
+        long editQuizId = 1L;
+        given(tokenService.extractUserInfo(any(String.class)))
+                .willReturn(UserInfo.of(quizWriterId, Role.USER));
+
+        given(userProfileService.editMyQuiz(any(EditMyQuizDto.Request.class), any(UserInfo.class), anyLong()))
+                .willReturn(EditMyQuizDto.Response.from(editQuizId));
+
+        EditMyQuizDto.Request requestBody = EditMyQuizDto.Request.builder()
+                .title("수정된 퀴즈 제목")
+                .contents("수정된 퀴즈 내용")
+                .build();
+
+        // when
+        ResultActions result = mvc.perform(
+                put("/api/users/{userId}/quizzes/{quizId}", quizWriterId, editQuizId)
+                        .header(HttpHeaders.AUTHORIZATION, accessToken.grantType() + " " + accessToken.accessToken())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestBody)));
+
+        // then
+        result
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.editQuizId").value(editQuizId));
+
+        // API 문서화
+        result
+                .andDo(document("user-profile/edit-my-quiz",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("접근 토큰(Access Token)")
+                        ),
+                        pathParameters(
+                                parameterWithName("userId").description("퀴즈 작성자 ID"),
+                                parameterWithName("quizId").description("수정할 퀴즈 ID")
+                        ),
+                        requestFields(
+                                fieldWithPath("title").description("퀴즈 제목"),
+                                fieldWithPath("contents").description("퀴즈 내용")
+                        ),
+                        responseFields(
+                                fieldWithPath("editQuizId").description("수정된 퀴즈 ID"))));
+
+    }
 }

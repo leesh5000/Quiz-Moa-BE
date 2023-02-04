@@ -31,6 +31,10 @@ public enum ErrorCode {
     DUPLICATED_USER(BAD_REQUEST, "M-001", "이미 존재하는 유저입니다."),
     NOT_EXIST_USER(BAD_REQUEST, "M-002", "존재하지 않는 유저입니다."),
     NOT_ACCESSIBLE_USER(FORBIDDEN, "M-003", "해당 리소스에 접근할 수 없는 유저입니다."),
+
+    /* Quiz */
+    NOT_EXIST_QUIZ(NOT_FOUND, "Q-001", "존재하지 않는 퀴즈입니다."),
+    IS_NOT_QUIZ_OWNER(FORBIDDEN, "Q-002", "퀴즈 작성자만 수정/삭제가 가능합니다.")
     ;
 
     private final HttpStatus httpStatus;

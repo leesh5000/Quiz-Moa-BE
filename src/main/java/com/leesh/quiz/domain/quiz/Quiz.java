@@ -3,11 +3,12 @@ package com.leesh.quiz.domain.quiz;
 import com.leesh.quiz.domain.answer.Answer;
 import com.leesh.quiz.domain.quizvote.QuizVote;
 import com.leesh.quiz.domain.user.User;
+import com.leesh.quiz.global.error.ErrorCode;
+import com.leesh.quiz.global.error.exception.BusinessException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.BatchSize;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -92,4 +93,18 @@ public class Quiz {
         return new Quiz(title, contents, user);
     }
 
+    public void edit(String title, String contents, Long userId) throws BusinessException {
+
+        // 퀴즈 작성자인지 검증한다.
+        validateQuizOwner(userId);
+
+        this.title = title;
+        this.contents = contents;
+    }
+
+    private void validateQuizOwner(Long userId) {
+        if (!Objects.equals(this.user.getId(), userId)) {
+            throw new BusinessException(ErrorCode.IS_NOT_QUIZ_OWNER);
+        }
+    }
 }

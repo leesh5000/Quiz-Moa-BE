@@ -1,5 +1,6 @@
 package com.leesh.quiz.api.userprofile.controller;
 
+import com.leesh.quiz.api.userprofile.dto.EditMyQuizDto;
 import com.leesh.quiz.api.userprofile.dto.PagingResponseDto;
 import com.leesh.quiz.api.userprofile.service.UserProfileService;
 import com.leesh.quiz.global.constant.UserInfo;
@@ -10,10 +11,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -30,11 +28,28 @@ public class UserProfileController {
                                                         @PageableDefault(size = 20) Pageable pageable) {
 
         // 접근 권한이 있는 사용자인지 검증
-        UserInfoValidator.isAccessible(userId, userInfo);
+        UserInfoValidator.validateAccessible(userId, userInfo);
 
         PagingResponseDto body = userProfileService.getMyQuizzes(pageable, userInfo);
 
         return ResponseEntity.ok(body);
 
     }
+
+    @PutMapping(value = "/quizzes/{quiz-id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EditMyQuizDto.Response> editMyQuiz(@PathVariable("user-id") Long userId,
+                                                    @PathVariable("quiz-id") Long quizId,
+                                                    @AuthenticationPrincipal UserInfo userInfo,
+                                                    @RequestBody EditMyQuizDto.Request request) {
+
+        // 접근 권한이 있는 사용자인지 검증
+        UserInfoValidator.validateAccessible(userId, userInfo);
+
+        EditMyQuizDto.Response body = userProfileService.editMyQuiz(request, userInfo, quizId);
+
+        return ResponseEntity.ok(body);
+
+    }
+
+
 }
