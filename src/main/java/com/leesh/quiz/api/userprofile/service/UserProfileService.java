@@ -10,17 +10,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static com.leesh.quiz.api.userprofile.dao.PagingRequestInfo.from;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class UserProfileService {
 
     private final UserProfileDao userProfileDao;
 
+    @Transactional(readOnly = true)
     public PagingResponseDto getMyQuizzes(Pageable pageable, UserInfo userInfo) {
 
         // Pageable, userInfo 를 Dao에서 바인딩 할 수 있도록 PagingRequestInfo로 변환
