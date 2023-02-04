@@ -11,6 +11,7 @@ import com.leesh.quiz.global.constant.UserInfo;
 import com.leesh.quiz.global.jwt.dto.AccessToken;
 import com.leesh.quiz.global.jwt.service.TokenService;
 import com.leesh.quiz.testconfiguration.MvcTestConfiguration;
+import com.leesh.quiz.testconfiguration.RestDocsConfiguration;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -166,7 +167,7 @@ class UserProfileControllerTest {
                 .willReturn(EditMyQuizDto.Response.from(editQuizId));
 
         EditMyQuizDto.Request requestBody = EditMyQuizDto.Request.builder()
-                .title("수정된 퀴즈 제목")
+                .title("수정된 퀴즈 제목, 퀴즈 제목은 10자 이상이어야 합니다.")
                 .contents("수정된 퀴즈 내용")
                 .build();
 
@@ -195,7 +196,7 @@ class UserProfileControllerTest {
                                 parameterWithName("quizId").description("수정할 퀴즈 ID")
                         ),
                         requestFields(
-                                fieldWithPath("title").description("퀴즈 제목"),
+                                fieldWithPath("title").description("퀴즈 제목").attributes(RestDocsConfiguration.field("constraints", "10자 이상 255자 이하")),
                                 fieldWithPath("contents").description("퀴즈 내용")
                         ),
                         responseFields(

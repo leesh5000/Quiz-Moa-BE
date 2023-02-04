@@ -1,5 +1,6 @@
 package com.leesh.quiz.api.userprofile.dto;
 
+import com.leesh.quiz.domain.quiz.validation.QuizTitle;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,7 @@ import lombok.NoArgsConstructor;
 public class EditMyQuizDto {
 
     @Builder
-    public record Request(String title, String contents) {
+    public record Request(@QuizTitle String title, String contents) {
 
     }
 

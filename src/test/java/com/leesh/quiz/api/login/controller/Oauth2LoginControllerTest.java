@@ -89,8 +89,7 @@ class Oauth2LoginControllerTest {
         result
                 .andDo(document("oauth2-login",
                         requestFields(
-                                fieldWithPath("oauth2Type").type(JsonFieldType.STRING).description("Oauth2 제공자 타입")
-                                        .attributes(RestDocsConfiguration.field("constraints", "Naver, Kakao, Google 중 하나")),
+                                fieldWithPath("oauth2Type").type(JsonFieldType.STRING).description("Oauth2 제공자 타입").attributes(RestDocsConfiguration.field("constraints", "Naver, Kakao, Google 중 하나")),
                                 fieldWithPath("authorizationCode").type(JsonFieldType.STRING).description("Oauth2 제공자로부터 받은 인가코드")
                         ),
                         responseFields(

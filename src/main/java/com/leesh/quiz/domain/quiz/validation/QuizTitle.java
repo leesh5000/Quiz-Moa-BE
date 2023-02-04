@@ -37,7 +37,15 @@ public @interface QuizTitle {
 
             if (value == null || value.isBlank()) {
                 context.buildConstraintViolationWithTemplate(
-                        messageSource.getMessage("validation.quiz.title.null"))
+                        messageSource.getMessage("QUIZ.TITLE.NULL"))
+                        .addConstraintViolation();
+
+                isValid = false;
+            }
+
+            if (value != null && value.length() < 10) {
+                context.buildConstraintViolationWithTemplate(
+                                messageSource.getMessage("QUIZ.TITLE.MIN"))
                         .addConstraintViolation();
 
                 isValid = false;
@@ -45,7 +53,7 @@ public @interface QuizTitle {
 
             if (value != null && value.length() > 255) {
                 context.buildConstraintViolationWithTemplate(
-                                messageSource.getMessage("validation.quiz.title.size"))
+                                messageSource.getMessage("QUIZ.TITLE.MAX"))
                         .addConstraintViolation();
 
                 isValid = false;
