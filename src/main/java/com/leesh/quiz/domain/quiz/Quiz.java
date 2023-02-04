@@ -40,6 +40,9 @@ public class Quiz {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String contents;
 
+    @Column(nullable = false)
+    private boolean deleted;
+
     @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private User user;
@@ -93,6 +96,7 @@ public class Quiz {
         return new Quiz(title, contents, user);
     }
 
+    /* Domain Business Logic */
     public void edit(String title, String contents, Long userId) throws BusinessException {
 
         // 퀴즈 작성자인지 검증한다.
@@ -102,7 +106,15 @@ public class Quiz {
         this.contents = contents;
     }
 
-    private void validateQuizOwner(Long userId) {
+    public void delete(Long userId) {
+
+        // 퀴즈 작성자인지 검증한다.
+        validateQuizOwner(userId);
+
+        this.deleted = true;
+    }
+
+    private void validateQuizOwner(Long userId) throws BusinessException {
         if (!Objects.equals(this.user.getId(), userId)) {
             throw new BusinessException(ErrorCode.IS_NOT_QUIZ_OWNER);
         }

@@ -1,6 +1,7 @@
 package com.leesh.quiz.api.userprofile.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.leesh.quiz.api.userprofile.dto.DeleteMyQuizDto;
 import com.leesh.quiz.api.userprofile.dto.EditMyQuizDto;
 import com.leesh.quiz.api.userprofile.dto.MyQuizDto;
 import com.leesh.quiz.api.userprofile.dto.PagingResponseDto;
@@ -35,8 +36,7 @@ import static org.mockito.BDDMockito.then;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -60,7 +60,7 @@ class UserProfileControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @DisplayName("퀴즈 목록 조회 API 테스트 - 정상 호출")
+    @DisplayName("유저 퀴즈 목록 조회 API 테스트 - 정상 호출")
     @Test
     void getMyQuizzes_success() throws Exception {
 
@@ -148,7 +148,7 @@ class UserProfileControllerTest {
 
     }
 
-    @DisplayName("퀴즈 수정 API 테스트 - 정상 호출")
+    @DisplayName("유저 퀴즈 수정 API 테스트 - 정상 호출")
     @Test
     void editMyQuiz_success() throws Exception {
 
@@ -200,6 +200,50 @@ class UserProfileControllerTest {
                         ),
                         responseFields(
                                 fieldWithPath("editQuizId").description("수정된 퀴즈 ID"))));
+
+    }
+
+    @DisplayName("유저 퀴즈 삭제 API 테스트 - 정상 호출")
+    @Test
+    void deleteMyQuiz_success() throws Exception {
+
+        // given
+        AccessToken accessToken = AccessToken.of(
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q",
+                new Date());
+
+        long quizWriterId = 1L;
+        long deleteQuizId = 1L;
+        given(tokenService.extractUserInfo(any(String.class)))
+                .willReturn(UserInfo.of(quizWriterId, Role.USER));
+
+        given(userProfileService.deleteMyQuiz(anyLong(), any(UserInfo.class)))
+                .willReturn(DeleteMyQuizDto.from(deleteQuizId));
+
+        // when
+        ResultActions result = mvc.perform(
+                delete("/api/users/{userId}/quizzes/{quizId}", quizWriterId, deleteQuizId)
+                        .header(HttpHeaders.AUTHORIZATION, accessToken.grantType() + " " + accessToken.accessToken())
+                        .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        result
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.deleteQuizId").value(deleteQuizId));
+
+        // API 문서화
+        result
+                .andDo(document("user-profile/delete-my-quiz",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("접근 토큰(Access Token)")
+                        ),
+                        pathParameters(
+                                parameterWithName("userId").description("퀴즈 작성자 ID"),
+                                parameterWithName("quizId").description("삭제할 퀴즈 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("deleteQuizId").description("삭제된 퀴즈 ID"))));
 
     }
 }

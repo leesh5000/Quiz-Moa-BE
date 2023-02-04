@@ -1,5 +1,6 @@
 package com.leesh.quiz.api.userprofile.controller;
 
+import com.leesh.quiz.api.userprofile.dto.DeleteMyQuizDto;
 import com.leesh.quiz.api.userprofile.dto.EditMyQuizDto;
 import com.leesh.quiz.api.userprofile.dto.PagingResponseDto;
 import com.leesh.quiz.api.userprofile.service.UserProfileService;
@@ -46,6 +47,20 @@ public class UserProfileController {
         UserInfoValidator.validateAccessible(userId, userInfo);
 
         EditMyQuizDto.Response body = userProfileService.editMyQuiz(request, userInfo, quizId);
+
+        return ResponseEntity.ok(body);
+
+    }
+
+    @DeleteMapping(value = "/quizzes/{quiz-id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<DeleteMyQuizDto> deleteMyQuiz(@PathVariable("user-id") Long userId,
+                                                       @PathVariable("quiz-id") Long quizId,
+                                                       @AuthenticationPrincipal UserInfo userInfo) {
+
+        // 접근 권한이 있는 사용자인지 검증
+        UserInfoValidator.validateAccessible(userId, userInfo);
+
+        DeleteMyQuizDto body = userProfileService.deleteMyQuiz(quizId, userInfo);
 
         return ResponseEntity.ok(body);
 

@@ -35,6 +35,9 @@ public class Answer {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String contents;
 
+    @Column(nullable = false)
+    private boolean deleted;
+
     @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private User user;
