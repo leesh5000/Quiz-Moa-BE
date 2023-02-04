@@ -1,4 +1,4 @@
-package com.leesh.quiz.api.auth.tokenrefresh.dto;
+package com.leesh.quiz.api.tokenrefresh.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.leesh.quiz.global.jwt.dto.AccessToken;

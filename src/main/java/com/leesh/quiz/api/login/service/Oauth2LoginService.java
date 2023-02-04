@@ -1,6 +1,6 @@
-package com.leesh.quiz.api.auth.login.service;
+package com.leesh.quiz.api.login.service;
 
-import com.leesh.quiz.api.auth.login.dto.Oauth2LoginDto;
+import com.leesh.quiz.api.login.dto.Oauth2LoginDto;
 import com.leesh.quiz.domain.user.User;
 import com.leesh.quiz.domain.user.constant.Oauth2Type;
 import com.leesh.quiz.domain.user.service.UserService;
