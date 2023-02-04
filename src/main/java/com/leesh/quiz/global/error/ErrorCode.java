@@ -1,7 +1,10 @@
 package com.leesh.quiz.global.error;
 
+import jakarta.annotation.PostConstruct;
 import lombok.Getter;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -9,43 +12,59 @@ import static org.springframework.http.HttpStatus.*;
 public enum ErrorCode {
 
     /* Authentication */
-    EXPIRED_TOKEN(UNAUTHORIZED, "A-001", "만료된 토큰입니다."),
-    INVALID_TOKEN(UNAUTHORIZED, "A-002", "유효하지 않은 토큰입니다."),
-    INVALID_AUTHORIZATION_HEADER(UNAUTHORIZED, "A-003", "올바르지 않은 Authorization 헤더입니다."),
-    NOT_EXIST_AUTHORIZATION(UNAUTHORIZED, "A-004", "Authorization 헤더가 존재하지 않습니다."),
-    NOT_BEARER_TYPE_AUTHORIZATION(UNAUTHORIZED, "A-005", "Bearer 타입의 Authorization 헤더가 아닙니다."),
-    ACCESS_TOKEN_NOT_FOUND(UNAUTHORIZED, "A-006", "접근 토큰이 존재하지 않습니다."),
-    NOT_ACCESS_TOKEN_TYPE(UNAUTHORIZED, "A-007", "접근 토큰이 아닙니다."),
-    INVALID_REFRESH_TOKEN(UNAUTHORIZED, "A-008", "유효하지 못한 리프레시 토큰입니다. 다시 로그인 해주세요."),
-    EXPIRED_REFRESH_TOKEN(UNAUTHORIZED, "A-009", "리프레시 토큰이 만료되었습니다."),
-    ALREADY_LOGOUT_USER(UNAUTHORIZED, "A-010", "로그아웃 처리된 리프레시 토큰입니다. 다시 로그인 해주세요."),
-    NOT_REFRESH_TOKEN_TYPE(UNAUTHORIZED, "A-011", "리프레시 토큰이 아닙니다."),
+    EXPIRED_TOKEN(UNAUTHORIZED, "A-001"),
+    INVALID_TOKEN(UNAUTHORIZED, "A-002"),
+    INVALID_AUTHORIZATION_HEADER(UNAUTHORIZED, "A-003"),
+    NOT_EXIST_AUTHORIZATION(UNAUTHORIZED, "A-004"),
+    NOT_BEARER_TYPE_AUTHORIZATION(UNAUTHORIZED, "A-005"),
+    ACCESS_TOKEN_NOT_FOUND(UNAUTHORIZED, "A-006"),
+    NOT_ACCESS_TOKEN_TYPE(UNAUTHORIZED, "A-007"),
+    INVALID_REFRESH_TOKEN(UNAUTHORIZED, "A-008"),
+    EXPIRED_REFRESH_TOKEN(UNAUTHORIZED, "A-009"),
+    ALREADY_LOGOUT_USER(UNAUTHORIZED, "A-010"),
+    NOT_REFRESH_TOKEN_TYPE(UNAUTHORIZED, "A-011"),
 
     /* Oauth2 */
-    NOT_SUPPORT_OAUTH2_TYPE(BAD_REQUEST, "O-001", "지원하지 않는 Oauth2 타입입니다."),
-    ALREADY_REGISTERED_FROM_KAKAO(BAD_REQUEST, "O-002", "카카오 소셜 계정으로 이미 가입된 이메일 입니다."),
-    ALREADY_REGISTERED_FROM_GOOGLE(BAD_REQUEST, "O-003", "구글 소셜 계정으로 이미 가입된 이메일 입니다."),
-    ALREADY_REGISTERED_FROM_NAVER(BAD_REQUEST, "O-004", "네이버 소셜 계정으로 이미 가입된 이메일 입니다."),
+    NOT_SUPPORT_OAUTH2_TYPE(BAD_REQUEST, "O-001"),
+    ALREADY_REGISTERED_FROM_KAKAO(BAD_REQUEST, "O-002"),
+    ALREADY_REGISTERED_FROM_GOOGLE(BAD_REQUEST, "O-003"),
+    ALREADY_REGISTERED_FROM_NAVER(BAD_REQUEST, "O-004"),
 
     /* User */
-    DUPLICATED_USER(BAD_REQUEST, "M-001", "이미 존재하는 유저입니다."),
-    NOT_EXIST_USER(BAD_REQUEST, "M-002", "존재하지 않는 유저입니다."),
-    NOT_ACCESSIBLE_USER(FORBIDDEN, "M-003", "해당 리소스에 접근할 수 없는 유저입니다."),
+    DUPLICATED_USER(BAD_REQUEST, "M-001"),
+    NOT_EXIST_USER(BAD_REQUEST, "M-002"),
+    NOT_ACCESSIBLE_USER(FORBIDDEN, "M-003"),
 
     /* Quiz */
-    NOT_EXIST_QUIZ(NOT_FOUND, "Q-001", "존재하지 않는 퀴즈입니다."),
-    IS_NOT_QUIZ_OWNER(FORBIDDEN, "Q-002", "퀴즈 작성자만 수정/삭제가 가능합니다.")
+    NOT_EXIST_QUIZ(NOT_FOUND, "Q-001"),
+    IS_NOT_QUIZ_OWNER(FORBIDDEN, "Q-002")
     ;
 
     private final HttpStatus httpStatus;
     private final String code;
-    private final String message;
-    private String parameter;
 
-    ErrorCode(HttpStatus httpStatus, String code, String message) {
+    // ErrorMessageInjector를 통해서 메세지를 주입받는다.
+    private String message;
+
+    ErrorCode(HttpStatus httpStatus, String code) {
         this.httpStatus = httpStatus;
         this.code = code;
-        this.message = message;
+    }
+
+    @Component
+    public static class ErrorMessageInjector {
+        private final MessageSourceAccessor messageSource;
+
+        private ErrorMessageInjector(MessageSourceAccessor messageSource) {
+            this.messageSource = messageSource;
+        }
+
+        @PostConstruct
+        private void init() {
+            for (ErrorCode errorCode : ErrorCode.values()) {
+                errorCode.message = messageSource.getMessage(errorCode.code);
+            }
+        }
     }
 
 }
