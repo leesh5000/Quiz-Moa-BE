@@ -1,5 +1,7 @@
 package com.leesh.quiz.domain.answer;
 
+import com.leesh.quiz.api.quiz.dto.quiz.QQuizDetailDto_AnswerDto;
+import com.leesh.quiz.api.quiz.dto.quiz.QuizDetailDto;
 import com.leesh.quiz.api.userprofile.dto.answer.MyAnswerDto;
 import com.leesh.quiz.api.userprofile.dto.answer.QMyAnswerDto;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.leesh.quiz.domain.answer.QAnswer.answer;
 import static com.leesh.quiz.domain.answervote.QAnswerVote.answerVote;
@@ -36,12 +39,12 @@ public class AnswerDaoImpl implements AnswerDao {
                         answer.modifiedAt
                 ))
                 .from(answer)
-                .innerJoin(answer.user, user)
-                .innerJoin(answer.quiz, quiz)
-                .leftJoin(answer.votes, answerVote)
+                    .innerJoin(answer.user, user)
+                    .innerJoin(answer.quiz, quiz)
+                    .leftJoin(answer.votes, answerVote)
                 .where(
                         userIdEq(userId),
-                        deletedEq(false)
+                        answer.deleted.eq(false)
                 )
                 .groupBy(answer.id)
                 .offset(pageable.getOffset())
@@ -54,7 +57,7 @@ public class AnswerDaoImpl implements AnswerDao {
                 .from(answer)
                 .where(
                         userIdEq(userId),
-                        deletedEq(false)
+                        answer.deleted.eq(false)
                 );
 
         // PageableExecutionUtils.getPage()는 count 쿼리에 대해 최적화를 해주는데, 다음과 같을 때 count Query를 생략한다.
@@ -63,11 +66,36 @@ public class AnswerDaoImpl implements AnswerDao {
         return PageableExecutionUtils.getPage(content, pageable, totalCount::fetchOne);
     }
 
+    @Override
+    public Optional<List<QuizDetailDto.AnswerDto>> getAnswersByQuizId(Long quizId) {
+
+        List<QuizDetailDto.AnswerDto> content = queryFactory
+                .select(new QQuizDetailDto_AnswerDto(
+                        answer.id,
+                        answer.contents,
+                        user.email.as("author"),
+                        answerVote.value.intValue().sum().as("votes"),
+                        answer.createdAt,
+                        answer.modifiedAt
+                ))
+                .from(answer)
+                    .innerJoin(answer.user, user)
+                    .leftJoin(answer.votes, answerVote)
+                .where(
+                        quizIdEq(quizId),
+                        answer.deleted.eq(false)
+                ).groupBy(answer.id)
+                .fetch();
+
+        return Optional.ofNullable(content);
+    }
+
+    private BooleanExpression quizIdEq(Long quizId) {
+        return quiz.id.eq(quizId);
+    }
+
     private BooleanExpression userIdEq(Long userId) {
         return user.id.eq(userId);
     }
 
-    private BooleanExpression deletedEq(boolean deleted) {
-        return answer.deleted.eq(deleted);
-    }
 }

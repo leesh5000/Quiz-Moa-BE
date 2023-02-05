@@ -2,7 +2,9 @@ package com.leesh.quiz.api.quiz.service;
 
 import com.leesh.quiz.api.quiz.dao.QuizDao;
 import com.leesh.quiz.api.quiz.dto.quiz.CreateQuizDto;
+import com.leesh.quiz.api.quiz.dto.quiz.QuizDetailDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDto;
+import com.leesh.quiz.domain.answer.AnswerRepository;
 import com.leesh.quiz.domain.quiz.Quiz;
 import com.leesh.quiz.domain.quiz.QuizRepository;
 import com.leesh.quiz.domain.user.User;
@@ -19,6 +21,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -29,6 +32,7 @@ public class QuizService {
     private final QuizRepository quizRepository;
     private final UserRepository userRepository;
     private final QuizDao quizDao;
+    private final AnswerRepository answerRepository;
 
     public CreateQuizDto.Response createQuiz(UserInfo userInfo, CreateQuizDto.Request request) {
 
@@ -58,5 +62,23 @@ public class QuizService {
         Page<QuizDto> page = PageableExecutionUtils.getPage(content, pageable, quizDao::getTotalCount);
 
         return new PagingResponseDto<>(page);
+    }
+
+    public QuizDetailDto getQuizDetail(Long quizId) {
+
+        // 한 번에 조회하는 것이 아니라, quiz를 조회한 후, answer를 조회한 다음 합쳐서 리턴하는 방식으로 구현
+        // 우선, quiz-id로 quiz를 먼저 조회한다.
+        QuizDetailDto quizDetail = quizRepository.getQuizDetail(quizId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_QUIZ));
+
+        // 해당 quiz에 대한 answer를 조회한다.
+        var answersByQuizId = answerRepository.getAnswersByQuizId(quizDetail.id())
+                .orElseGet(ArrayList::new);
+
+        // quizDetail에 answer를 추가한다.
+        quizDetail.answers().addAll(answersByQuizId);
+
+        return quizDetail;
+
     }
 }

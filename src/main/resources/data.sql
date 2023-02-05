@@ -17,19 +17,37 @@ insert into quiz (id, user_id, title, contents, deleted, created_by, modified_by
 values (1, 1, 'test1의 퀴즈 1', 'test1 퀴즈는 정말 어렵다.', false, '/api/quiz', '/api/quiz', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');
 
 insert into answer (id, user_id, quiz_id, contents, deleted, created_by, modified_by, created_at, modified_at)
-values (1, 1, 1, 'test1의 답변', false, '/api/answers', '/api/answers', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');
+values (1, 1, 1, 'test1의 답변 1', false, '/api/answers', '/api/answers', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');
 
 insert into answer (id, user_id, quiz_id, contents, deleted, created_by, modified_by, created_at, modified_at)
-values (2, 2, 1, 'test1의 답변', false, '/api/answers', '/api/answers', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');
+values (2, 2, 1, 'test2의 답변 1', false, '/api/answers', '/api/answers', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');
 
 insert into answer (id, user_id, quiz_id, contents, deleted, created_by, modified_by, created_at, modified_at)
-values (3, 1, 1, 'test1의 답변', false, '/api/answers', '/api/answers', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');
+values (3, 1, 1, 'test1의 답변 2', false, '/api/answers', '/api/answers', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');
 
 insert into answer (id, user_id, quiz_id, contents, deleted, created_by, modified_by, created_at, modified_at)
-values (4, 3, 1, 'test1의 답변', false, '/api/answers', '/api/answers', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');
+values (4, 3, 1, 'test3의 답변 1', false, '/api/answers', '/api/answers', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');
 
 insert into answer (id, user_id, quiz_id, contents, deleted, created_by, modified_by, created_at, modified_at)
-values (5, 4, 1, 'test1의 답변', false, '/api/answers', '/api/answers', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');
+values (5, 4, 1, 'test4의 답변 1', false, '/api/answers', '/api/answers', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');
+
+insert into answer (id, user_id, quiz_id, contents, deleted, created_by, modified_by, created_at, modified_at)
+values (16, 4, 1, 'test4의 답변 2', false, '/api/answers', '/api/answers', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');
+
+insert into answer_vote (id, user_id, answer_id, value, created_by, modified_by, created_at, modified_at)
+values (10, 2, 16, 1, '/api/answers/votes', '/api/answers/votes', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');
+
+insert into answer_vote (id, user_id, answer_id, value, created_by, modified_by, created_at, modified_at)
+values (11, 1, 16, 1, '/api/answers/votes', '/api/answers/votes', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');
+
+insert into answer_vote (id, user_id, answer_id, value, created_by, modified_by, created_at, modified_at)
+values (12, 5, 16, 1, '/api/answers/votes', '/api/answers/votes', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');
+
+insert into answer (id, user_id, quiz_id, contents, deleted, created_by, modified_by, created_at, modified_at)
+values (17, 5, 1, 'test5의 답변 1', false, '/api/answers', '/api/answers', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');
+
+insert into answer_vote (id, user_id, answer_id, value, created_by, modified_by, created_at, modified_at)
+values (13, 1, 17, -1, '/api/answers/votes', '/api/answers/votes', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');
 
 insert into quiz_vote (id, user_id, quiz_id, value, created_by, modified_by, created_at, modified_at)
 values (1, 1, 1, 1, '/api/quizzes/votes', '/api/quizzes/votes', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');

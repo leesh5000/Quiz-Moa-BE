@@ -1,6 +1,7 @@
 package com.leesh.quiz.api.quiz.controller;
 
 import com.leesh.quiz.api.quiz.dto.quiz.CreateQuizDto;
+import com.leesh.quiz.api.quiz.dto.quiz.QuizDetailDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDto;
 import com.leesh.quiz.api.quiz.service.QuizService;
 import com.leesh.quiz.global.constant.PagingResponseDto;
@@ -36,6 +37,15 @@ public class QuizController {
     public ResponseEntity<PagingResponseDto<QuizDto>> getQuizzes(@PageableDefault(size = 20) Pageable pageable) {
 
         PagingResponseDto<QuizDto> body = quizService.getQuizzesByPaging(pageable);
+
+        return ResponseEntity.ok(body);
+
+    }
+
+    @GetMapping(value = "/{quizId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<QuizDetailDto> getQuizDetail(@PathVariable Long quizId) {
+
+        QuizDetailDto body = quizService.getQuizDetail(quizId);
 
         return ResponseEntity.ok(body);
 

@@ -269,3 +269,19 @@ include::{snippets}/quiz/get-quizzes/http-response.adoc[]
 
 ===== Response Body =====
 include::{snippets}/quiz/get-quizzes/response-fields.adoc[]
+
+=== *퀴즈 세부내용 조회* ===
+
+퀴즈의 세부내용을 조회합니다. 별도의 인증이 필요 없으며, 비회원 유저도 조회가 가능합니다.
+
+==== Request ====
+include::{snippets}/quiz/get-quiz-detail/http-request.adoc[]
+
+===== Path Parameters =====
+include::{snippets}/quiz/get-quiz-detail/path-parameters.adoc[]
+
+==== Response ====
+include::{snippets}/quiz/get-quiz-detail/http-response.adoc[]
+
+===== Response Body =====
+include::{snippets}/quiz/get-quiz-detail/response-fields.adoc[]
