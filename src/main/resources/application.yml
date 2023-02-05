@@ -3,24 +3,17 @@ server:
   servlet:
     context-path: /
 
-logging.level.org.hibernate:
-  SQL: debug
-  type.descriptor.sql.BasicBinder: trace
-  com.leesh: debug
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug
+        type.descriptor.sql.BasicBinder: debug
+        com.leesh: debug
+    com.leesh.quiz.api.userprofile.dao.UserProfileDao: debug
 
 spring:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-  datasource:
-    url: jdbc:h2:mem:test
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
   jpa:
-    hibernate:
-      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
@@ -39,6 +32,14 @@ spring:
       max-request-size: 100MB # 파일 업로드 요청 시, 전체 요청 크기를 100MB로 제한
   aop:
     proxy-target-class: false # Filter의 경우 JDK 기반의 프록시를 사용하도록 설정
+  data:
+    web:
+      pageable:
+        default-page-size: 20
+        max-page-size: 2000
+
+mybatis:
+  mapper-locations: classpath:mybatis/mapper/**/*.xml
 
 token:
   secret: ENC(ZWPxWyobK729VrfW9s8GAqg5yAiHA6Cl7w7P3PQbc9QP9b0BZU0yJLLaRsKZKT45tFwrt/LFNoPeAI6fqRIh5IHDOTtwVEErnRzQsU1zIgIQ/SRzcFA2ZBIQIcgEAAywfbi6GVtRGvykI/W//LsZ1LFVb8WWBRZwc6WrAzxKyUmRrrbUdkl5lGg7FegQHm9W)

@@ -5,7 +5,7 @@ import com.leesh.quiz.domain.user.constant.Role;
 import com.leesh.quiz.global.constant.UserInfo;
 import com.leesh.quiz.global.jwt.dto.AccessToken;
 import com.leesh.quiz.global.jwt.service.TokenService;
-import com.leesh.quiz.testconfiguration.webmvc.MvcTestConfiguration;
+import com.leesh.quiz.testconfiguration.MvcTestConfiguration;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

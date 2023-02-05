@@ -7,8 +7,6 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import java.util.Arrays;
 
-import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
-
 public interface RequestMatchersUtils {
 
     RequestMatcher[] permitAllRequestMatchers = new RequestMatcher[]{
@@ -16,7 +14,6 @@ public interface RequestMatchersUtils {
             new AntPathRequestMatcher("/api/health"),
             new AntPathRequestMatcher("/api/access-token/refresh"),
             new AntPathRequestMatcher("/docs/**"),
-            toH2Console(),
             PathRequest.toStaticResources().atCommonLocations()
     };
 

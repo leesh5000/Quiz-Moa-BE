@@ -3,6 +3,8 @@ package com.leesh.quiz.domain.quiz;
 import com.leesh.quiz.domain.answer.Answer;
 import com.leesh.quiz.domain.quizvote.QuizVote;
 import com.leesh.quiz.domain.user.User;
+import com.leesh.quiz.global.error.ErrorCode;
+import com.leesh.quiz.global.error.exception.BusinessException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -20,7 +22,7 @@ import java.util.Set;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "Quiz", indexes = {
+@Table(name = "quiz", indexes = {
         @Index(columnList = "user_id"),
         @Index(columnList = "title"),
         @Index(columnList = "created_at")
@@ -35,9 +37,11 @@ public class Quiz {
     @Column(length = 255, nullable = false)
     private String title;
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String contents;
+
+    @Column(nullable = false)
+    private boolean deleted;
 
     @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -92,4 +96,27 @@ public class Quiz {
         return new Quiz(title, contents, user);
     }
 
+    /* Domain Business Logic */
+    public void edit(String title, String contents, Long userId) throws BusinessException {
+
+        // 퀴즈 작성자인지 검증한다.
+        validateQuizOwner(userId);
+
+        this.title = title;
+        this.contents = contents;
+    }
+
+    public void delete(Long userId) {
+
+        // 퀴즈 작성자인지 검증한다.
+        validateQuizOwner(userId);
+
+        this.deleted = true;
+    }
+
+    private void validateQuizOwner(Long userId) throws BusinessException {
+        if (!Objects.equals(this.user.getId(), userId)) {
+            throw new BusinessException(ErrorCode.IS_NOT_QUIZ_OWNER);
+        }
+    }
 }

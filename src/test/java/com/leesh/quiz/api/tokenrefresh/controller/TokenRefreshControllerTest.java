@@ -5,7 +5,7 @@ import com.leesh.quiz.api.tokenrefresh.service.TokenRefreshService;
 import com.leesh.quiz.global.jwt.constant.GrantType;
 import com.leesh.quiz.global.jwt.dto.AccessToken;
 import com.leesh.quiz.global.jwt.dto.RefreshToken;
-import com.leesh.quiz.testconfiguration.webmvc.MvcTestConfiguration;
+import com.leesh.quiz.testconfiguration.MvcTestConfiguration;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +31,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @DisplayName("접근 토큰 갱신 API 테스트")
 @WebMvcTest(TokenRefreshController.class)
@@ -65,11 +64,13 @@ class TokenRefreshControllerTest {
                 .header(
                         HttpHeaders.AUTHORIZATION,
                         refreshToken.grantType() + " " + refreshToken.refreshToken())
+                .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
 
         // then
         result
                 .andExpect(status().isOk())
+                .andExpect(header().exists(HttpHeaders.CONTENT_TYPE))
                 .andExpect(jsonPath("$.grantType").value(GrantType.BEARER.getType()))
                 .andExpect(jsonPath("$.accessToken").exists())
                 .andExpect(jsonPath("$.accessTokenExpiresIn").isNotEmpty());

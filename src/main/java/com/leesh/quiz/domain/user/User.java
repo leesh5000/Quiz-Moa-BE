@@ -1,6 +1,7 @@
 package com.leesh.quiz.domain.user;
 
 import com.leesh.quiz.domain.answer.Answer;
+import com.leesh.quiz.domain.answervote.AnswerVote;
 import com.leesh.quiz.domain.quiz.Quiz;
 import com.leesh.quiz.domain.quizvote.QuizVote;
 import com.leesh.quiz.domain.user.constant.Oauth2Type;
@@ -24,7 +25,7 @@ import java.util.Set;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "Users", indexes = {
+@Table(name = "users", indexes = {
         @Index(columnList = "username"),
         @Index(columnList = "email"),
         @Index(columnList = "created_at")
@@ -62,6 +63,22 @@ public class User {
     @Column(name = "refresh_token_expires_in", nullable = true)
     private LocalDateTime refreshTokenExpiresIn;
 
+    @OrderBy("id")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final Set<Quiz> quizzes = new LinkedHashSet<>();
+
+    @OrderBy("id")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final Set<Answer> answers = new LinkedHashSet<>();
+
+    @OrderBy("id")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final Set<QuizVote> quizVotes = new LinkedHashSet<>();
+
+    @OrderBy("id")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final Set<AnswerVote> answerVotes = new LinkedHashSet<>();
+
     /* Meta Data Start */
     @CreatedBy
     @Column(name = "created_by", nullable = false, updatable = false, length = 255)
@@ -79,18 +96,6 @@ public class User {
     @Column(name = "modified_at", nullable = false)
     private LocalDateTime modifiedAt;
     /* Meta Data End */
-
-    @OrderBy("id")
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final Set<Quiz> myQuizzes = new LinkedHashSet<>();
-
-    @OrderBy("id")
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final Set<Answer> myAnswers = new LinkedHashSet<>();
-
-    @OrderBy("id")
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final Set<QuizVote> myQuizVotes = new LinkedHashSet<>();
 
     @Override
     public boolean equals(Object o) {

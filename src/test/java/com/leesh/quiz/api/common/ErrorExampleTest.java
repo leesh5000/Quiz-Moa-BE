@@ -1,7 +1,8 @@
-package com.leesh.quiz.testconfiguration.restdocs;
+package com.leesh.quiz.api.common;
 
 import com.leesh.quiz.api.HomeController;
-import com.leesh.quiz.testconfiguration.webmvc.MvcTestConfiguration;
+import com.leesh.quiz.global.error.ErrorCode;
+import com.leesh.quiz.testconfiguration.MvcTestConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -15,9 +16,10 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(HomeController.class)
-@Import(MvcTestConfiguration.class)
+@Import({MvcTestConfiguration.class, ErrorCode.ErrorMessageInjector.class})
 @ActiveProfiles("test")
 @AutoConfigureRestDocs
 public class ErrorExampleTest {
@@ -29,6 +31,7 @@ public class ErrorExampleTest {
     void createErrorSnippets() throws Exception {
 
         mvc.perform(get("/api/home"))
+                .andExpect(status().is4xxClientError())
                 .andDo(document("error-example",
                         responseFields(
                                 fieldWithPath("errorCode").type(JsonFieldType.STRING).description("에러 코드"),
