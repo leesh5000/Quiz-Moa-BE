@@ -7,7 +7,6 @@
             resultType="com.leesh.quiz.api.userprofile.dto.quiz.MyQuizDto">
         select  qua.id                   as 'id',
                 qua.title                as 'title',
-                qua.contents             as 'contents',
                 qua.answer_count,
                 qua.email                as 'author',
                 ifnull(sum(qv.value), 0) as 'votes',
