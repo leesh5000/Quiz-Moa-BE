@@ -21,6 +21,9 @@ endif::[]
 | `200 OK`
 | 성공
 
+| `201 Created`
+| 리소스 생성
+
 | `204 No Content`
 | 성공 (응답 바디 없음)
 
@@ -229,3 +232,24 @@ include::{snippets}/user-profile/delete-my-answer/path-parameters.adoc[]
 
 ==== Response ====
 include::{snippets}/user-profile/delete-my-answer/http-response.adoc[]
+
+== *퀴즈* ==
+
+=== *퀴즈 생성* ===
+
+퀴즈를 생성합니다.
+
+==== Request ====
+include::{snippets}/quiz/create-quiz/http-request.adoc[]
+
+==== Request Header ====
+include::{snippets}/quiz/create-quiz/request-headers.adoc[]
+
+==== Request Body ====
+include::{snippets}/quiz/create-quiz/request-fields.adoc[]
+
+==== Response ====
+include::{snippets}/quiz/create-quiz/http-response.adoc[]
+
+==== Response Body ====
+include::{snippets}/quiz/create-quiz/response-fields.adoc[]

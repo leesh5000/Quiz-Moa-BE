@@ -121,7 +121,7 @@ class UserProfileControllerTest {
         result
                 .andDo(document("user-profile/get-my-quizzes",
                         requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("접근 토큰(Access Token)")
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("접근 토큰 (Access Token)")
                         ),
                         pathParameters(
                                 parameterWithName("userId").description("유저 ID (PK값)")
@@ -185,6 +185,9 @@ class UserProfileControllerTest {
                 .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.editQuizId").value(editQuizId));
 
+        then(tokenService).should(times(1)).extractUserInfo(any(String.class));
+        then(userProfileService).should(times(1)).editMyQuiz(any(EditMyQuizDto.Request.class), any(UserInfo.class), anyLong());
+        
         // API 문서화
         result
                 .andDo(document("user-profile/edit-my-quiz",
@@ -229,6 +232,9 @@ class UserProfileControllerTest {
         // then
         result
                 .andExpect(status().isNoContent());
+
+        then(userProfileService).should(times(1)).deleteMyQuiz(anyLong(), any(UserInfo.class));
+        then(tokenService).should(times(1)).extractUserInfo(any(String.class));
 
         // API 문서화
         result
@@ -364,6 +370,9 @@ class UserProfileControllerTest {
                 .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.editAnswerId").value(editAnswerId));
 
+        then(tokenService).should().extractUserInfo(any(String.class));
+        then(userProfileService).should().editMyAnswer(any(EditMyAnswerDto.Request.class), any(UserInfo.class), anyLong());
+
         // API 문서화
         result
                 .andDo(document("user-profile/edit-my-answer",
@@ -407,6 +416,9 @@ class UserProfileControllerTest {
         // then
         result
                 .andExpect(status().isNoContent());
+
+        then(tokenService).should().extractUserInfo(accessToken.accessToken());
+        then(userProfileService).should().deleteMyAnswer(deleteAnswerId, UserInfo.of(answerWriterId, Role.USER));
 
         // API 문서화
         result
