@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.leesh.quiz.api.userprofile.dao.UserProfileDao">
-    <select id="getQuizzesByPaging"
-            parameterType="com.leesh.quiz.api.userprofile.dao.PagingRequestInfo"
+    <select id="getMyQuizzesByPaging"
+            parameterType="com.leesh.quiz.api.userprofile.dto.PagingRequestInfo"
             resultType="com.leesh.quiz.api.userprofile.dto.MyQuizDto">
         select  qua.id                   as 'id',
                 qua.title                as 'title',

@@ -1,9 +1,6 @@
 package com.leesh.quiz.api.userprofile.controller;
 
-import com.leesh.quiz.api.userprofile.dto.DeleteMyQuizDto;
-import com.leesh.quiz.api.userprofile.dto.EditMyQuizDto;
-import com.leesh.quiz.api.userprofile.dto.MyQuizDto;
-import com.leesh.quiz.api.userprofile.dto.PagingResponseDto;
+import com.leesh.quiz.api.userprofile.dto.*;
 import com.leesh.quiz.api.userprofile.service.UserProfileService;
 import com.leesh.quiz.global.constant.UserInfo;
 import com.leesh.quiz.global.validator.UserInfoValidator;
@@ -68,5 +65,17 @@ public class UserProfileController {
 
     }
 
+    @GetMapping(value = "/answers", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PagingResponseDto<MyAnswerDto>> getMyAnswers(@PathVariable("user-id") Long userId,
+                                                                       @AuthenticationPrincipal UserInfo userInfo,
+                                                                       @PageableDefault(size = 20) Pageable pageable) {
 
+        // 접근 권한이 있는 사용자인지 검증
+        UserInfoValidator.validateAccessible(userId, userInfo);
+
+        PagingResponseDto<MyAnswerDto> body = userProfileService.getMyAnswers(pageable, userInfo);
+
+        return ResponseEntity.ok(body);
+
+    }
 }

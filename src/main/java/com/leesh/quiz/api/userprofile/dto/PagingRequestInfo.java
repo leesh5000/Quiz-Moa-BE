@@ -1,4 +1,4 @@
-package com.leesh.quiz.api.userprofile.dao;
+package com.leesh.quiz.api.userprofile.dto;
 
 import com.leesh.quiz.global.constant.UserInfo;
 import org.springframework.data.domain.Pageable;

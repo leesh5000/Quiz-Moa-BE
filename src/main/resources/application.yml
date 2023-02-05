@@ -3,10 +3,14 @@ server:
   servlet:
     context-path: /
 
-logging.level.org.hibernate:
-  SQL: debug
-  type.descriptor.sql.BasicBinder: trace
-  com.leesh: debug
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug
+        type.descriptor.sql.BasicBinder: debug
+        com.leesh: debug
+    com.leesh.quiz.api.userprofile.dao.UserProfileDao: debug
 
 spring:
   jpa:
