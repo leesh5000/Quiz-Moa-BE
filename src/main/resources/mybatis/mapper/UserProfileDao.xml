@@ -4,7 +4,7 @@
 <mapper namespace="com.leesh.quiz.api.userprofile.dao.UserProfileDao">
     <select id="getMyQuizzesByPaging"
             parameterType="com.leesh.quiz.api.userprofile.dto.PagingRequestInfo"
-            resultType="com.leesh.quiz.api.userprofile.dto.MyQuizDto">
+            resultType="com.leesh.quiz.api.userprofile.dto.quiz.MyQuizDto">
         select  qua.id                   as 'id',
                 qua.title                as 'title',
                 qua.contents             as 'contents',

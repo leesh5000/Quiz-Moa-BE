@@ -37,8 +37,10 @@ public enum ErrorCode {
 
     /* Quiz */
     NOT_EXIST_QUIZ(NOT_FOUND, "Q-001"),
-    IS_NOT_QUIZ_OWNER(FORBIDDEN, "Q-002")
-    ;
+    IS_NOT_QUIZ_OWNER(FORBIDDEN, "Q-002"),
+
+    /* Answer */
+    NOT_EXIST_ANSWER(FORBIDDEN, "AN-001");
 
     private final HttpStatus httpStatus;
     private final String code;

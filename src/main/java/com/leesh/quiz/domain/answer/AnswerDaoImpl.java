@@ -1,7 +1,7 @@
 package com.leesh.quiz.domain.answer;
 
-import com.leesh.quiz.api.userprofile.dto.MyAnswerDto;
-import com.leesh.quiz.api.userprofile.dto.QMyAnswerDto;
+import com.leesh.quiz.api.userprofile.dto.answer.MyAnswerDto;
+import com.leesh.quiz.api.userprofile.dto.answer.QMyAnswerDto;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -14,6 +14,7 @@ import java.util.List;
 
 import static com.leesh.quiz.domain.answer.QAnswer.answer;
 import static com.leesh.quiz.domain.answervote.QAnswerVote.answerVote;
+import static com.leesh.quiz.domain.quiz.QQuiz.quiz;
 import static com.leesh.quiz.domain.user.QUser.user;
 
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class AnswerDaoImpl implements AnswerDao {
                 .select(new QMyAnswerDto(
                         answer.id,
                         answer.contents,
+                        quiz.id.as("quizId"),
                         user.email.as("author"),
                         answerVote.value.intValue().sum().as("votes"),
                         answer.createdAt,
@@ -35,6 +37,7 @@ public class AnswerDaoImpl implements AnswerDao {
                 ))
                 .from(answer)
                 .innerJoin(answer.user, user)
+                .innerJoin(answer.quiz, quiz)
                 .leftJoin(answer.votes, answerVote)
                 .where(
                         userIdEq(userId),

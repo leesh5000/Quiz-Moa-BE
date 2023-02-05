@@ -1,6 +1,6 @@
 package com.leesh.quiz.domain.answer;
 
-import com.leesh.quiz.api.userprofile.dto.MyAnswerDto;
+import com.leesh.quiz.api.userprofile.dto.answer.MyAnswerDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

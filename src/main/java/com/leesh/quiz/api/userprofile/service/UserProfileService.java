@@ -1,7 +1,13 @@
 package com.leesh.quiz.api.userprofile.service;
 
 import com.leesh.quiz.api.userprofile.dao.UserProfileDao;
-import com.leesh.quiz.api.userprofile.dto.*;
+import com.leesh.quiz.api.userprofile.dto.PagingRequestInfo;
+import com.leesh.quiz.api.userprofile.dto.PagingResponseDto;
+import com.leesh.quiz.api.userprofile.dto.answer.EditMyAnswerDto;
+import com.leesh.quiz.api.userprofile.dto.answer.MyAnswerDto;
+import com.leesh.quiz.api.userprofile.dto.quiz.EditMyQuizDto;
+import com.leesh.quiz.api.userprofile.dto.quiz.MyQuizDto;
+import com.leesh.quiz.domain.answer.Answer;
 import com.leesh.quiz.domain.answer.AnswerRepository;
 import com.leesh.quiz.domain.quiz.Quiz;
 import com.leesh.quiz.domain.quiz.QuizRepository;
@@ -60,16 +66,15 @@ public class UserProfileService {
     }
 
 
-    public DeleteMyQuizDto deleteMyQuiz(Long quizId, UserInfo userInfo) {
+    public void deleteMyQuiz(Long quizId, UserInfo userInfo) {
 
         // 먼저, 퀴즈의 작성자 인지 검증을 위해 유저와 함께 fetch join 으로 가져온다.
         // 나머지 연관관계 컬렉션들은 BatchSize를 통해 1+1 쿼리로 가져온다.
         Quiz quiz = findQuizByIdWithUser(quizId);
 
-        // 자식 엔티티부터 차례대로 삭제한다.
+        // 퀴즈를 삭제한다. (실제 DB에서 삭제가 아닌 논리적으로 삭제)
         quiz.delete(userInfo.userId());
 
-        return DeleteMyQuizDto.from(quizId);
     }
 
     @Transactional(readOnly = true)
@@ -87,4 +92,32 @@ public class UserProfileService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_QUIZ));
     }
 
+    public EditMyAnswerDto.Response editMyAnswer(EditMyAnswerDto.Request request, UserInfo userInfo, Long answerId) {
+
+        // Answer를 가져온다. 답변의 작성자를 검증하기 위해 User도 함께 가져온다.
+        Answer answer = findAnswerByIdWithUser(answerId);
+
+        // 답변을 수정한다. (실패 시 Business 예외 발생)
+        answer.edit(request.contents(), userInfo.userId());
+
+        return EditMyAnswerDto.Response.from(answer.getId());
+
+    }
+
+    private Answer findAnswerByIdWithUser(Long answerId) {
+
+        return answerRepository.findByIdWithUser(answerId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_ANSWER));
+    }
+
+
+    public void deleteMyAnswer(Long answerId, UserInfo userInfo) {
+
+            // 먼저, 답변의 작성자 인지 검증을 위해 유저와 함께 fetch join 으로 가져온다.
+            // 나머지 연관관계 컬렉션들은 BatchSize를 통해 1+1 쿼리로 가져온다.
+            Answer answer = findAnswerByIdWithUser(answerId);
+
+            // 자식 엔티티부터 차례대로 삭제한다.
+            answer.delete(userInfo.userId());
+    }
 }

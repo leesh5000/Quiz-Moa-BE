@@ -1,7 +1,11 @@
 package com.leesh.quiz.api.userprofile.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.leesh.quiz.api.userprofile.dto.*;
+import com.leesh.quiz.api.userprofile.dto.PagingResponseDto;
+import com.leesh.quiz.api.userprofile.dto.answer.EditMyAnswerDto;
+import com.leesh.quiz.api.userprofile.dto.answer.MyAnswerDto;
+import com.leesh.quiz.api.userprofile.dto.quiz.EditMyQuizDto;
+import com.leesh.quiz.api.userprofile.dto.quiz.MyQuizDto;
 import com.leesh.quiz.api.userprofile.service.UserProfileService;
 import com.leesh.quiz.domain.user.constant.Role;
 import com.leesh.quiz.global.constant.UserInfo;
@@ -29,8 +33,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -215,8 +218,7 @@ class UserProfileControllerTest {
         given(tokenService.extractUserInfo(any(String.class)))
                 .willReturn(UserInfo.of(quizWriterId, Role.USER));
 
-        given(userProfileService.deleteMyQuiz(anyLong(), any(UserInfo.class)))
-                .willReturn(DeleteMyQuizDto.from(deleteQuizId));
+        willDoNothing().given(userProfileService).deleteMyQuiz(anyLong(), any(UserInfo.class));
 
         // when
         ResultActions result = mvc.perform(
@@ -226,9 +228,7 @@ class UserProfileControllerTest {
 
         // then
         result
-                .andExpect(status().isOk())
-                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.deleteQuizId").value(deleteQuizId));
+                .andExpect(status().isNoContent());
 
         // API 문서화
         result
@@ -239,9 +239,7 @@ class UserProfileControllerTest {
                         pathParameters(
                                 parameterWithName("userId").description("퀴즈 작성자 ID"),
                                 parameterWithName("quizId").description("삭제할 퀴즈 ID")
-                        ),
-                        responseFields(
-                                fieldWithPath("deleteQuizId").description("삭제된 퀴즈 ID"))));
+                        )));
 
     }
 
@@ -259,9 +257,9 @@ class UserProfileControllerTest {
                 .willReturn(UserInfo.of(userId, Role.USER));
 
         List<MyAnswerDto> content = List.of(
-                new MyAnswerDto(1L, "HTTP 프로토콜은 무상태성, 서버-클라이언트 구조, 캐시 가능의 특징을 가집니다.", "test1@gmail.com", 5, LocalDateTime.now(), LocalDateTime.now()),
-                new MyAnswerDto(2L, "저는 모르겠네요; 다른 분이 알려주세요", "test1@gmail.com", 0, LocalDateTime.now(), LocalDateTime.now()),
-                new MyAnswerDto(3L, "test2번 분 답변 감사합니다.", "test1@gmail.com", 2, LocalDateTime.now(), LocalDateTime.now())
+                new MyAnswerDto(1L, "HTTP 프로토콜은 무상태성, 서버-클라이언트 구조, 캐시 가능의 특징을 가집니다.", 3L, "test1@gmail.com", 5, LocalDateTime.now(), LocalDateTime.now()),
+                new MyAnswerDto(2L, "저는 모르겠네요; 다른 분이 알려주세요", 4L, "test1@gmail.com", 0, LocalDateTime.now(), LocalDateTime.now()),
+                new MyAnswerDto(3L, "test2번 분 답변 감사합니다.", 1L, "test1@gmail.com", 2, LocalDateTime.now(), LocalDateTime.now())
         );
 
         int totalElements = 1125;
@@ -286,6 +284,7 @@ class UserProfileControllerTest {
                 .andExpect(jsonPath("$.content").isArray())
                 .andExpect(jsonPath("$.content[0].id").value(1L))
                 .andExpect(jsonPath("$.content[0].contents").value("HTTP 프로토콜은 무상태성, 서버-클라이언트 구조, 캐시 가능의 특징을 가집니다."))
+                .andExpect(jsonPath("$.content[0].quizId").value(3L))
                 .andExpect(jsonPath("$.content[0].author").value("test1@gmail.com"))
                 .andExpect(jsonPath("$.content[0].votes").value(5))
                 .andExpect(jsonPath("$.content[0].createdAt").isNotEmpty())
@@ -317,6 +316,7 @@ class UserProfileControllerTest {
                                 fieldWithPath("content").description("답변 목록"),
                                 fieldWithPath("content[].id").description("답변 ID (PK값)"),
                                 fieldWithPath("content[].contents").description("답변 내용"),
+                                fieldWithPath("content[].quizId").description("이 답변의 퀴즈 ID (PK값)"),
                                 fieldWithPath("content[].author").description("답변 작성자"),
                                 fieldWithPath("content[].votes").description("이 답변이 얻은 추천 수 (음수도 가능)"),
                                 fieldWithPath("content[].createdAt").description("답변 작성 시간"),
@@ -326,6 +326,98 @@ class UserProfileControllerTest {
                                 fieldWithPath("last").description("마지막 페이지 여부"),
                                 fieldWithPath("first").description("첫 페이지 여부"),
                                 fieldWithPath("empty").description("빈 페이지 여부"))));
+
+    }
+
+    @DisplayName("유저 답변 수정 API 테스트 - 정상 호출")
+    @Test
+    void editMyAnswer_success() throws Exception {
+
+        // given
+        AccessToken accessToken = AccessToken.of(
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q",
+                new Date());
+
+        long answerWriterId = 1L;
+        long editAnswerId = 1L;
+        given(tokenService.extractUserInfo(any(String.class)))
+                .willReturn(UserInfo.of(answerWriterId, Role.USER));
+
+        given(userProfileService.editMyAnswer(any(EditMyAnswerDto.Request.class), any(UserInfo.class), anyLong()))
+                .willReturn(EditMyAnswerDto.Response.from(editAnswerId));
+
+        EditMyAnswerDto.Request requestBody = EditMyAnswerDto.Request.builder()
+                .contents("수정된 퀴즈 내용, test1 유저가 작성했음")
+                .build();
+
+        // when
+        ResultActions result = mvc.perform(
+                put("/api/users/{userId}/answers/{answerId}", answerWriterId, editAnswerId)
+                        .header(HttpHeaders.AUTHORIZATION, accessToken.grantType() + " " + accessToken.accessToken())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestBody)));
+
+        // then
+        result
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.editAnswerId").value(editAnswerId));
+
+        // API 문서화
+        result
+                .andDo(document("user-profile/edit-my-answer",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("접근 토큰(Access Token)")
+                        ),
+                        pathParameters(
+                                parameterWithName("userId").description("답변 작성자 ID"),
+                                parameterWithName("answerId").description("수정할 답변 ID")
+                        ),
+                        requestFields(
+                                fieldWithPath("contents").description("답변 내용")
+                        ),
+                        responseFields(
+                                fieldWithPath("editAnswerId").description("수정된 답변 ID"))));
+
+    }
+
+    @DisplayName("유저 답변 삭제 API 테스트 - 정상 호출")
+    @Test
+    void deleteMyAnswer_success() throws Exception {
+
+        // given
+        AccessToken accessToken = AccessToken.of(
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q",
+                new Date());
+
+        long answerWriterId = 1L;
+        long deleteAnswerId = 1L;
+        given(tokenService.extractUserInfo(any(String.class)))
+                .willReturn(UserInfo.of(answerWriterId, Role.USER));
+
+        willDoNothing().given(userProfileService).deleteMyAnswer(anyLong(), any(UserInfo.class));
+
+        // when
+        ResultActions result = mvc.perform(
+                delete("/api/users/{userId}/answers/{answerId}", answerWriterId, deleteAnswerId)
+                        .header(HttpHeaders.AUTHORIZATION, accessToken.grantType() + " " + accessToken.accessToken())
+                        .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        result
+                .andExpect(status().isNoContent());
+
+        // API 문서화
+        result
+                .andDo(document("user-profile/delete-my-answer",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("접근 토큰(Access Token)")
+                        ),
+                        pathParameters(
+                                parameterWithName("userId").description("답변 작성자 ID"),
+                                parameterWithName("answerId").description("삭제할 답변 ID")
+                        )));
 
     }
 }

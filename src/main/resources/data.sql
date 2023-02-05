@@ -104,7 +104,7 @@ insert into quiz_vote (id, user_id, quiz_id, value, created_by, modified_by, cre
 values (7, 2, 6, 1, '/api/quizzes/votes', '/api/quizzes/votes', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');
 
 insert into answer (id, user_id, quiz_id, contents, deleted, created_by, modified_by, created_at, modified_at)
-values (12, 5, 6, 'test5의 답변 1', false, '/api/answers', '/api/answers', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');
+values (12, 5, 3, 'test5의 답변 1', false, '/api/answers', '/api/answers', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');
 
 insert into answer_vote (id, user_id, answer_id, value, created_by, modified_by, created_at, modified_at)
 values (5, 1, 12, 1, '/api/answers/votes', '/api/answers/votes', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');

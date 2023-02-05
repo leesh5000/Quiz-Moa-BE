@@ -3,6 +3,8 @@ package com.leesh.quiz.domain.answer;
 import com.leesh.quiz.domain.answervote.AnswerVote;
 import com.leesh.quiz.domain.quiz.Quiz;
 import com.leesh.quiz.domain.user.User;
+import com.leesh.quiz.global.error.ErrorCode;
+import com.leesh.quiz.global.error.exception.BusinessException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -91,4 +93,26 @@ public class Answer {
         return new Answer(contents, user, quiz);
     }
 
+    /* Domain Business Logic */
+    public void edit(String contents, Long userId) {
+
+        // 답변 작성자인지 검증한다.
+        validateAnswerOwner(userId);
+
+        this.contents = contents;
+    }
+
+    private void validateAnswerOwner(Long userId) throws BusinessException {
+        if (!Objects.equals(this.user.getId(), userId)) {
+            throw new BusinessException(ErrorCode.IS_NOT_QUIZ_OWNER);
+        }
+    }
+
+    public void delete(Long userId) {
+
+        // 답변 작성자인지 검증한다.
+        validateAnswerOwner(userId);
+
+        this.deleted = true;
+    }
 }

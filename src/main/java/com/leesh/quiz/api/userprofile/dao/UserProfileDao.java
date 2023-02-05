@@ -1,6 +1,6 @@
 package com.leesh.quiz.api.userprofile.dao;
 
-import com.leesh.quiz.api.userprofile.dto.MyQuizDto;
+import com.leesh.quiz.api.userprofile.dto.quiz.MyQuizDto;
 import com.leesh.quiz.api.userprofile.dto.PagingRequestInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

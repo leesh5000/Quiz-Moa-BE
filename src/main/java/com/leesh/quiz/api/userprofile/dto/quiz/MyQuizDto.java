@@ -1,4 +1,4 @@
-package com.leesh.quiz.api.userprofile.dto;
+package com.leesh.quiz.api.userprofile.dto.quiz;
 
 import java.time.LocalDateTime;
 

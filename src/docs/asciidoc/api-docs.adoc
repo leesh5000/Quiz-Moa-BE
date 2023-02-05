@@ -21,17 +21,20 @@ endif::[]
 | `200 OK`
 | 성공
 
+| `204 No Content`
+| 성공 (응답 바디 없음)
+
 | `400 Bad Request`
 | 잘못된 요청
 
 | `401 Unauthorized`
-| 인증 안 됨
+| 인증되지 않은 클라이언트
 
 | `403 Forbidden`
 | 권한 없음
 
 | `404 Not Found`
-| 존재하지 않는 요청 리소스
+| 존재하지 않는 리소스 요청
 
 | `500 Internal Server Error`
 | 서버 에러
@@ -167,9 +170,6 @@ include::{snippets}/user-profile/delete-my-quiz/path-parameters.adoc[]
 ==== Response ====
 include::{snippets}/user-profile/delete-my-quiz/http-response.adoc[]
 
-==== Response Body ====
-include::{snippets}/user-profile/delete-my-quiz/response-fields.adoc[]
-
 === *유저 답변 목록 조회* ===
 
 유저가 작성한 답변들을 목록으로 조회합니다.
@@ -191,3 +191,41 @@ include::{snippets}/user-profile/get-my-answers/http-response.adoc[]
 
 ===== Response Body =====
 include::{snippets}/user-profile/get-my-answers/response-fields.adoc[]
+
+=== *유저 답변 수정* ===
+
+유저가 작성한 답변을 수정합니다.
+
+==== Request ====
+include::{snippets}/user-profile/edit-my-answer/http-request.adoc[]
+
+==== Request Header ====
+include::{snippets}/user-profile/edit-my-answer/request-headers.adoc[]
+
+==== Path Parameters ====
+include::{snippets}/user-profile/edit-my-answer/path-parameters.adoc[]
+
+==== Request Body ====
+include::{snippets}/user-profile/edit-my-answer/request-fields.adoc[]
+
+==== Response ====
+include::{snippets}/user-profile/edit-my-answer/http-response.adoc[]
+
+==== Response Body ====
+include::{snippets}/user-profile/edit-my-answer/response-fields.adoc[]
+
+=== *유저 답변 삭제* ===
+
+유저가 작성한 답변을 삭제합니다.
+
+==== Request ====
+include::{snippets}/user-profile/delete-my-answer/http-request.adoc[]
+
+==== Request Header ====
+include::{snippets}/user-profile/delete-my-answer/request-headers.adoc[]
+
+==== Path Parameters ====
+include::{snippets}/user-profile/delete-my-answer/path-parameters.adoc[]
+
+==== Response ====
+include::{snippets}/user-profile/delete-my-answer/http-response.adoc[]

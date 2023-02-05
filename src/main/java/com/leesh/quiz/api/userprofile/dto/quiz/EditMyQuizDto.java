@@ -1,4 +1,4 @@
-package com.leesh.quiz.api.userprofile.dto;
+package com.leesh.quiz.api.userprofile.dto.quiz;
 
 import com.leesh.quiz.domain.quiz.validation.QuizTitle;
 import lombok.AccessLevel;
