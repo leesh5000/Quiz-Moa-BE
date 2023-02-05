@@ -4,13 +4,13 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-public record PagingResponseDto(List<?> content,
+public record PagingResponseDto<T>(List<T> content,
                                    long totalElements, int totalPages,
                                    boolean last, boolean first,
                                    boolean empty) {
 
-    public static PagingResponseDto from(Page<?> page) {
-        return new PagingResponseDto(
+    public PagingResponseDto(Page<T> page) {
+        this(
                 page.getContent(),
                 page.getTotalElements(),
                 page.getTotalPages(),
@@ -19,5 +19,4 @@ public record PagingResponseDto(List<?> content,
                 page.isEmpty()
         );
     }
-
 }

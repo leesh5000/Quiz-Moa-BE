@@ -31,7 +31,7 @@ public class UserProfileService {
     private final QuizRepository quizRepository;
 
     @Transactional(readOnly = true)
-    public PagingResponseDto getMyQuizzes(Pageable pageable, UserInfo userInfo) {
+    public PagingResponseDto<MyQuizDto> getMyQuizzes(Pageable pageable, UserInfo userInfo) {
 
         // Pageable, userInfo 를 Dao에서 바인딩 할 수 있도록 PagingRequestInfo로 변환
         PagingRequestInfo pagingInfo = from(pageable, userInfo);
@@ -44,7 +44,7 @@ public class UserProfileService {
         Page<MyQuizDto> page = new PageImpl<>(myQuizzes, pageable, totalCount);
 
         // 이 중에서 필요한 정보만 추출하여 반환한다.
-        return PagingResponseDto.from(page);
+        return new PagingResponseDto<>(page);
     }
 
     public EditMyQuizDto.Response editMyQuiz(EditMyQuizDto.Request request, UserInfo userInfo, Long quizId) {

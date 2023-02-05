@@ -2,6 +2,7 @@ package com.leesh.quiz.api.userprofile.controller;
 
 import com.leesh.quiz.api.userprofile.dto.DeleteMyQuizDto;
 import com.leesh.quiz.api.userprofile.dto.EditMyQuizDto;
+import com.leesh.quiz.api.userprofile.dto.MyQuizDto;
 import com.leesh.quiz.api.userprofile.dto.PagingResponseDto;
 import com.leesh.quiz.api.userprofile.service.UserProfileService;
 import com.leesh.quiz.global.constant.UserInfo;
@@ -25,14 +26,14 @@ public class UserProfileController {
     // Paging은 Spring Data Jpa에서 제공하는 Pageable 스펙을 사용
     // 다음과 같은 형식 /quizzes?page={page}&size={size}&sort={property,direction}
     @GetMapping(value = "/quizzes", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PagingResponseDto> getMyQuizzes(@PathVariable("user-id") Long userId,
-                                                        @AuthenticationPrincipal UserInfo userInfo,
-                                                        @PageableDefault(size = 20) Pageable pageable) {
+    public ResponseEntity<PagingResponseDto<MyQuizDto>> getMyQuizzes(@PathVariable("user-id") Long userId,
+                                                                     @AuthenticationPrincipal UserInfo userInfo,
+                                                                     @PageableDefault(size = 20) Pageable pageable) {
 
         // 접근 권한이 있는 사용자인지 검증
         UserInfoValidator.validateAccessible(userId, userInfo);
 
-        PagingResponseDto body = userProfileService.getMyQuizzes(pageable, userInfo);
+        PagingResponseDto<MyQuizDto> body = userProfileService.getMyQuizzes(pageable, userInfo);
 
         return ResponseEntity.ok(body);
 
