@@ -16,9 +16,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -49,11 +47,11 @@ public class Quiz {
 
     @OrderBy("id")
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final Set<Answer> answers = new LinkedHashSet<>();
+    private final List<Answer> answers = new ArrayList<>();
 
     @OrderBy("id")
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final Set<QuizVote> votes = new LinkedHashSet<>();
+    private final List<QuizVote> votes = new ArrayList<>();
 
     /* Meta Data Start */
     @CreatedBy
