@@ -1,8 +1,6 @@
 package com.leesh.quiz.api.userprofile.service;
 
 import com.leesh.quiz.api.userprofile.dao.UserProfileDao;
-import com.leesh.quiz.api.userprofile.dto.PagingRequestInfo;
-import com.leesh.quiz.api.userprofile.dto.PagingResponseDto;
 import com.leesh.quiz.api.userprofile.dto.answer.EditMyAnswerDto;
 import com.leesh.quiz.api.userprofile.dto.answer.MyAnswerDto;
 import com.leesh.quiz.api.userprofile.dto.quiz.EditMyQuizDto;
@@ -11,6 +9,8 @@ import com.leesh.quiz.domain.answer.Answer;
 import com.leesh.quiz.domain.answer.AnswerRepository;
 import com.leesh.quiz.domain.quiz.Quiz;
 import com.leesh.quiz.domain.quiz.QuizRepository;
+import com.leesh.quiz.global.constant.PagingRequestInfo;
+import com.leesh.quiz.global.constant.PagingResponseDto;
 import com.leesh.quiz.global.constant.UserInfo;
 import com.leesh.quiz.global.error.ErrorCode;
 import com.leesh.quiz.global.error.exception.BusinessException;
@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.leesh.quiz.api.userprofile.dto.PagingRequestInfo.from;
+import static com.leesh.quiz.global.constant.PagingRequestInfo.from;
 
 @RequiredArgsConstructor
 @Transactional

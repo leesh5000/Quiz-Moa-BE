@@ -1,7 +1,7 @@
 package com.leesh.quiz.api.userprofile.dao;
 
 import com.leesh.quiz.api.userprofile.dto.quiz.MyQuizDto;
-import com.leesh.quiz.api.userprofile.dto.PagingRequestInfo;
+import com.leesh.quiz.global.constant.PagingRequestInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;

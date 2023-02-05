@@ -1,16 +1,25 @@
 package com.leesh.quiz.api.quiz.service;
 
+import com.leesh.quiz.api.quiz.dao.QuizDao;
 import com.leesh.quiz.api.quiz.dto.quiz.CreateQuizDto;
+import com.leesh.quiz.api.quiz.dto.quiz.QuizDto;
 import com.leesh.quiz.domain.quiz.Quiz;
 import com.leesh.quiz.domain.quiz.QuizRepository;
 import com.leesh.quiz.domain.user.User;
 import com.leesh.quiz.domain.user.UserRepository;
+import com.leesh.quiz.global.constant.PagingRequestInfo;
+import com.leesh.quiz.global.constant.PagingResponseDto;
 import com.leesh.quiz.global.constant.UserInfo;
 import com.leesh.quiz.global.error.ErrorCode;
 import com.leesh.quiz.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Transactional
@@ -19,6 +28,7 @@ public class QuizService {
 
     private final QuizRepository quizRepository;
     private final UserRepository userRepository;
+    private final QuizDao quizDao;
 
     public CreateQuizDto.Response createQuiz(UserInfo userInfo, CreateQuizDto.Request request) {
 
@@ -37,8 +47,16 @@ public class QuizService {
         Quiz quiz = request.toEntity(user);
 
         return CreateQuizDto.Response.from(
-                quizRepository.save(quiz).getId()
-        );
+                quizRepository.save(quiz).getId());
+    }
 
+    public PagingResponseDto<QuizDto> getQuizzesByPaging(Pageable pageable) {
+
+        List<QuizDto> content = quizDao.getQuizzesByPaging(
+                PagingRequestInfo.from(pageable));
+
+        Page<QuizDto> page = PageableExecutionUtils.getPage(content, pageable, quizDao::getTotalCount);
+
+        return new PagingResponseDto<>(page);
     }
 }
