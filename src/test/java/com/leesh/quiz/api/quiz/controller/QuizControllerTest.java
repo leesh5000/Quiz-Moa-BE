@@ -1,6 +1,7 @@
 package com.leesh.quiz.api.quiz.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.leesh.quiz.api.quiz.dto.answer.CreateAnswerDto;
 import com.leesh.quiz.api.quiz.dto.quiz.CreateQuizDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDetailDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDto;
@@ -262,6 +263,62 @@ class QuizControllerTest {
                                 fieldWithPath("answers[].votes").description("답변 추천 수"),
                                 fieldWithPath("answers[].createdAt").description("답변 생성 시간"),
                                 fieldWithPath("answers[].modifiedAt").description("답변 수정 시간")
+                        )));
+
+    }
+
+    @DisplayName("퀴즈에 답변 달기 API 테스트 - 정상 호출")
+    @Test
+    void createAnswer_success() throws Exception {
+
+        // given
+        AccessToken accessToken = AccessToken.of(
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q",
+                new Date());
+
+        long userId = 1L;
+        given(tokenService.extractUserInfo(any(String.class)))
+                .willReturn(UserInfo.of(userId, Role.USER));
+
+        long createAnswerId = 1L;
+        CreateAnswerDto.Request request = new CreateAnswerDto.Request("배열은 물리적으로 인접해 위치하며 인덱스로 접근 가능한 동일한 데이터 타입을 저장하는 자료구조이며, 연결리스트는 다음 노드의 주소와 데이터를 저장하는 자료구조입니다.");
+        CreateAnswerDto.Response response = CreateAnswerDto.Response.from(createAnswerId);
+
+        given(quizService.createAnswer(any(UserInfo.class), anyLong(), any(CreateAnswerDto.Request.class)))
+                .willReturn(response);
+
+        // when
+        ResultActions result = mvc.perform(
+                post("/api/quizzes/{quiz-id}/answers", createAnswerId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, accessToken.grantType() + " " + accessToken.accessToken())
+                        .content(objectMapper.writeValueAsString(request)
+                        ));
+
+        // then
+        result
+                .andExpect(status().isCreated())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.createAnswerId").value(createAnswerId));
+
+        then(quizService).should().createAnswer(any(UserInfo.class), anyLong(), any(CreateAnswerDto.Request.class));
+        then(tokenService).should().extractUserInfo(any(String.class));
+
+        // API 문서화
+        result
+                .andDo(document("quiz/create-answer",
+                        pathParameters(
+                                parameterWithName("quiz-id").description("퀴즈 ID")
+                        ),
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("접근 토큰 (Access Token)")
+                        ),
+                        requestFields(
+                                fieldWithPath("contents").description("답변 내용").attributes(RestDocsConfiguration.field("constraints", "10자 이상 255자 이하"))
+                        ),
+                        responseFields(
+                                fieldWithPath("createAnswerId").description("생성된 답변의 ID")
                         )));
 
     }

@@ -198,7 +198,7 @@ class UserProfileControllerTest {
                         ),
                         requestFields(
                                 fieldWithPath("title").description("퀴즈 제목").attributes(RestDocsConfiguration.field("constraints", "10자 이상 255자 이하")),
-                                fieldWithPath("contents").description("퀴즈 내용")
+                                fieldWithPath("contents").description("퀴즈 내용").attributes(RestDocsConfiguration.field("constraints", "10자 이상"))
                         ),
                         responseFields(
                                 fieldWithPath("editQuizId").description("수정된 퀴즈 ID"))));
@@ -382,7 +382,7 @@ class UserProfileControllerTest {
                                 parameterWithName("answerId").description("수정할 답변 ID")
                         ),
                         requestFields(
-                                fieldWithPath("contents").description("답변 내용")
+                                fieldWithPath("contents").description("답변 내용").attributes(RestDocsConfiguration.field("constraints", "10자 이상"))
                         ),
                         responseFields(
                                 fieldWithPath("editAnswerId").description("수정된 답변 ID"))));

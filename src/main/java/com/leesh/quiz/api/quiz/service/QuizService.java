@@ -1,12 +1,14 @@
 package com.leesh.quiz.api.quiz.service;
 
 import com.leesh.quiz.api.quiz.dao.QuizDao;
+import com.leesh.quiz.api.quiz.dto.answer.CreateAnswerDto;
 import com.leesh.quiz.api.quiz.dto.quiz.CreateQuizDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDetailDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDto;
-import com.leesh.quiz.domain.answer.AnswerRepository;
+import com.leesh.quiz.domain.answer.Answer;
+import com.leesh.quiz.domain.answer.repository.AnswerRepository;
 import com.leesh.quiz.domain.quiz.Quiz;
-import com.leesh.quiz.domain.quiz.QuizRepository;
+import com.leesh.quiz.domain.quiz.repository.QuizRepository;
 import com.leesh.quiz.domain.user.User;
 import com.leesh.quiz.domain.user.UserRepository;
 import com.leesh.quiz.global.constant.PagingRequestInfo;
@@ -54,6 +56,7 @@ public class QuizService {
                 quizRepository.save(quiz).getId());
     }
 
+    @Transactional(readOnly = true)
     public PagingResponseDto<QuizDto> getQuizzesByPaging(Pageable pageable) {
 
         List<QuizDto> content = quizDao.getQuizzesByPaging(
@@ -64,6 +67,7 @@ public class QuizService {
         return new PagingResponseDto<>(page);
     }
 
+    @Transactional(readOnly = true)
     public QuizDetailDto getQuizDetail(Long quizId) {
 
         // 한 번에 조회하는 것이 아니라, quiz를 조회한 후, answer를 조회한 다음 합쳐서 리턴하는 방식으로 구현
@@ -80,5 +84,24 @@ public class QuizService {
 
         return quizDetail;
 
+    }
+
+    public CreateAnswerDto.Response createAnswer(UserInfo userInfo, Long quizId, CreateAnswerDto.Request request) {
+
+        // JPA의 getReferenceById를 사용하면, 조회 쿼리를 하지 않고 Answer 엔티티를 저장할 수 있지만,
+        // 데이터의 정합성을 위해 findById로 직접 조회한다. (PK 기반의 Select는 전체 애플리케이션에 비하면 아주 미비한 비용이므로)
+
+        // 해당 답변의 작성자가 유효한지 찾는다.
+        User user = userRepository.findById(userInfo.userId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_USER));
+
+        // 해당 퀴즈가 유효한지 찾는다.
+        Quiz quiz = quizRepository.findById(quizId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_QUIZ));
+
+        Answer answer = request.toEntity(user, quiz);
+
+        return CreateAnswerDto.Response.from(
+                answerRepository.save(answer).getId());
     }
 }

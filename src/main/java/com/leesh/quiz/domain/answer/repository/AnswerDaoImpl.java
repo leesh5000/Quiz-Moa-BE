@@ -1,4 +1,4 @@
-package com.leesh.quiz.domain.answer;
+package com.leesh.quiz.domain.answer.repository;
 
 import com.leesh.quiz.api.quiz.dto.quiz.QQuizDetailDto_AnswerDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDetailDto;

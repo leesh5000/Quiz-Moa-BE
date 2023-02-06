@@ -1,5 +1,6 @@
 package com.leesh.quiz.api.quiz.controller;
 
+import com.leesh.quiz.api.quiz.dto.answer.CreateAnswerDto;
 import com.leesh.quiz.api.quiz.dto.quiz.CreateQuizDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDetailDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDto;
@@ -25,7 +26,7 @@ public class QuizController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreateQuizDto.Response> createQuiz(@AuthenticationPrincipal UserInfo userInfo,
-                                        @RequestBody @Valid CreateQuizDto.Request request) {
+                                                             @RequestBody @Valid CreateQuizDto.Request request) {
 
         CreateQuizDto.Response body = quizService.createQuiz(userInfo, request);
 
@@ -48,6 +49,17 @@ public class QuizController {
         QuizDetailDto body = quizService.getQuizDetail(quizId);
 
         return ResponseEntity.ok(body);
+
+    }
+
+    @PostMapping(value = "/{quiz-id}/answers", consumes = MediaType.APPLICATION_JSON_VALUE ,produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CreateAnswerDto.Response> createAnswer(@AuthenticationPrincipal UserInfo userInfo,
+                                                                 @PathVariable("quiz-id") Long quizId,
+                                                                 @RequestBody @Valid CreateAnswerDto.Request request) {
+
+        CreateAnswerDto.Response body = quizService.createAnswer(userInfo, quizId, request);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(body);
 
     }
 

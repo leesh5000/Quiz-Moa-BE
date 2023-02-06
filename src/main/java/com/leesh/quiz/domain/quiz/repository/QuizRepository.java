@@ -1,5 +1,6 @@
-package com.leesh.quiz.domain.quiz;
+package com.leesh.quiz.domain.quiz.repository;
 
+import com.leesh.quiz.domain.quiz.Quiz;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -1,4 +1,4 @@
-package com.leesh.quiz.domain.quiz;
+package com.leesh.quiz.domain.quiz.repository;
 
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDetailDto;
 

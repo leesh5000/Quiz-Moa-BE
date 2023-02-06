@@ -285,3 +285,25 @@ include::{snippets}/quiz/get-quiz-detail/http-response.adoc[]
 
 ===== Response Body =====
 include::{snippets}/quiz/get-quiz-detail/response-fields.adoc[]
+
+=== *퀴즈에 답변 달기* ===
+
+퀴즈에 답변을 답니다.
+
+==== Request ====
+include::{snippets}/quiz/create-answer/http-request.adoc[]
+
+==== Request Header ====
+include::{snippets}/quiz/create-answer/request-headers.adoc[]
+
+==== Path Parameters ====
+include::{snippets}/quiz/create-answer/path-parameters.adoc[]
+
+==== Request Body ====
+include::{snippets}/quiz/create-answer/request-fields.adoc[]
+
+==== Response ====
+include::{snippets}/quiz/create-answer/http-response.adoc[]
+
+==== Response Body ====
+include::{snippets}/quiz/create-answer/response-fields.adoc[]
