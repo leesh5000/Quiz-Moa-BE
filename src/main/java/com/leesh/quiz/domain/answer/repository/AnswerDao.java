@@ -12,6 +12,6 @@ public interface AnswerDao {
 
     Page<MyAnswerDto> getMyAnswersByPaging(Long userId, Pageable pageable);
 
-    Optional<List<QuizDetailDto.AnswerDto>> getAnswersByQuizId(Long quizId);
+    Optional<List<QuizDetailDto.AnswerDto>> getAnswersWithVoteByQuizId(Long quizId);
 
 }

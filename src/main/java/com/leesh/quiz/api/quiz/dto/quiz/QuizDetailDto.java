@@ -7,24 +7,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 public record QuizDetailDto(Long id, String title, String contents,
-                            List<AnswerDto> answers, String author, int votes,
+                            Long authorId, String author,
+                            List<AnswerDto> answers, List<QuizVoteDto> votes,
                             LocalDateTime createdAt, LocalDateTime modifiedAt) {
 
     @QueryProjection
     public QuizDetailDto(Long id, String title, String contents,
-                         String author, int votes,
+                         Long authorId, String author,
+                         List<QuizVoteDto> votes,
                          LocalDateTime createdAt, LocalDateTime modifiedAt) {
 
-        this(id, title, contents, new ArrayList<>(), author, votes, createdAt, modifiedAt);
-
+        this(id, title, contents, authorId, author, new ArrayList<>(), votes, createdAt, modifiedAt);
     }
 
     public record AnswerDto(Long id, String contents,
-                            String author, int votes,
+                            Long authorId, String author,
+                            List<AnswerVoteDto> votes,
                             LocalDateTime createdAt, LocalDateTime modifiedAt) {
 
         @QueryProjection
         public AnswerDto {}
+
+    }
+
+    public record QuizVoteDto(Long id, int value,
+                              Long voterId, String voter) {
+
+        @QueryProjection
+        public QuizVoteDto {}
+
+    }
+
+    public record AnswerVoteDto(Long id, int value,
+                                Long voterId, String voter) {
+
+        @QueryProjection
+        public AnswerVoteDto {}
 
     }
 }

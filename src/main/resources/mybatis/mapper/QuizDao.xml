@@ -44,4 +44,5 @@
         from quiz q
         where q.deleted = false;
     </select>
+    
 </mapper>

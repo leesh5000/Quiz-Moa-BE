@@ -1,9 +1,11 @@
 package com.leesh.quiz.domain.answer.repository;
 
 import com.leesh.quiz.api.quiz.dto.quiz.QQuizDetailDto_AnswerDto;
+import com.leesh.quiz.api.quiz.dto.quiz.QQuizDetailDto_AnswerVoteDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDetailDto;
 import com.leesh.quiz.api.userprofile.dto.answer.MyAnswerDto;
 import com.leesh.quiz.api.userprofile.dto.answer.QMyAnswerDto;
+import com.leesh.quiz.domain.user.QUser;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -19,6 +21,8 @@ import static com.leesh.quiz.domain.answer.QAnswer.answer;
 import static com.leesh.quiz.domain.answervote.QAnswerVote.answerVote;
 import static com.leesh.quiz.domain.quiz.QQuiz.quiz;
 import static com.leesh.quiz.domain.user.QUser.user;
+import static com.querydsl.core.group.GroupBy.groupBy;
+import static com.querydsl.core.group.GroupBy.list;
 
 @RequiredArgsConstructor
 public class AnswerDaoImpl implements AnswerDao {
@@ -67,27 +71,51 @@ public class AnswerDaoImpl implements AnswerDao {
     }
 
     @Override
-    public Optional<List<QuizDetailDto.AnswerDto>> getAnswersByQuizId(Long quizId) {
+    public Optional<List<QuizDetailDto.AnswerDto>> getAnswersWithVoteByQuizId(Long quizId) {
+
+        // Hibernate 6.x에서 HibernateHandler 대신 DefaultQueryHandler를 사용하는 현상 때문에 JPAQueryFactory를 직접 생성해서 사용해야함
+        // https://github.com/querydsl/querydsl/issues/3428 참고
+
+        QUser author = new QUser("author");
+        QUser voter = new QUser("voter");
 
         List<QuizDetailDto.AnswerDto> content = queryFactory
-                .select(new QQuizDetailDto_AnswerDto(
-                        answer.id,
-                        answer.contents,
-                        user.email.as("author"),
-                        answerVote.value.intValue().sum().as("votes"),
-                        answer.createdAt,
-                        answer.modifiedAt
-                ))
                 .from(answer)
-                    .innerJoin(answer.user, user)
+                    .innerJoin(answer.user, author)
+                    .innerJoin(answer.quiz, quiz)
                     .leftJoin(answer.votes, answerVote)
+                    .leftJoin(answerVote.user, voter)
                 .where(
                         quizIdEq(quizId),
                         answer.deleted.eq(false)
-                ).groupBy(answer.id)
-                .fetch();
+                )
+                .transform(
+                    groupBy(answer.id).list(
+                        new QQuizDetailDto_AnswerDto(
+                                answer.id,
+                                answer.contents,
+                                author.id.as("authorId"),
+                                author.email.as("author"),
+                                list(new QQuizDetailDto_AnswerVoteDto(
+                                                answerVote.id,
+                                                answerVote.value.intValue(),
+                                                voter.id.as("voterId"),
+                                                voter.email.as("voter")
+                                ).as("votes")),
+                                answer.createdAt,
+                                answer.modifiedAt
+                        )
+                ));
 
-        return Optional.ofNullable(content);
+        // LEFT OUTER JOIN 이므로, 퀴즈에 투표가 없는 경우에는 vote id가 null 이므로, 이를 제거해준다.
+        if (!content.isEmpty()) {
+            for (var answerDto : content) {
+                answerDto.votes().removeIf(v -> v.id() == null);
+            }
+        }
+
+        return Optional.ofNullable(
+                content.size() == 0 ? null : content);
     }
 
     private BooleanExpression quizIdEq(Long quizId) {

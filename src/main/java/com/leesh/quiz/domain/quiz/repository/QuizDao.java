@@ -6,6 +6,6 @@ import java.util.Optional;
 
 public interface QuizDao {
 
-    Optional<QuizDetailDto> getQuizDetail(Long quizId);
+    Optional<QuizDetailDto> getQuizDetailByQuizId(Long id);
 
 }

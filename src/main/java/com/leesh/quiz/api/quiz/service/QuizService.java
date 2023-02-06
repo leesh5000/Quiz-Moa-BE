@@ -5,10 +5,12 @@ import com.leesh.quiz.api.quiz.dto.answer.CreateAnswerDto;
 import com.leesh.quiz.api.quiz.dto.quiz.CreateQuizDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDetailDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDto;
+import com.leesh.quiz.api.quiz.dto.vote.QuizVoteDto;
 import com.leesh.quiz.domain.answer.Answer;
 import com.leesh.quiz.domain.answer.repository.AnswerRepository;
 import com.leesh.quiz.domain.quiz.Quiz;
 import com.leesh.quiz.domain.quiz.repository.QuizRepository;
+import com.leesh.quiz.domain.quizvote.QuizVoteRepository;
 import com.leesh.quiz.domain.user.User;
 import com.leesh.quiz.domain.user.UserRepository;
 import com.leesh.quiz.global.constant.PagingRequestInfo;
@@ -16,6 +18,7 @@ import com.leesh.quiz.global.constant.PagingResponseDto;
 import com.leesh.quiz.global.constant.UserInfo;
 import com.leesh.quiz.global.error.ErrorCode;
 import com.leesh.quiz.global.error.exception.BusinessException;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +26,6 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -35,6 +37,7 @@ public class QuizService {
     private final UserRepository userRepository;
     private final QuizDao quizDao;
     private final AnswerRepository answerRepository;
+    private final QuizVoteRepository quizVoteRepository;
 
     public CreateQuizDto.Response createQuiz(UserInfo userInfo, CreateQuizDto.Request request) {
 
@@ -68,19 +71,19 @@ public class QuizService {
     }
 
     @Transactional(readOnly = true)
-    public QuizDetailDto getQuizDetail(Long quizId) {
+    public QuizDetailDto getQuizDetail(@NotNull Long quizId) {
 
-        // 한 번에 조회하는 것이 아니라, quiz를 조회한 후, answer를 조회한 다음 합쳐서 리턴하는 방식으로 구현
-        // 우선, quiz-id로 quiz를 먼저 조회한다.
-        QuizDetailDto quizDetail = quizRepository.getQuizDetail(quizId)
+        // 한 방 쿼리로, 퀴즈, 퀴즈 작성자, 퀴즈-투표, 퀴즈-투표 작성자, 답변, 답변 작성자, 답변-투표, 답변-투표 작성자를 조회하는 것은
+        // Row 수가 N 관계에 있는 테이블 만큼 늘어나게 되므로 나눠서 조회한다.
+        // 어쨌든 N 관계에 있는 모든 Row가 애플리케이션 메모리까지 올라오니까 DB에서 최대한 줄여서 가져와야 한다.
+
+        // 우선, quiz-id로 퀴즈, 퀴즈 작성자, 퀴즈-투표, 퀴즈-투표 작성자 정보를 조회한다.
+        QuizDetailDto quizDetail = quizRepository.getQuizDetailByQuizId(quizId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_QUIZ));
 
-        // 해당 quiz에 대한 answer를 조회한다.
-        var answersByQuizId = answerRepository.getAnswersByQuizId(quizDetail.id())
-                .orElseGet(ArrayList::new);
-
-        // quizDetail에 answer를 추가한다.
-        quizDetail.answers().addAll(answersByQuizId);
+        // 해당 quiz에 대한 answer를 조회한 후, 값이 존재하면 퀴즈에 추가한다.
+        answerRepository.getAnswersWithVoteByQuizId(quizId)
+                .ifPresent(a -> quizDetail.answers().addAll(a));
 
         return quizDetail;
 
@@ -103,5 +106,10 @@ public class QuizService {
 
         return CreateAnswerDto.Response.from(
                 answerRepository.save(answer).getId());
+    }
+
+
+    public void vote(UserInfo userInfo, Long quizId, QuizVoteDto.Request request) {
+
     }
 }

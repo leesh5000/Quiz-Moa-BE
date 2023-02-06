@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface QuizRepository extends JpaRepository<Quiz, Long>, QuizDao {
 
     @Query("select q from Quiz q join fetch q.user where q.id = :id and q.deleted = false")
-    Optional<Quiz> findByIdWithUser(@Param("id") Long id);
+    Optional<Quiz> findByQuizIdWithUser(@Param("id") Long id);
 
 }

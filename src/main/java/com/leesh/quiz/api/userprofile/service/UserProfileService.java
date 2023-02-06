@@ -88,7 +88,7 @@ public class UserProfileService {
 
     private Quiz findQuizByIdWithUser(Long quizId) {
 
-        return quizRepository.findByIdWithUser(quizId)
+        return quizRepository.findByQuizIdWithUser(quizId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_QUIZ));
     }
 
