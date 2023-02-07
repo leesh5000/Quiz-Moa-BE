@@ -307,3 +307,28 @@ include::{snippets}/quiz/create-answer/http-response.adoc[]
 
 ==== Response Body ====
 include::{snippets}/quiz/create-answer/response-fields.adoc[]
+
+=== *퀴즈에 투표 하기* ===
+
+퀴즈에 투표를 합니다.
+
+==== Request ====
+include::{snippets}/quiz/create-quiz-vote/http-request.adoc[]
+
+==== Request Header ====
+include::{snippets}/quiz/create-quiz-vote/request-headers.adoc[]
+
+==== Path Parameters ====
+include::{snippets}/quiz/create-quiz-vote/path-parameters.adoc[]
+
+==== Request Body ====
+include::{snippets}/quiz/create-quiz-vote/request-fields.adoc[]
+
+==== Response ====
+include::{snippets}/quiz/create-quiz-vote/http-response.adoc[]
+
+==== Response Body ====
+include::{snippets}/quiz/create-quiz-vote/response-fields.adoc[]
+
+
+

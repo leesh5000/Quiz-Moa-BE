@@ -5,11 +5,12 @@ import com.leesh.quiz.api.quiz.dto.answer.CreateAnswerDto;
 import com.leesh.quiz.api.quiz.dto.quiz.CreateQuizDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDetailDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDto;
-import com.leesh.quiz.api.quiz.dto.vote.QuizVoteDto;
+import com.leesh.quiz.api.quiz.dto.vote.CreateQuizVoteDto;
 import com.leesh.quiz.domain.answer.Answer;
 import com.leesh.quiz.domain.answer.repository.AnswerRepository;
 import com.leesh.quiz.domain.quiz.Quiz;
 import com.leesh.quiz.domain.quiz.repository.QuizRepository;
+import com.leesh.quiz.domain.quizvote.QuizVote;
 import com.leesh.quiz.domain.quizvote.QuizVoteRepository;
 import com.leesh.quiz.domain.user.User;
 import com.leesh.quiz.domain.user.UserRepository;
@@ -109,7 +110,24 @@ public class QuizService {
     }
 
 
-    public void vote(UserInfo userInfo, Long quizId, QuizVoteDto.Request request) {
+    public CreateQuizVoteDto.Response createQuizVote(UserInfo userInfo, Long quizId, CreateQuizVoteDto.Request request) {
+
+        // JPA의 getReferenceById를 사용하면, 조회 쿼리를 하지 않고 Answer 엔티티를 저장할 수 있지만,
+        // 데이터의 정합성을 위해 findById로 직접 조회한다.
+        // (PK 기반의 Select는 전체 애플리케이션에 비하면 아주 미비한 비용이므로, 쿼리 몇 번 더 나가더라도 데이터 정합성을 우선시 한다.)
+        // DB에 외래키가 안 걸려있을 경우, quiz, user가 없는 투표가 생길 수 있음
+
+        // 해당 투표가 유효한지 찾는다.
+        Quiz quiz = quizRepository.findById(quizId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_QUIZ));
+
+        // 해당 투표한 유저가 유효한지 찾는다.
+        User user = userRepository.findById(userInfo.userId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_USER));
+
+        QuizVote quizVote = quizVoteRepository.save(request.toEntity(user, quiz));
+
+        return CreateQuizVoteDto.Response.from(quizVote.getId());
 
     }
 }

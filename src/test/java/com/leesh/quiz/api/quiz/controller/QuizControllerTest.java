@@ -5,6 +5,7 @@ import com.leesh.quiz.api.quiz.dto.answer.CreateAnswerDto;
 import com.leesh.quiz.api.quiz.dto.quiz.CreateQuizDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDetailDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDto;
+import com.leesh.quiz.api.quiz.dto.vote.CreateQuizVoteDto;
 import com.leesh.quiz.api.quiz.service.QuizService;
 import com.leesh.quiz.domain.user.constant.Role;
 import com.leesh.quiz.global.constant.PagingResponseDto;
@@ -195,11 +196,19 @@ class QuizControllerTest {
         // given
         List<AnswerDto> answers = new ArrayList<>();
 
-        int totalElements = 1125;
-        int totalPages = 12;
-        boolean last = false;
-        boolean first = true;
-        boolean empty = false;
+        List<QuizDetailDto.AnswerVoteDto> answerVotes = new ArrayList<>();
+        answerVotes.add(new QuizDetailDto.AnswerVoteDto(1L, 1, 1L, "test1@gmail.com"));
+        answerVotes.add(new QuizDetailDto.AnswerVoteDto(2L, 1, 1L, "test2@gmail.com"));
+        answerVotes.add(new QuizDetailDto.AnswerVoteDto(3L, 1, 1L, "test3@gmail.com"));
+
+        List<QuizDetailDto.QuizVoteDto> quizVotes = new ArrayList<>();
+        quizVotes.add(new QuizDetailDto.QuizVoteDto(1L, 1, 1L, "test1@gmail.com"));
+        quizVotes.add(new QuizDetailDto.QuizVoteDto(2L, 1, 2L, "test2@gmail.com"));
+        quizVotes.add(new QuizDetailDto.QuizVoteDto(3L, 1, 3L, "test3@gmail.com"));
+
+        answers.add(new AnswerDto(1L, "먼저, 빈 주입 방식과 수정자 주입 방식이 있습니다. 빈 주입 방식은 @Autowired를 통해 주입하는 방식을 말합니다.", 2L, "test2@gmail.com", answerVotes, LocalDateTime.now(), LocalDateTime.now()));
+        answers.add(new AnswerDto(2L, "한 가지가 더 있는듯 합니다.", 3L, "test3@gmail.com", answerVotes, LocalDateTime.now(), LocalDateTime.now()));
+        answers.add(new AnswerDto(3L, "생성자 주입 방식이 있습니다. 불변성을 유지할 수 있기 때문에 주로 생성자 주입 방식을 사용합니다.", 5L, "test5@gmail.com", answerVotes, LocalDateTime.now(), LocalDateTime.now()));
 
         long quizId = 1L;
         given(quizService.getQuizDetail(anyLong()))
@@ -207,15 +216,9 @@ class QuizControllerTest {
                         quizId,
                         "스프링의 빈 주입 방식에 대해...",
                         "스프링이 빈 주입을 하는 방법에 대해 모두 설명해주세요. 그리고, 우리가 흔히 사용하는 방식은 무엇이며, 각각 어떤 장점이 있는지에 대해 설명해주세요.",
-                        answers,
-                        "leesh@gmail.com",
-                        10,
+                        1L, "leesh@gmail.com",
+                        answers, quizVotes,
                         LocalDateTime.now(), LocalDateTime.now()));
-
-        answers.add(new AnswerDto(1L, "먼저, 빈 주입 방식과 수정자 주입 방식이 있습니다. 빈 주입 방식은 @Autowired를 통해 주입하는 방식을 말합니다.", "test2@gmail.com", 1, LocalDateTime.now(), LocalDateTime.now()));
-        answers.add(new AnswerDto(2L, "한 가지가 더 있는듯 합니다.", "test3@gmail.com", -2, LocalDateTime.now(), LocalDateTime.now()));
-        answers.add(new AnswerDto(2L, "생성자 주입 방식이 있습니다. 불변성을 유지할 수 있기 때문에 주로 생성자 주입 방식을 사용합니다.", "test5@gmail.com", 5, LocalDateTime.now(), LocalDateTime.now()));
-
 
         // when
         ResultActions result = mvc.perform(
@@ -229,16 +232,27 @@ class QuizControllerTest {
                 .andExpect(jsonPath("$.id").value(quizId))
                 .andExpect(jsonPath("$.title").value("스프링의 빈 주입 방식에 대해..."))
                 .andExpect(jsonPath("$.contents").value("스프링이 빈 주입을 하는 방법에 대해 모두 설명해주세요. 그리고, 우리가 흔히 사용하는 방식은 무엇이며, 각각 어떤 장점이 있는지에 대해 설명해주세요."))
+                .andExpect(jsonPath("$.authorId").value(1L))
                 .andExpect(jsonPath("$.author").value("leesh@gmail.com"))
-                .andExpect(jsonPath("$.votes").value(10))
                 .andExpect(jsonPath("$.createdAt").isNotEmpty())
                 .andExpect(jsonPath("$.modifiedAt").isNotEmpty())
+                .andExpect(jsonPath("$.votes").isArray())
+                .andExpect(jsonPath("$.votes[0].id").value(1L))
+                .andExpect(jsonPath("$.votes[0].value").value(1))
+                .andExpect(jsonPath("$.votes[0].voterId").value(1L))
+                .andExpect(jsonPath("$.votes[0].voter").value("test1@gmail.com"))
+                .andExpect(jsonPath("$.answers").isArray())
                 .andExpect(jsonPath("$.answers[0].id").value(1L))
                 .andExpect(jsonPath("$.answers[0].contents").value("먼저, 빈 주입 방식과 수정자 주입 방식이 있습니다. 빈 주입 방식은 @Autowired를 통해 주입하는 방식을 말합니다."))
+                .andExpect(jsonPath("$.answers[0].authorId").value(2L))
                 .andExpect(jsonPath("$.answers[0].author").value("test2@gmail.com"))
-                .andExpect(jsonPath("$.answers[0].votes").value(1))
                 .andExpect(jsonPath("$.answers[0].createdAt").isNotEmpty())
-                .andExpect(jsonPath("$.answers[0].modifiedAt").isNotEmpty());
+                .andExpect(jsonPath("$.answers[0].modifiedAt").isNotEmpty())
+                .andExpect(jsonPath("$.answers[0].votes").isArray())
+                .andExpect(jsonPath("$.answers[0].votes[0].id").value(1L))
+                .andExpect(jsonPath("$.answers[0].votes[0].value").value(1))
+                .andExpect(jsonPath("$.answers[0].votes[0].voterId").value(1L))
+                .andExpect(jsonPath("$.answers[0].votes[0].voter").value("test1@gmail.com"));
 
         then(quizService).should().getQuizDetail(anyLong());
 
@@ -252,17 +266,27 @@ class QuizControllerTest {
                                 fieldWithPath("id").description("퀴즈 ID"),
                                 fieldWithPath("title").description("퀴즈 제목"),
                                 fieldWithPath("contents").description("퀴즈 내용"),
+                                fieldWithPath("authorId").description("퀴즈 작성자 ID"),
                                 fieldWithPath("author").description("퀴즈 작성자"),
-                                fieldWithPath("votes").description("퀴즈 추천 수"),
                                 fieldWithPath("createdAt").description("퀴즈 생성 시간"),
                                 fieldWithPath("modifiedAt").description("퀴즈 수정 시간"),
-                                fieldWithPath("answers").description("퀴즈에 달린 답변 목록"),
+                                fieldWithPath("votes").description("현재 퀴즈에 대한 투표 정보 (추천 정보)"),
+                                fieldWithPath("votes[].id").description("투표 ID"),
+                                fieldWithPath("votes[].value").description("투표 값"),
+                                fieldWithPath("votes[].voterId").description("투표자 ID"),
+                                fieldWithPath("votes[].voter").description("투표자"),
+                                fieldWithPath("answers").description("퀴즈에 대한 답변 정보"),
                                 fieldWithPath("answers[].id").description("답변 ID"),
                                 fieldWithPath("answers[].contents").description("답변 내용"),
+                                fieldWithPath("answers[].authorId").description("답변 작성자 ID"),
                                 fieldWithPath("answers[].author").description("답변 작성자"),
-                                fieldWithPath("answers[].votes").description("답변 추천 수"),
                                 fieldWithPath("answers[].createdAt").description("답변 생성 시간"),
-                                fieldWithPath("answers[].modifiedAt").description("답변 수정 시간")
+                                fieldWithPath("answers[].modifiedAt").description("답변 수정 시간"),
+                                fieldWithPath("answers[].votes").description("답변에 대한 투표 정보"),
+                                fieldWithPath("answers[].votes[].id").description("투표 ID"),
+                                fieldWithPath("answers[].votes[].value").description("투표 값"),
+                                fieldWithPath("answers[].votes[].voterId").description("투표자 ID"),
+                                fieldWithPath("answers[].votes[].voter").description("투표자")
                         )));
 
     }
@@ -323,5 +347,60 @@ class QuizControllerTest {
 
     }
 
+    @DisplayName("퀴즈에 투표 하기 API 테스트 - 정상 호출")
+    @Test
+    void createQuizVote_success() throws Exception {
+
+        // given
+        AccessToken accessToken = AccessToken.of(
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q",
+                new Date());
+
+        long userId = 1L;
+        given(tokenService.extractUserInfo(any(String.class)))
+                .willReturn(UserInfo.of(userId, Role.USER));
+
+        long createQuizVoteId = 1L;
+        CreateQuizVoteDto.Request request = new CreateQuizVoteDto.Request(Byte.valueOf("1"));
+        CreateQuizVoteDto.Response response = CreateQuizVoteDto.Response.from(createQuizVoteId);
+
+        given(quizService.createQuizVote(any(UserInfo.class), anyLong(), any(CreateQuizVoteDto.Request.class)))
+                .willReturn(response);
+
+        // when
+        ResultActions result = mvc.perform(
+                post("/api/quizzes/{quiz-id}/votes", createQuizVoteId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, accessToken.grantType() + " " + accessToken.accessToken())
+                        .content(objectMapper.writeValueAsString(request)
+                        ));
+
+        // then
+        result
+                .andExpect(status().isCreated())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.voteId").value(createQuizVoteId));
+
+        then(quizService).should().createQuizVote(any(UserInfo.class), anyLong(), any(CreateQuizVoteDto.Request.class));
+        then(tokenService).should().extractUserInfo(any(String.class));
+
+        // API 문서화
+        result
+                .andDo(document("quiz/create-quiz-vote",
+                        pathParameters(
+                                parameterWithName("quiz-id").description("퀴즈 ID")
+                        ),
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("접근 토큰 (Access Token)")
+                        ),
+                        requestFields(
+                                fieldWithPath("value").description("투표 값").attributes(RestDocsConfiguration.field("constraints", "1 또는 -1"))
+                        ),
+                        responseFields(
+                                fieldWithPath("voteId").description("생성된 투표의 ID")
+                        )));
+
+    }
 
 }

@@ -4,7 +4,7 @@ import com.leesh.quiz.api.quiz.dto.answer.CreateAnswerDto;
 import com.leesh.quiz.api.quiz.dto.quiz.CreateQuizDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDetailDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDto;
-import com.leesh.quiz.api.quiz.dto.vote.QuizVoteDto;
+import com.leesh.quiz.api.quiz.dto.vote.CreateQuizVoteDto;
 import com.leesh.quiz.api.quiz.service.QuizService;
 import com.leesh.quiz.global.constant.PagingResponseDto;
 import com.leesh.quiz.global.constant.UserInfo;
@@ -65,13 +65,13 @@ public class QuizController {
     }
 
     @PostMapping(value = "/{quiz-id}/votes", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<QuizVoteDto.Response> vote(@AuthenticationPrincipal UserInfo userInfo,
-                                                    @PathVariable("quiz-id") Long quizId,
-                                                     @RequestBody @Valid QuizVoteDto.Request request) {
+    public ResponseEntity<CreateQuizVoteDto.Response> createQuizVote(@AuthenticationPrincipal UserInfo userInfo,
+                                                                     @PathVariable("quiz-id") Long quizId,
+                                                                     @RequestBody @Valid CreateQuizVoteDto.Request request) {
 
-        quizService.vote(userInfo, quizId, request);
+        CreateQuizVoteDto.Response body = quizService.createQuizVote(userInfo, quizId, request);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(body);
 
     }
 
