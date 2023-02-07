@@ -73,12 +73,13 @@ public class QuizVote {
         return Objects.hashCode(id);
     }
 
-    private QuizVote(User user, Quiz quiz) {
+    private QuizVote(User user, Quiz quiz, byte value) {
         this.user = user;
         this.quiz = quiz;
+        this.value = value;
     }
 
-    public static QuizVote of(User user, Quiz quiz) {
-        return new QuizVote(user, quiz);
+    public static QuizVote of(User user, Quiz quiz, byte value) {
+        return new QuizVote(user, quiz, value);
     }
 }

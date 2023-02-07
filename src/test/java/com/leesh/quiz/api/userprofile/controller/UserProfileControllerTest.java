@@ -1,7 +1,7 @@
 package com.leesh.quiz.api.userprofile.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.leesh.quiz.api.userprofile.dto.PagingResponseDto;
+import com.leesh.quiz.global.constant.PagingResponseDto;
 import com.leesh.quiz.api.userprofile.dto.answer.EditMyAnswerDto;
 import com.leesh.quiz.api.userprofile.dto.answer.MyAnswerDto;
 import com.leesh.quiz.api.userprofile.dto.quiz.EditMyQuizDto;
@@ -75,9 +75,9 @@ class UserProfileControllerTest {
                 .willReturn(UserInfo.of(userId, Role.USER));
 
         List<MyQuizDto> content = List.of(
-                new MyQuizDto(1L, "HTTP 프로토콜의 특징은 무엇인가요?", "특징이랑 이유까지 함께 답해주세요.", 5, "test1@gmail.com", 12, LocalDateTime.now(), LocalDateTime.now()),
-                new MyQuizDto(2L, "RDB와 NoSQL의 차이점은 무엇인가?", "추가적으로 각 DB의 장단점과 종류에 대해서도 답해주세요.", 0, "test1@gmail.com", 3, LocalDateTime.now(), LocalDateTime.now()),
-                new MyQuizDto(3L, "컴파일 언어와 스크립트 언어의 차이점은?", "제목과 동일", 2, "test1@gmail.com", 2, LocalDateTime.now(), LocalDateTime.now())
+                new MyQuizDto(1L, "HTTP 프로토콜의 특징은 무엇인가요?", 5, "test1@gmail.com", 12, LocalDateTime.now(), LocalDateTime.now()),
+                new MyQuizDto(2L, "RDB와 NoSQL의 차이점은 무엇인가?", 0, "test1@gmail.com", 3, LocalDateTime.now(), LocalDateTime.now()),
+                new MyQuizDto(3L, "컴파일 언어와 스크립트 언어의 차이점은?", 2, "test1@gmail.com", 2, LocalDateTime.now(), LocalDateTime.now())
                 );
 
         int totalElements = 1125;
@@ -102,7 +102,6 @@ class UserProfileControllerTest {
                 .andExpect(jsonPath("$.content").isArray())
                 .andExpect(jsonPath("$.content[0].id").value(1L))
                 .andExpect(jsonPath("$.content[0].title").value("HTTP 프로토콜의 특징은 무엇인가요?"))
-                .andExpect(jsonPath("$.content[0].contents").value("특징이랑 이유까지 함께 답해주세요."))
                 .andExpect(jsonPath("$.content[0].answerCount").value(5))
                 .andExpect(jsonPath("$.content[0].author").value("test1@gmail.com"))
                 .andExpect(jsonPath("$.content[0].votes").value(12))
@@ -121,7 +120,7 @@ class UserProfileControllerTest {
         result
                 .andDo(document("user-profile/get-my-quizzes",
                         requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("접근 토큰(Access Token)")
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("접근 토큰 (Access Token)")
                         ),
                         pathParameters(
                                 parameterWithName("userId").description("유저 ID (PK값)")
@@ -135,7 +134,6 @@ class UserProfileControllerTest {
                                 fieldWithPath("content").description("퀴즈 목록"),
                                 fieldWithPath("content[].id").description("퀴즈 ID (PK값)"),
                                 fieldWithPath("content[].title").description("퀴즈 제목"),
-                                fieldWithPath("content[].contents").description("퀴즈 내용"),
                                 fieldWithPath("content[].answerCount").description("퀴즈 답변 수"),
                                 fieldWithPath("content[].author").description("퀴즈 작성자"),
                                 fieldWithPath("content[].votes").description("이 퀴즈가 얻은 추천 수 (음수도 가능)"),
@@ -185,6 +183,9 @@ class UserProfileControllerTest {
                 .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.editQuizId").value(editQuizId));
 
+        then(tokenService).should(times(1)).extractUserInfo(any(String.class));
+        then(userProfileService).should(times(1)).editMyQuiz(any(EditMyQuizDto.Request.class), any(UserInfo.class), anyLong());
+
         // API 문서화
         result
                 .andDo(document("user-profile/edit-my-quiz",
@@ -197,7 +198,7 @@ class UserProfileControllerTest {
                         ),
                         requestFields(
                                 fieldWithPath("title").description("퀴즈 제목").attributes(RestDocsConfiguration.field("constraints", "10자 이상 255자 이하")),
-                                fieldWithPath("contents").description("퀴즈 내용")
+                                fieldWithPath("contents").description("퀴즈 내용").attributes(RestDocsConfiguration.field("constraints", "10자 이상"))
                         ),
                         responseFields(
                                 fieldWithPath("editQuizId").description("수정된 퀴즈 ID"))));
@@ -229,6 +230,9 @@ class UserProfileControllerTest {
         // then
         result
                 .andExpect(status().isNoContent());
+
+        then(userProfileService).should(times(1)).deleteMyQuiz(anyLong(), any(UserInfo.class));
+        then(tokenService).should(times(1)).extractUserInfo(any(String.class));
 
         // API 문서화
         result
@@ -364,6 +368,9 @@ class UserProfileControllerTest {
                 .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.editAnswerId").value(editAnswerId));
 
+        then(tokenService).should().extractUserInfo(any(String.class));
+        then(userProfileService).should().editMyAnswer(any(EditMyAnswerDto.Request.class), any(UserInfo.class), anyLong());
+
         // API 문서화
         result
                 .andDo(document("user-profile/edit-my-answer",
@@ -375,7 +382,7 @@ class UserProfileControllerTest {
                                 parameterWithName("answerId").description("수정할 답변 ID")
                         ),
                         requestFields(
-                                fieldWithPath("contents").description("답변 내용")
+                                fieldWithPath("contents").description("답변 내용").attributes(RestDocsConfiguration.field("constraints", "10자 이상"))
                         ),
                         responseFields(
                                 fieldWithPath("editAnswerId").description("수정된 답변 ID"))));
@@ -407,6 +414,9 @@ class UserProfileControllerTest {
         // then
         result
                 .andExpect(status().isNoContent());
+
+        then(tokenService).should().extractUserInfo(accessToken.accessToken());
+        then(userProfileService).should().deleteMyAnswer(deleteAnswerId, UserInfo.of(answerWriterId, Role.USER));
 
         // API 문서화
         result

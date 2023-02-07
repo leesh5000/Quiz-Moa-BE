@@ -1,5 +1,6 @@
 package com.leesh.quiz.global.configuration;
 
+import com.querydsl.jpa.JPQLTemplates;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,11 @@ public class QueryDslConfiguration {
     // 도서 ORM 표준 JPA 13.1 트랜잭션 범위의 영속성 컨텍스트 참고
     @Bean
     public JPAQueryFactory jpaQueryFactory() {
-        return new JPAQueryFactory(entityManager);
+
+        // Hibernate 6.x에서 HibernateHandler 대신 DefaultQueryHandler를 사용하는 현상 때문에 결과 집합 쿼리 Transfrom이 에러가 나는 현상이 있음
+        // 따라서, JPAQueryFactory를 직접 생성해서 사용해야함
+        // https://github.com/querydsl/querydsl/issues/3428 참고
+        return new JPAQueryFactory(JPQLTemplates.DEFAULT, entityManager);
     }
 
 }

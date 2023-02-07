@@ -1,4 +1,4 @@
-package com.leesh.quiz.api.userprofile.dto;
+package com.leesh.quiz.global.constant;
 
 import org.springframework.data.domain.Page;
 

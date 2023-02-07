@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 주로 @RequestParam enum으로 binding 못했을 경우 발생
+     * 주로 @RequestParam enum으로 binding 못했을 경우 발생 혹은 @PathVariable 형식에 잘못된 타입을 넣었을 때
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     protected ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {

@@ -1,6 +1,6 @@
-package com.leesh.quiz.api.userprofile.dto;
+package com.leesh.quiz.global.constant;
 
-import com.leesh.quiz.global.constant.UserInfo;
+import jakarta.annotation.Nullable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * @param offset
  * @param pageSize
  */
-public record PagingRequestInfo(boolean sorted, List<Sort.Order> orders, long offset, int pageSize, Long userId) {
+public record PagingRequestInfo(boolean sorted, List<Sort.Order> orders, long offset, int pageSize, @Nullable Long userId) {
 
     public static PagingRequestInfo from(Pageable pageable, UserInfo userInfo) {
         return new PagingRequestInfo(
@@ -26,6 +26,16 @@ public record PagingRequestInfo(boolean sorted, List<Sort.Order> orders, long of
                 pageable.getOffset(),
                 pageable.getPageSize(),
                 userInfo.userId()
+        );
+    }
+
+    public static PagingRequestInfo from(Pageable pageable) {
+        return new PagingRequestInfo(
+                pageable.getSort().isSorted(),
+                pageable.getSort().stream().collect(Collectors.toList()),
+                pageable.getOffset(),
+                pageable.getPageSize(),
+                null
         );
     }
 

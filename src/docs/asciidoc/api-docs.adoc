@@ -21,6 +21,9 @@ endif::[]
 | `200 OK`
 | 성공
 
+| `201 Created`
+| 리소스 생성
+
 | `204 No Content`
 | 성공 (응답 바디 없음)
 
@@ -229,3 +232,128 @@ include::{snippets}/user-profile/delete-my-answer/path-parameters.adoc[]
 
 ==== Response ====
 include::{snippets}/user-profile/delete-my-answer/http-response.adoc[]
+
+== *퀴즈* ==
+
+=== *퀴즈 생성* ===
+
+퀴즈를 생성합니다.
+
+==== Request ====
+include::{snippets}/quiz/create-quiz/http-request.adoc[]
+
+==== Request Header ====
+include::{snippets}/quiz/create-quiz/request-headers.adoc[]
+
+==== Request Body ====
+include::{snippets}/quiz/create-quiz/request-fields.adoc[]
+
+==== Response ====
+include::{snippets}/quiz/create-quiz/http-response.adoc[]
+
+==== Response Body ====
+include::{snippets}/quiz/create-quiz/response-fields.adoc[]
+
+=== *퀴즈 목록 조회* ===
+
+퀴즈 목록을 조회합니다. 별도의 인증이 필요 없으며, 비회원 유저도 조회가 가능합니다.
+
+==== Request ====
+include::{snippets}/quiz/get-quizzes/http-request.adoc[]
+
+===== Query Parameter =====
+include::{snippets}/quiz/get-quizzes/query-parameters.adoc[]
+
+==== Response ====
+include::{snippets}/quiz/get-quizzes/http-response.adoc[]
+
+===== Response Body =====
+include::{snippets}/quiz/get-quizzes/response-fields.adoc[]
+
+=== *퀴즈 세부내용 조회* ===
+
+퀴즈의 세부내용을 조회합니다. 별도의 인증이 필요 없으며, 비회원 유저도 조회가 가능합니다.
+
+==== Request ====
+include::{snippets}/quiz/get-quiz-detail/http-request.adoc[]
+
+===== Path Parameters =====
+include::{snippets}/quiz/get-quiz-detail/path-parameters.adoc[]
+
+==== Response ====
+include::{snippets}/quiz/get-quiz-detail/http-response.adoc[]
+
+===== Response Body =====
+include::{snippets}/quiz/get-quiz-detail/response-fields.adoc[]
+
+=== *퀴즈에 답변 달기* ===
+
+퀴즈에 답변을 답니다.
+
+==== Request ====
+include::{snippets}/quiz/create-answer/http-request.adoc[]
+
+==== Request Header ====
+include::{snippets}/quiz/create-answer/request-headers.adoc[]
+
+==== Path Parameters ====
+include::{snippets}/quiz/create-answer/path-parameters.adoc[]
+
+==== Request Body ====
+include::{snippets}/quiz/create-answer/request-fields.adoc[]
+
+==== Response ====
+include::{snippets}/quiz/create-answer/http-response.adoc[]
+
+==== Response Body ====
+include::{snippets}/quiz/create-answer/response-fields.adoc[]
+
+=== *퀴즈에 투표 하기* ===
+
+퀴즈에 투표를 합니다.
+
+==== Request ====
+include::{snippets}/quiz/create-quiz-vote/http-request.adoc[]
+
+==== Request Header ====
+include::{snippets}/quiz/create-quiz-vote/request-headers.adoc[]
+
+==== Path Parameters ====
+include::{snippets}/quiz/create-quiz-vote/path-parameters.adoc[]
+
+==== Request Body ====
+include::{snippets}/quiz/create-quiz-vote/request-fields.adoc[]
+
+==== Response ====
+include::{snippets}/quiz/create-quiz-vote/http-response.adoc[]
+
+==== Response Body ====
+include::{snippets}/quiz/create-quiz-vote/response-fields.adoc[]
+
+== *답변* ==
+
+=== *답변에 투표하기* ===
+
+답변에 투표를 합니다.
+
+==== Request ====
+include::{snippets}/answer/create-answer-vote/http-request.adoc[]
+
+==== Request Header ====
+include::{snippets}/answer/create-answer-vote/request-headers.adoc[]
+
+==== Path Parameters ====
+include::{snippets}/answer/create-answer-vote/path-parameters.adoc[]
+
+==== Request Body ====
+include::{snippets}/answer/create-answer-vote/request-fields.adoc[]
+
+==== Response ====
+include::{snippets}/answer/create-answer-vote/http-response.adoc[]
+
+==== Response Body ====
+include::{snippets}/answer/create-answer-vote/response-fields.adoc[]
+
+
+
+
