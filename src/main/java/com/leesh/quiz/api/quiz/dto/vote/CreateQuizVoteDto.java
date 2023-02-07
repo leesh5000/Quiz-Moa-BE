@@ -17,10 +17,10 @@ public class CreateQuizVoteDto {
 
     }
 
-    public record Response(long voteId) {
+    public record Response(long createdVoteId) {
 
-        public static Response from(long voteId) {
-            return new Response(voteId);
+        public static Response from(long createdVoteId) {
+            return new Response(createdVoteId);
         }
 
     }

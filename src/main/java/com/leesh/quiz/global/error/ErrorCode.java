@@ -40,7 +40,10 @@ public enum ErrorCode {
     IS_NOT_QUIZ_OWNER(FORBIDDEN, "Q-002"),
 
     /* Answer */
-    NOT_EXIST_ANSWER(FORBIDDEN, "AN-001");
+    NOT_EXIST_ANSWER(FORBIDDEN, "AN-001"),
+
+    /* Vote */
+    ALREADY_EXIST_VOTER(BAD_REQUEST, "V-001");
 
     private final HttpStatus httpStatus;
     private final String code;

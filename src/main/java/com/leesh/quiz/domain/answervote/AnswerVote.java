@@ -71,12 +71,13 @@ public class AnswerVote {
         return Objects.hashCode(id);
     }
 
-    private AnswerVote(User user, Answer answer) {
+    private AnswerVote(User user, Answer answer, Byte value) {
         this.user = user;
         this.answer = answer;
+        this.value = value;
     }
 
-    public static AnswerVote of(User user, Answer answer) {
-        return new AnswerVote(user, answer);
+    public static AnswerVote of(User user, Answer answer, Byte value) {
+        return new AnswerVote(user, answer, value);
     }
 }

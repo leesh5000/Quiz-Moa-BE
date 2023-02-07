@@ -330,5 +330,30 @@ include::{snippets}/quiz/create-quiz-vote/http-response.adoc[]
 ==== Response Body ====
 include::{snippets}/quiz/create-quiz-vote/response-fields.adoc[]
 
+== *답변* ==
+
+=== *답변에 투표하기* ===
+
+답변에 투표를 합니다.
+
+==== Request ====
+include::{snippets}/answer/create-answer-vote/http-request.adoc[]
+
+==== Request Header ====
+include::{snippets}/answer/create-answer-vote/request-headers.adoc[]
+
+==== Path Parameters ====
+include::{snippets}/answer/create-answer-vote/path-parameters.adoc[]
+
+==== Request Body ====
+include::{snippets}/answer/create-answer-vote/request-fields.adoc[]
+
+==== Response ====
+include::{snippets}/answer/create-answer-vote/http-response.adoc[]
+
+==== Response Body ====
+include::{snippets}/answer/create-answer-vote/response-fields.adoc[]
+
+
 
 

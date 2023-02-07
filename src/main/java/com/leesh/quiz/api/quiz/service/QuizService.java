@@ -93,15 +93,18 @@ public class QuizService {
     public CreateAnswerDto.Response createAnswer(UserInfo userInfo, Long quizId, CreateAnswerDto.Request request) {
 
         // JPA의 getReferenceById를 사용하면, 조회 쿼리를 하지 않고 Answer 엔티티를 저장할 수 있지만,
-        // 데이터의 정합성을 위해 findById로 직접 조회한다. (PK 기반의 Select는 전체 애플리케이션에 비하면 아주 미비한 비용이므로)
-
-        // 해당 답변의 작성자가 유효한지 찾는다.
-        User user = userRepository.findById(userInfo.userId())
-                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_USER));
+        // 데이터의 정합성을 위해 findById로 직접 조회한다.
+        // (PK 기반의 Select는 전체 애플리케이션에 비하면 아주 미비한 비용이므로, 쿼리 몇 번 더 나가더라도 데이터 정합성을 우선시 한다.)
+        // DB에 외래키가 안 걸려있을 경우, quiz, user가 없는 답변이 생길 수 있음
+        // 참고 : shorturl.at/klv46
 
         // 해당 퀴즈가 유효한지 찾는다.
         Quiz quiz = quizRepository.findById(quizId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_QUIZ));
+
+        // 답변을 다는 유저가 유효한지 확인한다.
+        User user = userRepository.findById(userInfo.userId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_USER));
 
         Answer answer = request.toEntity(user, quiz);
 
@@ -109,21 +112,25 @@ public class QuizService {
                 answerRepository.save(answer).getId());
     }
 
-
     public CreateQuizVoteDto.Response createQuizVote(UserInfo userInfo, Long quizId, CreateQuizVoteDto.Request request) {
 
-        // JPA의 getReferenceById를 사용하면, 조회 쿼리를 하지 않고 Answer 엔티티를 저장할 수 있지만,
-        // 데이터의 정합성을 위해 findById로 직접 조회한다.
-        // (PK 기반의 Select는 전체 애플리케이션에 비하면 아주 미비한 비용이므로, 쿼리 몇 번 더 나가더라도 데이터 정합성을 우선시 한다.)
-        // DB에 외래키가 안 걸려있을 경우, quiz, user가 없는 투표가 생길 수 있음
+        // 먼저, 해당 유저가 이미 투표를 했는지 확인한다.
+        quizVoteRepository.findByQuizIdAndUserId(quizId, userInfo.userId())
+                .ifPresent(v -> {
+                    throw new BusinessException(ErrorCode.ALREADY_EXIST_VOTER);
+                });
 
-        // 해당 투표가 유효한지 찾는다.
-        Quiz quiz = quizRepository.findById(quizId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_QUIZ));
+        // 퀴즈나 답변 엔티티의 생성/수정/삭제는 매우 드물게 일어난다.
+        // 예를들어, 애플리케이션은 대부분 10번 조회가 일어나는 동안 1번의 생성/수정/삭제가 일어난다고 한다.
+        // 또한, 퀴즈나 답변 엔티티는 매우 중요한 데이터이므로 정합성이 매우 중요하다.
+        // 이러한 이유로 퀴즈나 답변 엔티티의 생성/수정/삭제는 직접 데이터를 조회하여 정합성을 확인한다.
+        // 하지만, 투표 데이터의 경우, 유저들은 글을 쓰는 것 보다 글을 읽고 투표하는 행위는 매우 자주한다.
+        // 또한, 투표 데이터의 경우 그렇게 정합성이 중요한 데이터가 아니다.
+        // 이러한 이유로, 투표 데이터의 경우 DB를 직접 조회하지 않고, 프록시로 조회하여 최적화한다.
+        Quiz quiz = quizRepository.getReferenceById(quizId);
 
         // 해당 투표한 유저가 유효한지 찾는다.
-        User user = userRepository.findById(userInfo.userId())
-                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_USER));
+        User user = userRepository.getReferenceById(userInfo.userId());
 
         QuizVote quizVote = quizVoteRepository.save(request.toEntity(user, quiz));
 

@@ -1,4 +1,4 @@
-package com.leesh.quiz.domain.quizvote.validation;
+package com.leesh.quiz.domain.answervote.validation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
@@ -16,16 +16,16 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({FIELD})
 @Retention(RUNTIME)
-@Constraint(validatedBy = QuizVoteValue.QuizVoteValidator.class)
+@Constraint(validatedBy = AnswerVoteValue.AnswerVoteValidator.class)
 @Documented
-public @interface QuizVoteValue {
+public @interface AnswerVoteValue {
 
-    String message() default "QUIZVOTE.INVALID.VALUE";
+    String message() default "ANSWERVOTE.INVALID.VALUE";
     Class<?>[] groups() default { };
     Class<? extends Payload>[] payload() default { };
 
     @RequiredArgsConstructor
-    class QuizVoteValidator implements ConstraintValidator<QuizVoteValue, Byte> {
+    class AnswerVoteValidator implements ConstraintValidator<AnswerVoteValue, Byte> {
 
         private final MessageSourceAccessor messageSource;
 
@@ -38,7 +38,7 @@ public @interface QuizVoteValue {
             // 투표 값은 항상 1 이거나 -1 이어야 함
             if (value == null || !(value == 1 || value == -1)) {
                 context.buildConstraintViolationWithTemplate(
-                                messageSource.getMessage("QUIZVOTE.INVALID.VALUE"))
+                                messageSource.getMessage("ANSWERVOTE.INVALID.VALUE"))
                         .addConstraintViolation();
 
                 isValid = false;

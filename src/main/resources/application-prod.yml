@@ -1,6 +1,8 @@
-spring:
-  # TODO 운영 DB 연결
-
 logging:
   level:
-    com.leesh: info
+    org:
+      hibernate:
+        SQL: debug
+        type.descriptor.sql.BasicBinder: debug
+        com.leesh: debug
+    com.leesh.quiz.api.userprofile.dao.UserProfileDao: debug

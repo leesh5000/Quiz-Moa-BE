@@ -380,7 +380,7 @@ class QuizControllerTest {
         result
                 .andExpect(status().isCreated())
                 .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.voteId").value(createQuizVoteId));
+                .andExpect(jsonPath("$.createdVoteId").value(createQuizVoteId));
 
         then(quizService).should().createQuizVote(any(UserInfo.class), anyLong(), any(CreateQuizVoteDto.Request.class));
         then(tokenService).should().extractUserInfo(any(String.class));
@@ -389,7 +389,7 @@ class QuizControllerTest {
         result
                 .andDo(document("quiz/create-quiz-vote",
                         pathParameters(
-                                parameterWithName("quiz-id").description("퀴즈 ID")
+                                parameterWithName("quiz-id").description("투표할 퀴즈 ID")
                         ),
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("접근 토큰 (Access Token)")
@@ -398,7 +398,7 @@ class QuizControllerTest {
                                 fieldWithPath("value").description("투표 값").attributes(RestDocsConfiguration.field("constraints", "1 또는 -1"))
                         ),
                         responseFields(
-                                fieldWithPath("voteId").description("생성된 투표의 ID")
+                                fieldWithPath("createdVoteId").description("생성된 투표의 ID")
                         )));
 
     }
