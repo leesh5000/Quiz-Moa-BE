@@ -7,8 +7,8 @@ import com.leesh.quiz.domain.user.constant.Oauth2Type;
 import com.leesh.quiz.global.jwt.constant.GrantType;
 import com.leesh.quiz.global.jwt.dto.AccessToken;
 import com.leesh.quiz.global.jwt.dto.RefreshToken;
-import com.leesh.quiz.testconfiguration.RestDocsConfiguration;
 import com.leesh.quiz.testconfiguration.MvcTestConfiguration;
+import com.leesh.quiz.testconfiguration.RestDocsConfiguration;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,8 @@ class Oauth2LoginControllerTest {
                 .willReturn(
                         Oauth2LoginDto.Response.from(
                                 AccessToken.of("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBQ0NFU1MiLCJpYXQiOjE2NzUyMTA4NzksImV4cCI6MTY3NTIxMTc3OSwidXNlcklkIjoxLCJyb2xlIjoiVVNFUiJ9.X1AfxGWGUPhC5ovt3hcLv8_6Zb8H0Z4yn8tDxHohrTx_kcgTDWIHPt8yDuTHYo9KmqqqIwTQ7VEtMaVyJdqKrQ", new Date()),
-                                RefreshToken.of("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q", new Date())
+                                RefreshToken.of("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q", new Date()),
+                                new Oauth2LoginDto.UserProfile(1L, "홍길동", "hong@gmail.com", "https://cdn.naver.com")
                         ));
 
         // when
@@ -79,6 +80,11 @@ class Oauth2LoginControllerTest {
                 .andExpect(jsonPath("$.refreshToken").exists())
                 .andExpect(jsonPath("$.accessTokenExpiresIn").exists())
                 .andExpect(jsonPath("$.refreshTokenExpiresIn").exists())
+                .andExpect(jsonPath("$.userProfile").exists())
+                .andExpect(jsonPath("$.userProfile.id").value(1L))
+                .andExpect(jsonPath("$.userProfile.name").value("홍길동"))
+                .andExpect(jsonPath("$.userProfile.email").value("hong@gmail.com"))
+                .andExpect(jsonPath("$.userProfile.picture").value("https://cdn.naver.com"))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
         ;
@@ -97,7 +103,11 @@ class Oauth2LoginControllerTest {
                                 fieldWithPath("accessToken").type(JsonFieldType.STRING).description("Access Token"),
                                 fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("Refresh Token"),
                                 fieldWithPath("accessTokenExpiresIn").type(JsonFieldType.STRING).description("Access Token 만료 시간"),
-                                fieldWithPath("refreshTokenExpiresIn").type(JsonFieldType.STRING).description("Refresh Token 만료 시간")
+                                fieldWithPath("refreshTokenExpiresIn").type(JsonFieldType.STRING).description("Refresh Token 만료 시간"),
+                                fieldWithPath("userProfile.id").type(JsonFieldType.NUMBER).description("사용자 ID"),
+                                fieldWithPath("userProfile.name").type(JsonFieldType.STRING).description("사용자 이름"),
+                                fieldWithPath("userProfile.email").type(JsonFieldType.STRING).description("사용자 이메일"),
+                                fieldWithPath("userProfile.picture").type(JsonFieldType.STRING).description("사용자 프로필 사진")
                         )));
 
     }

@@ -26,7 +26,7 @@ endif::[]
 
 | `204 No Content`
 | 성공 (응답 바디 없음)
-
+정
 | `400 Bad Request`
 | 잘못된 요청
 

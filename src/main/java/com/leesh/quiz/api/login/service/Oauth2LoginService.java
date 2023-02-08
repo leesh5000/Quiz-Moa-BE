@@ -41,7 +41,18 @@ public class Oauth2LoginService {
         user.updateRefreshToken(refreshToken.refreshToken(),
                 convertToLocalDateTime(refreshToken.refreshTokenExpiresIn()));
 
-        return Oauth2LoginDto.Response.from(accessToken, refreshToken);
+        return Oauth2LoginDto.Response.from(accessToken, refreshToken,
+                createUserProfile(user));
+    }
+
+    private Oauth2LoginDto.UserProfile createUserProfile(User user) {
+
+        return Oauth2LoginDto.UserProfile.builder()
+                .id(user.getId())
+                .name(user.getUsername())
+                .email(user.getEmail())
+                .picture(user.getProfile())
+                .build();
     }
 
     private Oauth2Attributes getUserInfoFromProvider(Oauth2LoginDto.Request request) {
