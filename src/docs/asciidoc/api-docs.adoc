@@ -39,6 +39,9 @@ endif::[]
 | `404 Not Found`
 | 존재하지 않는 리소스 요청
 
+| `409 Conflict`
+| 이미 존재하는 리소스
+
 | `500 Internal Server Error`
 | 서버 에러
 |===
