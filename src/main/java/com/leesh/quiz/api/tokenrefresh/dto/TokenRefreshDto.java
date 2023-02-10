@@ -1,13 +1,9 @@
 package com.leesh.quiz.api.tokenrefresh.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.leesh.quiz.global.jwt.dto.AccessToken;
 
-import java.util.Date;
-
 public record TokenRefreshDto(String grantType, String accessToken,
-                              @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-                              Date accessTokenExpiresIn) {
+                              Integer accessTokenExpiresIn) {
 
     public static TokenRefreshDto from(AccessToken accessToken) {
         return new TokenRefreshDto(

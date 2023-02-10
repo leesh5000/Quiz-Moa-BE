@@ -20,8 +20,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Date;
-
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -53,11 +51,11 @@ class TokenRefreshControllerTest {
         // given
         RefreshToken refreshToken = RefreshToken.of(
                 "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q",
-                new Date());
+                900);
 
         given(service.refresh(anyString()))
                 .willReturn(
-                        TokenRefreshDto.from(AccessToken.of("access_token", new Date())));
+                        TokenRefreshDto.from(AccessToken.of("access_token", 900)));
 
         // when
         ResultActions result = mvc.perform(post("/api/access-token/refresh")
@@ -85,8 +83,8 @@ class TokenRefreshControllerTest {
                         ),
                         responseFields(
                                 fieldWithPath("grantType").type(JsonFieldType.STRING).description(GrantType.BEARER.getType()),
-                                fieldWithPath("accessToken").type(JsonFieldType.STRING).description("Access Token"),
-                                fieldWithPath("accessTokenExpiresIn").description("Access Token 만료 시간")
+                                fieldWithPath("accessToken").type(JsonFieldType.STRING).description("접근 토큰"),
+                                fieldWithPath("accessTokenExpiresIn").description("접근 토큰 만료 시간 (단위 초)")
                         )
                 ));
 

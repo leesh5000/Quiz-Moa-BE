@@ -30,7 +30,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.leesh.quiz.api.quiz.dto.quiz.QuizDetailDto.AnswerDto;
@@ -73,7 +72,7 @@ class QuizControllerTest {
         // given
         AccessToken accessToken = AccessToken.of(
                 "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q",
-                new Date());
+                900);
 
         long userId = 1L;
         given(tokenService.extractUserInfo(any(String.class)))
@@ -298,7 +297,7 @@ class QuizControllerTest {
         // given
         AccessToken accessToken = AccessToken.of(
                 "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q",
-                new Date());
+                900);
 
         long userId = 1L;
         given(tokenService.extractUserInfo(any(String.class)))
@@ -354,7 +353,7 @@ class QuizControllerTest {
         // given
         AccessToken accessToken = AccessToken.of(
                 "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q",
-                new Date());
+                900);
 
         long userId = 1L;
         given(tokenService.extractUserInfo(any(String.class)))

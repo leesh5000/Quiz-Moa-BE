@@ -22,8 +22,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Date;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -61,8 +59,8 @@ class Oauth2LoginControllerTest {
         given(service.oauth2Login(request))
                 .willReturn(
                         Oauth2LoginDto.Response.from(
-                                AccessToken.of("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBQ0NFU1MiLCJpYXQiOjE2NzUyMTA4NzksImV4cCI6MTY3NTIxMTc3OSwidXNlcklkIjoxLCJyb2xlIjoiVVNFUiJ9.X1AfxGWGUPhC5ovt3hcLv8_6Zb8H0Z4yn8tDxHohrTx_kcgTDWIHPt8yDuTHYo9KmqqqIwTQ7VEtMaVyJdqKrQ", new Date()),
-                                RefreshToken.of("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q", new Date()),
+                                AccessToken.of("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBQ0NFU1MiLCJpYXQiOjE2NzUyMTA4NzksImV4cCI6MTY3NTIxMTc3OSwidXNlcklkIjoxLCJyb2xlIjoiVVNFUiJ9.X1AfxGWGUPhC5ovt3hcLv8_6Zb8H0Z4yn8tDxHohrTx_kcgTDWIHPt8yDuTHYo9KmqqqIwTQ7VEtMaVyJdqKrQ", 900),
+                                RefreshToken.of("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q", 60 * 60 * 24 * 14),
                                 new Oauth2LoginDto.UserProfile(1L, "홍길동", "hong@gmail.com", "https://cdn.naver.com")
                         ));
 
@@ -100,10 +98,10 @@ class Oauth2LoginControllerTest {
                         ),
                         responseFields(
                                 fieldWithPath("grantType").type(JsonFieldType.STRING).description(GrantType.BEARER.getType()),
-                                fieldWithPath("accessToken").type(JsonFieldType.STRING).description("Access Token"),
-                                fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("Refresh Token"),
-                                fieldWithPath("accessTokenExpiresIn").type(JsonFieldType.STRING).description("Access Token 만료 시간"),
-                                fieldWithPath("refreshTokenExpiresIn").type(JsonFieldType.STRING).description("Refresh Token 만료 시간"),
+                                fieldWithPath("accessToken").type(JsonFieldType.STRING).description("접근 토큰"),
+                                fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("갱신 토큰"),
+                                fieldWithPath("accessTokenExpiresIn").type(JsonFieldType.NUMBER).description("접근 토큰 유효시간 (초 단위)"),
+                                fieldWithPath("refreshTokenExpiresIn").type(JsonFieldType.NUMBER).description("갱신 토큰 유효시간 (초 단위)"),
                                 fieldWithPath("userProfile.id").type(JsonFieldType.NUMBER).description("사용자 ID"),
                                 fieldWithPath("userProfile.name").type(JsonFieldType.STRING).description("사용자 이름"),
                                 fieldWithPath("userProfile.email").type(JsonFieldType.STRING).description("사용자 이메일"),

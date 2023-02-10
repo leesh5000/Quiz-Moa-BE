@@ -24,12 +24,12 @@ import java.util.Date;
 @Service
 public class JwtTokenService implements TokenService {
 
-    private final String accessTokenExpirationTime;
-    private final String refreshTokenExpirationTime;
+    private final Long accessTokenExpirationTime;
+    private final Long refreshTokenExpirationTime;
     private final String tokenSecret;
 
-    public JwtTokenService(@Value("${token.access-token-expiration-time}") String accessTokenExpirationTime,
-                           @Value("${token.refresh-token-expiration-time}") String refreshTokenExpirationTime,
+    public JwtTokenService(@Value("${token.access-token-expiration-time}") Long accessTokenExpirationTime,
+                           @Value("${token.refresh-token-expiration-time}") Long refreshTokenExpirationTime,
                            @Value("${token.secret}") String tokenSecret) {
         this.accessTokenExpirationTime = accessTokenExpirationTime;
         this.refreshTokenExpirationTime = refreshTokenExpirationTime;
@@ -73,7 +73,7 @@ public class JwtTokenService implements TokenService {
     @Override
     public AccessToken createAccessToken(Long userId, Role role) {
 
-        Date expirationTime = createAccessTokenExpireTime();
+        Date expirationTime = new Date(System.currentTimeMillis() + accessTokenExpirationTime);
 
         String accessToken = Jwts.builder()
                 .setSubject(TokenType.ACCESS.name())    // 토큰 제목
@@ -85,13 +85,13 @@ public class JwtTokenService implements TokenService {
                 .setHeaderParam("typ", "JWT")
                 .compact();
 
-        return AccessToken.of(accessToken, expirationTime);
+        return AccessToken.of(accessToken, (int) (accessTokenExpirationTime / 1000));
     }
 
     @Override
     public RefreshToken createRefreshToken(Long userId) {
 
-        Date expirationTime = createRefreshTokenExpireTime();
+        Date expirationTime = new Date(System.currentTimeMillis() + refreshTokenExpirationTime);
 
         String refreshToken = Jwts.builder()
                 .setSubject(TokenType.REFRESH.name())    // 토큰 제목
@@ -102,15 +102,7 @@ public class JwtTokenService implements TokenService {
                 .setHeaderParam("typ", "JWT")
                 .compact();
 
-        return RefreshToken.of(refreshToken, expirationTime);
-    }
-
-    private Date createAccessTokenExpireTime() {
-        return new Date(System.currentTimeMillis() + Long.parseLong(accessTokenExpirationTime));
-    }
-
-    private Date createRefreshTokenExpireTime() {
-        return new Date(System.currentTimeMillis() + Long.parseLong(refreshTokenExpirationTime));
+        return RefreshToken.of(refreshToken, (int) (refreshTokenExpirationTime / 1000));
     }
 
     // 이 메소드의 파라미터인 토큰은 해당 시점에서는 Access Token 또는 Refresh Token 인지 알 수 없다.
