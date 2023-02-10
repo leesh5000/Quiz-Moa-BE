@@ -147,3 +147,13 @@ values (8, 5, 14, -1, '/api/answers/votes', '/api/answers/votes', '2023-02-01 15
 
 insert into answer_vote (id, user_id, answer_id, value, created_by, modified_by, created_at, modified_at)
 values (9, 1, 14, -1, '/api/answers/votes', '/api/answers/votes', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');
+
+insert into quiz (id, user_id, title, contents, deleted, created_by, modified_by, created_at, modified_at)
+values (20, 5, 'test5의 퀴즈 2', 'test5의 퀴즈 2', false, '/api/quizzes', '/api/quizzes', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');
+
+insert into quiz (id, user_id, title, contents, deleted, created_by, modified_by, created_at, modified_at)
+values (21, 5, 'test5의 퀴즈 2', 'test5의 퀴즈 2', false, '/api/quizzes', '/api/quizzes', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');
+
+insert into quiz (id, user_id, title, contents, deleted, created_by, modified_by, created_at, modified_at)
+values (22, 1, '퀴즈는 마지막 정말 재밌다. 이렇게 퀴즈 제목이 길어지면 어떻게 되는거지? 퀴즈 제목은....... 퀴즈는 마지막 정말 재밌다. 이렇게 퀴즈 제목이 길어지면 어떻게 되는거지? 퀴즈 제목은', 'test5의 퀴즈 2', false, '/api/quizzes', '/api/quizzes', '2023-02-01 15:11:31.172654', '2023-02-01 15:11:31.172654');
+
