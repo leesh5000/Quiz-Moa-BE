@@ -4,8 +4,10 @@ import com.leesh.quiz.domain.user.constant.Oauth2Type;
 import com.leesh.quiz.global.error.ErrorCode;
 import com.leesh.quiz.global.error.exception.AuthenticationException;
 
+import java.util.Arrays;
+
 public interface Oauth2ValidationUtils {
-    static void isValidOauth2(Oauth2Type userOauth2Type, Oauth2Type requestOauth2Type) {
+    static void isValidOauth2Type(Oauth2Type userOauth2Type, Oauth2Type requestOauth2Type) {
         if (userOauth2Type != requestOauth2Type) {
             switch (userOauth2Type) {
                 case GOOGLE -> throw new AuthenticationException(ErrorCode.ALREADY_REGISTERED_FROM_GOOGLE);
