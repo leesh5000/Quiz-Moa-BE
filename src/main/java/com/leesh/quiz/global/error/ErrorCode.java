@@ -33,7 +33,7 @@ public enum ErrorCode {
 
     /* User */
     DUPLICATED_USER(CONFLICT, "M-001"),
-    NOT_EXIST_USER(BAD_REQUEST, "M-002"),
+    NOT_EXIST_USER(NOT_FOUND, "M-002"),
     NOT_ACCESSIBLE_USER(FORBIDDEN, "M-003"),
 
     /* Quiz */
@@ -41,7 +41,7 @@ public enum ErrorCode {
     IS_NOT_QUIZ_OWNER(FORBIDDEN, "Q-002"),
 
     /* Answer */
-    NOT_EXIST_ANSWER(FORBIDDEN, "AN-001"),
+    NOT_EXIST_ANSWER(NOT_FOUND, "AN-001"),
 
     /* Vote */
     ALREADY_EXIST_VOTER(CONFLICT, "V-001");
