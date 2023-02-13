@@ -43,7 +43,7 @@ public class Oauth2LoginService {
         user.updateRefreshToken(
                 refreshToken.refreshToken(),
                 convertToLocalDateTime(
-                        new Date(refreshToken.refreshTokenExpiresIn())
+                        new Date(System.currentTimeMillis() + refreshToken.refreshTokenExpiresIn() * 1000)
                 )
         );
 
