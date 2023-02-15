@@ -2,6 +2,7 @@ package com.leesh.quiz.domain.answer.repository;
 
 import com.leesh.quiz.api.quiz.dto.quiz.QQuizDetailDto_AnswerDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QQuizDetailDto_AnswerVoteDto;
+import com.leesh.quiz.api.quiz.dto.quiz.QQuizDetailDto_AuthorDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDetailDto;
 import com.leesh.quiz.api.userprofile.dto.answer.MyAnswerDto;
 import com.leesh.quiz.api.userprofile.dto.answer.QMyAnswerDto;
@@ -94,13 +95,19 @@ public class AnswerDaoImpl implements AnswerDao {
                         new QQuizDetailDto_AnswerDto(
                                 answer.id,
                                 answer.contents,
-                                author.id.as("authorId"),
-                                author.email.as("author"),
+                                new QQuizDetailDto_AuthorDto(
+                                        author.id,
+                                        author.username,
+                                        author.email
+                                ),
                                 list(new QQuizDetailDto_AnswerVoteDto(
                                                 answerVote.id,
                                                 answerVote.value.intValue(),
-                                                voter.id.as("voterId"),
-                                                voter.email.as("voter")
+                                                new QQuizDetailDto_AuthorDto(
+                                                        voter.id,
+                                                        voter.username,
+                                                        voter.email
+                                                )
                                 ).as("votes")),
                                 answer.createdAt,
                                 answer.modifiedAt
