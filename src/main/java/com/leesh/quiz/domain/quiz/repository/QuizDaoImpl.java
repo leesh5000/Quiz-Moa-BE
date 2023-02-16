@@ -17,7 +17,7 @@ import static com.leesh.quiz.domain.quizvote.QQuizVote.quizVote;
 import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.querydsl.core.group.GroupBy.list;
 
-;
+
 
 @RequiredArgsConstructor
 public class QuizDaoImpl implements QuizDao {
