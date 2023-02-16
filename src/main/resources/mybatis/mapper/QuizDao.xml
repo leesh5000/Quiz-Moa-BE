@@ -24,12 +24,12 @@
                         u.id        as 'user_id',
                         u.username,
                         u.email,
-                        count(a.id) as 'answer_count'
+                        count(if(a.deleted = false, 1, null)) as 'answer_count'
                 from quiz q
                     inner join users u on q.user_id = u.id
                     left outer join answer a on q.id = a.quiz_id
                 where q.deleted = false
-                group by q.id) as qua
+                 group by q.id) as qua
             left outer join quiz_vote qv on qua.id = qv.quiz_id
         group by qua.id
         <if test="sorted">
