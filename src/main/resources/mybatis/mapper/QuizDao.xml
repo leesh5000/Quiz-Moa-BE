@@ -8,11 +8,11 @@
             resultType="com.leesh.quiz.api.quiz.dto.quiz.QuizDto">
         select  qua.id                   as 'id',
                 qua.title                as 'title',
-                qua.answer_count,
+                qua.answer_count         as 'answerCount',
                 ifnull(sum(qv.value), 0) as 'totalVotes',
-                qua.created_at,
-                qua.modified_at,
-                qua.user_id              as 'user_id',
+                qua.created_at           as 'createdAt',
+                qua.modified_at          as 'modifiedAt',
+                qua.user_id              as 'userId',
                 qua.username             as 'username',
                 qua.email                as 'email'
         from (
@@ -45,12 +45,12 @@
     <resultMap id="author" type="com.leesh.quiz.api.quiz.dto.quiz.QuizDto">
         <id property="id" column="id"/>
         <result property="title" column="title"/>
-        <result property="answerCount" column="answer_count"/>
+        <result property="answerCount" column="answerCount"/>
         <result property="totalVotes" column="totalVotes"/>
-        <result property="createdAt" column="created_at"/>
-        <result property="modifiedAt" column="modified_at"/>
+        <result property="createdAt" column="createdAt"/>
+        <result property="modifiedAt" column="modifiedAt"/>
         <association property="author" javaType="com.leesh.quiz.api.quiz.dto.quiz.QuizDto$Author">
-            <id property="id" column="user_id"/>
+            <id property="id" column="userId"/>
             <result property="username" column="username"/>
             <result property="email" column="email"/>
         </association>
