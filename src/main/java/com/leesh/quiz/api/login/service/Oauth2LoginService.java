@@ -36,7 +36,7 @@ public class Oauth2LoginService {
         User user = userService.findUserOrRegister(userInfo);
 
         // jwt 토큰을 생성한다.
-        AccessToken accessToken = tokenService.createAccessToken(user.getId(), user.getRole());
+        AccessToken accessToken = tokenService.createAccessToken(user);
         RefreshToken refreshToken = tokenService.createRefreshToken(user.getId());
 
         // 유저의 refresh token을 업데이트한다.
@@ -47,18 +47,7 @@ public class Oauth2LoginService {
                 )
         );
 
-        return Oauth2LoginDto.Response.from(accessToken, refreshToken,
-                createUserProfile(user));
-    }
-
-    private Oauth2LoginDto.UserProfile createUserProfile(User user) {
-
-        return Oauth2LoginDto.UserProfile.builder()
-                .id(user.getId())
-                .name(user.getUsername())
-                .email(user.getEmail())
-                .picture(user.getProfile())
-                .build();
+        return Oauth2LoginDto.Response.from(accessToken, refreshToken);
     }
 
     private Oauth2Attributes getUserInfoFromProvider(Oauth2LoginDto.Request request) {

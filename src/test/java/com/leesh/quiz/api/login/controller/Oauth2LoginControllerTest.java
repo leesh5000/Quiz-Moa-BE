@@ -60,8 +60,7 @@ class Oauth2LoginControllerTest {
                 .willReturn(
                         Oauth2LoginDto.Response.from(
                                 AccessToken.of("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBQ0NFU1MiLCJpYXQiOjE2NzUyMTA4NzksImV4cCI6MTY3NTIxMTc3OSwidXNlcklkIjoxLCJyb2xlIjoiVVNFUiJ9.X1AfxGWGUPhC5ovt3hcLv8_6Zb8H0Z4yn8tDxHohrTx_kcgTDWIHPt8yDuTHYo9KmqqqIwTQ7VEtMaVyJdqKrQ", 900),
-                                RefreshToken.of("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q", 60 * 60 * 24 * 14),
-                                new Oauth2LoginDto.UserProfile(1L, "홍길동", "hong@gmail.com", "https://cdn.naver.com")
+                                RefreshToken.of("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q", 60 * 60 * 24 * 14)
                         ));
 
         // when
@@ -78,11 +77,6 @@ class Oauth2LoginControllerTest {
                 .andExpect(jsonPath("$.refreshToken").exists())
                 .andExpect(jsonPath("$.accessTokenExpiresIn").exists())
                 .andExpect(jsonPath("$.refreshTokenExpiresIn").exists())
-                .andExpect(jsonPath("$.userProfile").exists())
-                .andExpect(jsonPath("$.userProfile.id").value(1L))
-                .andExpect(jsonPath("$.userProfile.name").value("홍길동"))
-                .andExpect(jsonPath("$.userProfile.email").value("hong@gmail.com"))
-                .andExpect(jsonPath("$.userProfile.picture").value("https://cdn.naver.com"))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
         ;
@@ -101,11 +95,7 @@ class Oauth2LoginControllerTest {
                                 fieldWithPath("accessToken").type(JsonFieldType.STRING).description("접근 토큰"),
                                 fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("갱신 토큰"),
                                 fieldWithPath("accessTokenExpiresIn").type(JsonFieldType.NUMBER).description("접근 토큰 유효시간 (초 단위)"),
-                                fieldWithPath("refreshTokenExpiresIn").type(JsonFieldType.NUMBER).description("갱신 토큰 유효시간 (초 단위)"),
-                                fieldWithPath("userProfile.id").type(JsonFieldType.NUMBER).description("사용자 ID"),
-                                fieldWithPath("userProfile.name").type(JsonFieldType.STRING).description("사용자 이름"),
-                                fieldWithPath("userProfile.email").type(JsonFieldType.STRING).description("사용자 이메일"),
-                                fieldWithPath("userProfile.picture").type(JsonFieldType.STRING).description("사용자 프로필 사진")
+                                fieldWithPath("refreshTokenExpiresIn").type(JsonFieldType.NUMBER).description("갱신 토큰 유효시간 (초 단위)")
                         )));
 
     }

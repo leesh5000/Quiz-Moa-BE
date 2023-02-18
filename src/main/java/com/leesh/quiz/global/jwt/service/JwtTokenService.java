@@ -1,5 +1,6 @@
 package com.leesh.quiz.global.jwt.service;
 
+import com.leesh.quiz.domain.user.User;
 import com.leesh.quiz.domain.user.constant.Role;
 import com.leesh.quiz.global.constant.UserInfo;
 import com.leesh.quiz.global.error.ErrorCode;
@@ -48,7 +49,7 @@ public class JwtTokenService implements TokenService {
 
         // 현재 로그인 유저 정보 반환
         return UserInfo.of(
-                claims.get("userId", Long.class),
+                claims.get("id", Long.class),
                 Role.valueOf(claims.get("role", String.class)));
     }
 
@@ -71,16 +72,18 @@ public class JwtTokenService implements TokenService {
     }
 
     @Override
-    public AccessToken createAccessToken(Long userId, Role role) {
+    public AccessToken createAccessToken(User user) {
 
         Date expirationTime = new Date(System.currentTimeMillis() + accessTokenExpirationTime);
 
         String accessToken = Jwts.builder()
-                .setSubject(TokenType.ACCESS.name())    // 토큰 제목
-                .setIssuedAt(new Date())                // 토큰 발급 시간
-                .setExpiration(expirationTime)          // 토큰 만료 시간
-                .claim("userId", userId)          // 회원 아이디
-                .claim("role", role)              // 유저 role
+                .setSubject(TokenType.ACCESS.name())        // 토큰 제목
+                .setIssuedAt(new Date())                    // 토큰 발급 시간
+                .setExpiration(expirationTime)              // 토큰 만료 시간
+                .claim("id", user.getId())            // 회원 아이디 (PK값)
+                .claim("name", user.getUsername())    // 회원 이름
+                .claim("email", user.getEmail())      // 회원 이메일
+                .claim("role", user.getRole())        // 유저 role
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512)
                 .setHeaderParam("typ", "JWT")
                 .compact();
@@ -94,10 +97,10 @@ public class JwtTokenService implements TokenService {
         Date expirationTime = new Date(System.currentTimeMillis() + refreshTokenExpirationTime);
 
         String refreshToken = Jwts.builder()
-                .setSubject(TokenType.REFRESH.name())    // 토큰 제목
+                .setSubject(TokenType.REFRESH.name())   // 토큰 제목
                 .setIssuedAt(new Date())                // 토큰 발급 시간
                 .setExpiration(expirationTime)          // 토큰 만료 시간
-                .claim("userId", userId)          // 회원 아이디
+                .claim("id", userId)              // 회원 아이디 (PK값)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512)
                 .setHeaderParam("typ", "JWT")
                 .compact();

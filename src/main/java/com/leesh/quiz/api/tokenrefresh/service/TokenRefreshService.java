@@ -25,7 +25,7 @@ public class TokenRefreshService {
         User user = userService.findUserByRefreshToken(refreshToken);
 
         // 새로운 액세스 토큰을 발급한다.
-        AccessToken accessToken = tokenService.createAccessToken(user.getId(), user.getRole());
+        AccessToken accessToken = tokenService.createAccessToken(user);
 
         return TokenRefreshDto.from(accessToken);
 
