@@ -9,6 +9,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -59,11 +60,11 @@ public class WebConfiguration implements WebMvcConfigurer {
         copy.getFactory().setCharacterEscapes(htmlCharacterEscapes);
         return new MappingJackson2HttpMessageConverter(copy);
     }
+*/
 
     @Bean
     public RequestContextListener requestContextListener() {
         return new RequestContextListener();
     }
-*/
 
 }

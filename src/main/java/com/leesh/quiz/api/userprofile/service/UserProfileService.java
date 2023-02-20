@@ -24,7 +24,10 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import static com.leesh.quiz.global.constant.PagingRequestInfo.from;
 
@@ -126,29 +129,44 @@ public class UserProfileService {
     }
 
     public UserProfileDto getUserProfile(String email) {
+        return fetchUserProfileDto(email);
+    }
 
-        // 먼저, 유저가 존재하는지 찾는다.
-        User user = userService.findUserByEmail(email);
+    private UserProfileDto fetchUserProfileDto(String email) {
 
-        // 유저가 작성한 퀴즈를 가져온다. (퀴즈 투표도 Fetch Join으로 함께 가져온다.)
-        var userQuizzesCount = quizRepository.getUserQuizCountWithVotesSum(email)
-                // 없으면, 0으로 초기화한다.
-                .orElseGet(
-                        () -> new UserProfileDto.Quizzes(0, 0));
+        final Map<String, Object> data = new HashMap<>();
 
-        // 유저가 작성한 답변을 가져온다. (답변 투표도 Fetch Join으로 함께 가져온다.)
-        var userAnswerCount = answerRepository.getUserAnswerCountWithVotesSum(email)
-                // 없으면, 0으로 초기화한다.
-                .orElseGet(
-                        () -> new UserProfileDto.Answers(0, 0));
+        // CompletableFuture를 이용하여 멀티 스레드로 데이터를 가져온다.
+        try {
+
+            CompletableFuture.allOf(
+                    CompletableFuture.supplyAsync(() -> userService.findUserByEmail(email))
+                            .thenAccept(u -> data.put("user", u)),
+                    CompletableFuture.supplyAsync(
+                                    () -> quizRepository
+                                            .getUserQuizCountWithVotesSum(email)
+                                            .orElseGet(() -> new UserProfileDto.Quizzes(0, 0)))
+                            .thenAccept(q -> data.put("quizzes", q)),
+                    CompletableFuture.supplyAsync(
+                                    () -> answerRepository
+                                            .getUserAnswerCountWithVotesSum(email)
+                                            .orElseGet(() -> new UserProfileDto.Answers(0, 0)))
+                            .thenApply(a -> data.put("answers", a)))
+                    .get();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        User user = (User) data.get("user");
 
         return UserProfileDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .profileImageUrl(user.getProfile())
-                .quizzes(userQuizzesCount)
-                .answers(userAnswerCount)
+                .answers((UserProfileDto.Answers) data.get("answers"))
+                .quizzes((UserProfileDto.Quizzes) data.get("quizzes"))
                 .build();
     }
 }

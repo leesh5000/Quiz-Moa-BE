@@ -18,15 +18,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Component
 public class LogAspect {
 
-    @Pointcut("within(com.leesh.quiz..*)")
-    private void allMethod() {
-    }
+    @Pointcut("within(com.leesh.quiz.api..*.controller..*)")
+    public void allControllers() {}
 
-    @Pointcut("within(com.leesh.quiz.global..*)")
-    private void global() {
-    }
-
-    @Around("allMethod() && !global()")
+    @Around("allControllers()")
     public Object logging(ProceedingJoinPoint pjp) throws Throwable {
 
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
@@ -37,7 +32,7 @@ public class LogAspect {
         Object result = pjp.proceed();
 
         long end = System.currentTimeMillis();
-        log.info("[Response] URI : {}, Method : {} , Results = {} , elapsed = {}", request.getRequestURI(), pjp.getSignature().toShortString(), result, end - start);
+        log.info("[Response] URI : {}, Method : {} , Results = {} , elapsed = {}ms", request.getRequestURI(), pjp.getSignature().toShortString(), result, end - start);
 
         return result;
 
