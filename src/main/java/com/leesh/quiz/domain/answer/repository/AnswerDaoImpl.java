@@ -4,8 +4,9 @@ import com.leesh.quiz.api.quiz.dto.quiz.QQuizDetailDto_AnswerDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QQuizDetailDto_AnswerVoteDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QQuizDetailDto_AuthorDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDetailDto;
-import com.leesh.quiz.api.userprofile.dto.answer.MyAnswerDto;
-import com.leesh.quiz.api.userprofile.dto.answer.QMyAnswerDto;
+import com.leesh.quiz.api.userprofile.dto.answer.QUserAnswerDto;
+import com.leesh.quiz.api.userprofile.dto.answer.QUserAnswerDto_AuthorDto;
+import com.leesh.quiz.api.userprofile.dto.answer.UserAnswerDto;
 import com.leesh.quiz.api.userprofile.dto.user.QUserProfileDto_Answers;
 import com.leesh.quiz.api.userprofile.dto.user.UserProfileDto;
 import com.leesh.quiz.domain.user.QUser;
@@ -32,15 +33,19 @@ public class AnswerDaoImpl implements AnswerDao {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<MyAnswerDto> getMyAnswersByPaging(Long userId, Pageable pageable) {
+    public Page<UserAnswerDto> getUserAnswersByPaging(Long userId, Pageable pageable) {
 
-        List<MyAnswerDto> content = queryFactory
-                .select(new QMyAnswerDto(
+        List<UserAnswerDto> content = queryFactory
+                .select(new QUserAnswerDto(
                         answer.id,
                         answer.contents,
                         quiz.id.as("quizId"),
-                        user.email.as("author"),
-                        answerVote.value.intValue().sum().as("votes"),
+                        new QUserAnswerDto_AuthorDto(
+                                user.id.as("id"),
+                                user.username.as("username"),
+                                user.email.as("email")
+                        ),
+                        answerVote.value.intValue().sum().as("totalVotesSum"),
                         answer.createdAt,
                         answer.modifiedAt
                 ))

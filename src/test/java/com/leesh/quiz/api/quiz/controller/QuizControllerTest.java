@@ -128,7 +128,7 @@ class QuizControllerTest {
                         .id(1L)
                         .title("HTTP 프로토콜의 특징은 무엇인가요?")
                         .answerCount(5)
-                        .totalVotes(12)
+                        .totalVotesSum(12)
                         .createdAt(LocalDateTime.now())
                         .modifiedAt(LocalDateTime.now())
                         .author(
@@ -142,7 +142,7 @@ class QuizControllerTest {
                         .id(2L)
                         .title("테스트 5 유저가 작성한 퀴즈")
                         .answerCount(0)
-                        .totalVotes(3)
+                        .totalVotesSum(3)
                         .createdAt(LocalDateTime.now())
                         .modifiedAt(LocalDateTime.now())
                         .author(
@@ -180,7 +180,7 @@ class QuizControllerTest {
                 .andExpect(jsonPath("$.content[0].author.id").value(1L))
                 .andExpect(jsonPath("$.content[0].author.email").value("test1@gmail.com"))
                 .andExpect(jsonPath("$.content[0].author.username").value("test1"))
-                .andExpect(jsonPath("$.content[0].totalVotes").value(12))
+                .andExpect(jsonPath("$.content[0].totalVotesSum").value(12))
                 .andExpect(jsonPath("$.content[0].createdAt").isNotEmpty())
                 .andExpect(jsonPath("$.content[0].modifiedAt").isNotEmpty())
                 .andExpect(jsonPath("$.totalElements").value(totalElements))
@@ -208,7 +208,7 @@ class QuizControllerTest {
                                 fieldWithPath("content[].author.id").description("퀴즈 작성자 ID (PK값)"),
                                 fieldWithPath("content[].author.email").description("퀴즈 작성자 이메일"),
                                 fieldWithPath("content[].author.username").description("퀴즈 작성자 이름"),
-                                fieldWithPath("content[].totalVotes").description("이 퀴즈가 얻은 추천 수 (음수도 가능)"),
+                                fieldWithPath("content[].totalVotesSum").description("좋아요 수 - 싫어요 수"),
                                 fieldWithPath("content[].createdAt").description("퀴즈 작성 시간"),
                                 fieldWithPath("content[].modifiedAt").description("마지막 퀴즈 수정 시간"),
                                 fieldWithPath("totalElements").description("전체 퀴즈 수"),

@@ -9,7 +9,7 @@
         select  qua.id                   as 'id',
                 qua.title                as 'title',
                 qua.answer_count         as 'answerCount',
-                ifnull(sum(qv.value), 0) as 'totalVotes',
+                ifnull(sum(qv.value), 0) as 'totalVotesSum',
                 qua.created_at           as 'createdAt',
                 qua.modified_at          as 'modifiedAt',
                 qua.user_id              as 'userId',
@@ -49,7 +49,7 @@
         <id property="id" column="id"/>
         <result property="title" column="title"/>
         <result property="answerCount" column="answerCount"/>
-        <result property="totalVotes" column="totalVotes"/>
+        <result property="totalVotesSum" column="totalVotesSum"/>
         <result property="createdAt" column="createdAt"/>
         <result property="modifiedAt" column="modifiedAt"/>
         <association property="author" javaType="com.leesh.quiz.api.quiz.dto.quiz.QuizDto$Author">

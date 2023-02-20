@@ -2,7 +2,7 @@ package com.leesh.quiz.api.userprofile.controller;
 
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDto;
 import com.leesh.quiz.api.userprofile.dto.answer.EditMyAnswerDto;
-import com.leesh.quiz.api.userprofile.dto.answer.MyAnswerDto;
+import com.leesh.quiz.api.userprofile.dto.answer.UserAnswerDto;
 import com.leesh.quiz.api.userprofile.dto.quiz.EditMyQuizDto;
 import com.leesh.quiz.api.userprofile.dto.user.UserProfileDto;
 import com.leesh.quiz.api.userprofile.service.UserProfileService;
@@ -76,14 +76,10 @@ public class UserProfileController {
     }
 
     @GetMapping(value = "/{user-id}/answers", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PagingResponseDto<MyAnswerDto>> getMyAnswers(@PathVariable("user-id") Long userId,
-                                                                       @AuthenticationPrincipal UserInfo userInfo,
-                                                                       @PageableDefault(size = 20) Pageable pageable) {
+    public ResponseEntity<PagingResponseDto<UserAnswerDto>> getUserAnswers(@PathVariable("user-id") Long userId,
+                                                                           @PageableDefault(size = 20) Pageable pageable) {
 
-        // 접근 권한이 있는 사용자인지 검증
-        UserInfoValidator.validateAccessible(userId, userInfo);
-
-        PagingResponseDto<MyAnswerDto> body = userProfileService.getMyAnswers(pageable, userInfo);
+        PagingResponseDto<UserAnswerDto> body = userProfileService.getUserAnswers(pageable, userId);
 
         return ResponseEntity.ok(body);
 

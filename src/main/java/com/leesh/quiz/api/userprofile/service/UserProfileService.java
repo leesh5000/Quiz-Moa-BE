@@ -3,7 +3,7 @@ package com.leesh.quiz.api.userprofile.service;
 import com.leesh.quiz.api.quiz.dao.QuizDao;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDto;
 import com.leesh.quiz.api.userprofile.dto.answer.EditMyAnswerDto;
-import com.leesh.quiz.api.userprofile.dto.answer.MyAnswerDto;
+import com.leesh.quiz.api.userprofile.dto.answer.UserAnswerDto;
 import com.leesh.quiz.api.userprofile.dto.quiz.EditMyQuizDto;
 import com.leesh.quiz.api.userprofile.dto.user.UserProfileDto;
 import com.leesh.quiz.domain.answer.Answer;
@@ -85,9 +85,9 @@ public class UserProfileService {
     }
 
     @Transactional(readOnly = true)
-    public PagingResponseDto<MyAnswerDto> getMyAnswers(Pageable pageable, UserInfo userInfo) {
+    public PagingResponseDto<UserAnswerDto> getUserAnswers(Pageable pageable, Long userId) {
 
-        Page<MyAnswerDto> page = answerRepository.getMyAnswersByPaging(userInfo.userId(), pageable);
+        Page<UserAnswerDto> page = answerRepository.getUserAnswersByPaging(userId, pageable);
 
         return new PagingResponseDto<>(page);
     }

@@ -3,7 +3,7 @@ package com.leesh.quiz.api.userprofile.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDto;
 import com.leesh.quiz.api.userprofile.dto.answer.EditMyAnswerDto;
-import com.leesh.quiz.api.userprofile.dto.answer.MyAnswerDto;
+import com.leesh.quiz.api.userprofile.dto.answer.UserAnswerDto;
 import com.leesh.quiz.api.userprofile.dto.quiz.EditMyQuizDto;
 import com.leesh.quiz.api.userprofile.dto.user.UserProfileDto;
 import com.leesh.quiz.api.userprofile.service.UserProfileService;
@@ -158,7 +158,7 @@ class UserProfileControllerTest {
                         .id(1L)
                         .title("HTTP 프로토콜의 특징은 무엇인가요?")
                         .answerCount(5)
-                        .totalVotes(12)
+                        .totalVotesSum(12)
                         .createdAt(LocalDateTime.now())
                         .modifiedAt(LocalDateTime.now())
                         .author(
@@ -168,7 +168,7 @@ class UserProfileControllerTest {
                         .id(2L)
                         .title("테스트 5 유저가 작성한 퀴즈")
                         .answerCount(0)
-                        .totalVotes(3)
+                        .totalVotesSum(3)
                         .createdAt(LocalDateTime.now())
                         .modifiedAt(LocalDateTime.now())
                         .author(author)
@@ -202,7 +202,7 @@ class UserProfileControllerTest {
                 .andExpect(jsonPath("$.content[0].author.id").value(1L))
                 .andExpect(jsonPath("$.content[0].author.email").value("test1@gmail.com"))
                 .andExpect(jsonPath("$.content[0].author.username").value("test1"))
-                .andExpect(jsonPath("$.content[0].totalVotes").value(12))
+                .andExpect(jsonPath("$.content[0].totalVotesSum").value(12))
                 .andExpect(jsonPath("$.content[0].createdAt").isNotEmpty())
                 .andExpect(jsonPath("$.content[0].modifiedAt").isNotEmpty())
                 .andExpect(jsonPath("$.totalElements").value(totalElements))
@@ -237,7 +237,7 @@ class UserProfileControllerTest {
                                 fieldWithPath("content[].author.id").description("퀴즈 작성자 ID (PK값)"),
                                 fieldWithPath("content[].author.email").description("퀴즈 작성자 이메일"),
                                 fieldWithPath("content[].author.username").description("퀴즈 작성자 이름"),
-                                fieldWithPath("content[].totalVotes").description("이 퀴즈가 얻은 추천 수 (음수도 가능)"),
+                                fieldWithPath("content[].totalVotesSum").description("이 퀴즈가 얻은 투표의 모든 합계 (음수도 가능)"),
                                 fieldWithPath("content[].createdAt").description("퀴즈 작성 시간"),
                                 fieldWithPath("content[].modifiedAt").description("마지막 퀴즈 수정 시간"),
                                 fieldWithPath("totalElements").description("전체 퀴즈 수"),
@@ -361,10 +361,16 @@ class UserProfileControllerTest {
         given(tokenService.extractUserInfo(any(String.class)))
                 .willReturn(UserInfo.of(userId, Role.USER));
 
-        List<MyAnswerDto> content = List.of(
-                new MyAnswerDto(1L, "HTTP 프로토콜은 무상태성, 서버-클라이언트 구조, 캐시 가능의 특징을 가집니다.", 3L, "test1@gmail.com", 5, LocalDateTime.now(), LocalDateTime.now()),
-                new MyAnswerDto(2L, "저는 모르겠네요; 다른 분이 알려주세요", 4L, "test1@gmail.com", 0, LocalDateTime.now(), LocalDateTime.now()),
-                new MyAnswerDto(3L, "test2번 분 답변 감사합니다.", 1L, "test1@gmail.com", 2, LocalDateTime.now(), LocalDateTime.now())
+        UserAnswerDto.AuthorDto author = new UserAnswerDto.AuthorDto(
+                1L,
+                "test1",
+                "test1@gmail.com"
+        );
+
+        List<UserAnswerDto> content = List.of(
+                new UserAnswerDto(1L, "HTTP 프로토콜은 무상태성, 서버-클라이언트 구조, 캐시 가능의 특징을 가집니다.", 3L, author, 5, LocalDateTime.now(), LocalDateTime.now()),
+                new UserAnswerDto(2L, "저는 모르겠네요; 다른 분이 알려주세요", 4L, author, 0, LocalDateTime.now(), LocalDateTime.now()),
+                new UserAnswerDto(3L, "test2번 분 답변 감사합니다.", 1L, author, 2, LocalDateTime.now(), LocalDateTime.now())
         );
 
         int totalElements = 1125;
@@ -373,7 +379,7 @@ class UserProfileControllerTest {
         boolean first = true;
         boolean empty = false;
 
-        given(userProfileService.getMyAnswers(any(Pageable.class), any(UserInfo.class)))
+        given(userProfileService.getUserAnswers(any(Pageable.class), anyLong()))
                 .willReturn(new PagingResponseDto<>(content, totalElements, totalPages, last, first, empty));
 
         // when
@@ -390,8 +396,11 @@ class UserProfileControllerTest {
                 .andExpect(jsonPath("$.content[0].id").value(1L))
                 .andExpect(jsonPath("$.content[0].contents").value("HTTP 프로토콜은 무상태성, 서버-클라이언트 구조, 캐시 가능의 특징을 가집니다."))
                 .andExpect(jsonPath("$.content[0].quizId").value(3L))
-                .andExpect(jsonPath("$.content[0].author").value("test1@gmail.com"))
-                .andExpect(jsonPath("$.content[0].votes").value(5))
+                .andExpect(jsonPath("$.content[0].author").isNotEmpty())
+                .andExpect(jsonPath("$.content[0].author.id").value(1L))
+                .andExpect(jsonPath("$.content[0].author.username").value("test1"))
+                .andExpect(jsonPath("$.content[0].author.email").value("test1@gmail.com"))
+                .andExpect(jsonPath("$.content[0].totalVotesSum").value(5))
                 .andExpect(jsonPath("$.content[0].createdAt").isNotEmpty())
                 .andExpect(jsonPath("$.content[0].modifiedAt").isNotEmpty())
                 .andExpect(jsonPath("$.totalElements").value(totalElements))
@@ -401,7 +410,7 @@ class UserProfileControllerTest {
                 .andExpect(jsonPath("$.empty").value(empty));
 
         then(tokenService).should().extractUserInfo(any(String.class));
-        then(userProfileService).should().getMyAnswers(any(Pageable.class), any(UserInfo.class));
+        then(userProfileService).should().getUserAnswers(any(Pageable.class), anyLong());
 
         // API 문서화
         result
@@ -422,8 +431,11 @@ class UserProfileControllerTest {
                                 fieldWithPath("content[].id").description("답변 ID (PK값)"),
                                 fieldWithPath("content[].contents").description("답변 내용"),
                                 fieldWithPath("content[].quizId").description("이 답변의 퀴즈 ID (PK값)"),
-                                fieldWithPath("content[].author").description("답변 작성자"),
-                                fieldWithPath("content[].votes").description("이 답변이 얻은 추천 수 (음수도 가능)"),
+                                fieldWithPath("content[].author").description("이 답변의 작성자"),
+                                fieldWithPath("content[].author.id").description("작성자 ID (PK값)"),
+                                fieldWithPath("content[].author.username").description("작성자 닉네임"),
+                                fieldWithPath("content[].author.email").description("작성자 이메일"),
+                                fieldWithPath("content[].totalVotesSum").description("좋아요 수 - 싫어요 수"),
                                 fieldWithPath("content[].createdAt").description("답변 작성 시간"),
                                 fieldWithPath("content[].modifiedAt").description("마지막 답변 수정 시간"),
                                 fieldWithPath("totalElements").description("전체 답변 수"),
