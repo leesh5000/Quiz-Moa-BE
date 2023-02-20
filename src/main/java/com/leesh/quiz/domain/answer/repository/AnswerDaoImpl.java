@@ -6,8 +6,9 @@ import com.leesh.quiz.api.quiz.dto.quiz.QQuizDetailDto_AuthorDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDetailDto;
 import com.leesh.quiz.api.userprofile.dto.answer.MyAnswerDto;
 import com.leesh.quiz.api.userprofile.dto.answer.QMyAnswerDto;
+import com.leesh.quiz.api.userprofile.dto.user.QUserProfileDto_Answers;
+import com.leesh.quiz.api.userprofile.dto.user.UserProfileDto;
 import com.leesh.quiz.domain.user.QUser;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +49,7 @@ public class AnswerDaoImpl implements AnswerDao {
                     .innerJoin(answer.quiz, quiz)
                     .leftJoin(answer.votes, answerVote)
                 .where(
-                        userIdEq(userId),
+                        user.id.eq(userId),
                         answer.deleted.eq(false)
                 )
                 .groupBy(answer.id)
@@ -61,7 +62,7 @@ public class AnswerDaoImpl implements AnswerDao {
                 .select(answer.count()) // select count(answer.id)
                 .from(answer)
                 .where(
-                        userIdEq(userId),
+                        user.id.eq(userId),
                         answer.deleted.eq(false)
                 );
 
@@ -87,7 +88,7 @@ public class AnswerDaoImpl implements AnswerDao {
                     .leftJoin(answer.votes, answerVote)
                     .leftJoin(answerVote.user, voter)
                 .where(
-                        quizIdEq(quizId),
+                        quiz.id.eq(quizId),
                         answer.deleted.eq(false)
                 )
                 .transform(
@@ -125,12 +126,23 @@ public class AnswerDaoImpl implements AnswerDao {
                 content.size() == 0 ? null : content);
     }
 
-    private BooleanExpression quizIdEq(Long quizId) {
-        return quiz.id.eq(quizId);
-    }
+    @Override
+    public Optional<UserProfileDto.Answers> getUserAnswerCountWithVotesSum(String email) {
 
-    private BooleanExpression userIdEq(Long userId) {
-        return user.id.eq(userId);
+        UserProfileDto.Answers contents = queryFactory
+                .select(new QUserProfileDto_Answers(
+                        answer.id.countDistinct().intValue().as("totalCount"),
+                        answerVote.value.intValue().sum().as("totalVotesSum")
+                ))
+                .from(answer)
+                .leftJoin(answer.votes, answerVote)
+                .where(
+                        answer.user.email.eq(email),
+                        answer.deleted.eq(false)
+                )
+                .fetchOne();
+
+        return Optional.ofNullable(contents);
     }
 
 }

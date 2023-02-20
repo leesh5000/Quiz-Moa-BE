@@ -81,7 +81,7 @@ public class JwtTokenService implements TokenService {
                 .setIssuedAt(new Date())                    // 토큰 발급 시간
                 .setExpiration(expirationTime)              // 토큰 만료 시간
                 .claim("id", user.getId())            // 회원 아이디 (PK값)
-                .claim("name", user.getUsername())    // 회원 이름
+                .claim("username", user.getUsername())    // 회원 이름
                 .claim("email", user.getEmail())      // 회원 이메일
                 .claim("role", user.getRole())        // 유저 role
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512)

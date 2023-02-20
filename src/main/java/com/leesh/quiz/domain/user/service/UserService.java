@@ -48,6 +48,12 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_USER));
+    }
+
+    @Transactional(readOnly = true)
     public User findUserByRefreshToken(String refreshToken) {
 
         // 리프레시 토큰을 통해 유저를 찾는다.

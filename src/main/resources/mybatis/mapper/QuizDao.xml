@@ -29,6 +29,9 @@
                     inner join users u on q.user_id = u.id
                     left outer join answer a on q.id = a.quiz_id
                 where q.deleted = false
+                    <if test="userId != null">
+                        and q.user_id = #{userId}
+                    </if>
                  group by q.id) as qua
             left outer join quiz_vote qv on qua.id = qv.quiz_id
         group by qua.id
@@ -61,6 +64,13 @@
         select count(*)
         from quiz q
         where q.deleted = false;
+    </select>
+
+    <select id="getTotalCountByUserId"
+            resultType="long">
+        select count(*)
+        from quiz q
+        where q.user_id = ${userId} and q.deleted = false;
     </select>
     
 </mapper>

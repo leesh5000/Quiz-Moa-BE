@@ -11,8 +11,8 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: create
-    defer-datasource-initialization: true
-  sql:
-    init:
-      mode: always
+      ddl-auto: validate
+#    defer-datasource-initialization: true
+#  sql:
+#    init:
+#      mode: always

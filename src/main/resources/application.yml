@@ -10,7 +10,7 @@ logging:
         SQL: debug
         type.descriptor.sql.BasicBinder: debug
         com.leesh: debug
-    com.leesh.quiz.api.userprofile.dao.UserProfileDao: debug
+    com.leesh.quiz.api.quiz.dao.QuizDao: debug
 
 spring:
   jpa:

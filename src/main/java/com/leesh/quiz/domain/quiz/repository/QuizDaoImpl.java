@@ -4,6 +4,8 @@ import com.leesh.quiz.api.quiz.dto.quiz.QQuizDetailDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QQuizDetailDto_AuthorDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QQuizDetailDto_QuizVoteDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDetailDto;
+import com.leesh.quiz.api.userprofile.dto.user.QUserProfileDto_Quizzes;
+import com.leesh.quiz.api.userprofile.dto.user.UserProfileDto;
 import com.leesh.quiz.domain.user.QUser;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -83,6 +85,24 @@ public class QuizDaoImpl implements QuizDao {
 
         return Optional.ofNullable(content.get(id));
 
+    }
+
+    public Optional<UserProfileDto.Quizzes> getUserQuizCountWithVotesSum(String email) {
+
+        UserProfileDto.Quizzes contents = queryFactory
+                .select(new QUserProfileDto_Quizzes(
+                        quiz.id.countDistinct().intValue().as("totalCount"),
+                        quizVote.value.intValue().sum().as("totalVotesSum")
+                ))
+                .from(quiz)
+                .leftJoin(quiz.votes, quizVote)
+                .where(
+                        quiz.user.email.eq(email),
+                        quiz.deleted.eq(false)
+                )
+                .fetchOne();
+
+        return Optional.ofNullable(contents);
     }
 
     private BooleanExpression quizIdEq(Long id) {

@@ -1,10 +1,11 @@
 package com.leesh.quiz.api.userprofile.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.leesh.quiz.api.quiz.dto.quiz.QuizDto;
 import com.leesh.quiz.api.userprofile.dto.answer.EditMyAnswerDto;
 import com.leesh.quiz.api.userprofile.dto.answer.MyAnswerDto;
 import com.leesh.quiz.api.userprofile.dto.quiz.EditMyQuizDto;
-import com.leesh.quiz.api.userprofile.dto.quiz.MyQuizDto;
+import com.leesh.quiz.api.userprofile.dto.user.UserProfileDto;
 import com.leesh.quiz.api.userprofile.service.UserProfileService;
 import com.leesh.quiz.domain.user.constant.Role;
 import com.leesh.quiz.global.constant.PagingResponseDto;
@@ -60,9 +61,83 @@ class UserProfileControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @DisplayName("유저 프로필 조회 테스트 - 정상 호출")
+    @Test
+    void getUserProfile_success() throws Exception {
+
+        // given
+        AccessToken accessToken = AccessToken.of(
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q",
+                900);
+
+        long userId = 1L;
+        String email = "test1@gmail.com";
+        given(tokenService.extractUserInfo(any(String.class)))
+                .willReturn(UserInfo.of(userId, Role.USER));
+
+        UserProfileDto.Answers answers = new UserProfileDto.Answers(13, 22);
+        UserProfileDto.Quizzes quizzes = new UserProfileDto.Quizzes(3, 5);
+
+        UserProfileDto userProfileDto = UserProfileDto.builder()
+                .id(3L)
+                .username("테스트 유저")
+                .email("test1@gmail.com")
+                .profileImageUrl("https://cdn.test.com")
+                .quizzes(quizzes)
+                .answers(answers)
+                .build();
+
+        given(userProfileService.getUserProfile(anyString()))
+                .willReturn(userProfileDto);
+
+        // when
+        ResultActions result = mvc.perform(
+                get("/api/users/{email}", email)
+                        .header(HttpHeaders.AUTHORIZATION, accessToken.grantType() + " " + accessToken.accessToken())
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        // then
+        result
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.id").value(3L))
+                .andExpect(jsonPath("$.username").value("테스트 유저"))
+                .andExpect(jsonPath("$.email").value("test1@gmail.com"))
+                .andExpect(jsonPath("$.profileImageUrl").value("https://cdn.test.com"))
+                .andExpect(jsonPath("$.quizzes.totalCount").value(3))
+                .andExpect(jsonPath("$.quizzes.totalVotesSum").value(5))
+                .andExpect(jsonPath("$.answers.totalCount").value(13))
+                .andExpect(jsonPath("$.answers.totalVotesSum").value(22));
+
+        then(tokenService).should(times(1)).extractUserInfo(any(String.class));
+        then(userProfileService).should(times(1)).getUserProfile(anyString());
+
+        // API 문서화
+        result
+                .andDo(document("user-profile/get-user-profile",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("접근 토큰 (Access Token)")
+                        ),
+                        pathParameters(
+                                parameterWithName("email").description("프로필 조회하려는 유저 이메일")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("유저 ID (PK값)"),
+                                fieldWithPath("username").description("유저 이름"),
+                                fieldWithPath("email").description("유저 이메일"),
+                                fieldWithPath("profileImageUrl").description("유저 프로필 이미지 URL"),
+                                fieldWithPath("quizzes.totalCount").description("유저가 작성한 퀴즈의 총 개수"),
+                                fieldWithPath("quizzes.totalVotesSum").description("유저가 작성한 퀴즈가 받은 총 추천 수"),
+                                fieldWithPath("answers.totalCount").description("유저가 작성한 답변의 총 개수"),
+                                fieldWithPath("answers.totalVotesSum").description("유저가 작성한 답변이 받은 총 추천 수")
+                        )));
+
+    }
+
     @DisplayName("유저 퀴즈 목록 조회 API 테스트 - 정상 호출")
     @Test
-    void getMyQuizzes_success() throws Exception {
+    void getUserQuizzes_success() throws Exception {
 
         // given
         AccessToken accessToken = AccessToken.of(
@@ -73,11 +148,32 @@ class UserProfileControllerTest {
         given(tokenService.extractUserInfo(any(String.class)))
                 .willReturn(UserInfo.of(userId, Role.USER));
 
-        List<MyQuizDto> content = List.of(
-                new MyQuizDto(1L, "HTTP 프로토콜의 특징은 무엇인가요?", 5, "test1@gmail.com", 12, LocalDateTime.now(), LocalDateTime.now()),
-                new MyQuizDto(2L, "RDB와 NoSQL의 차이점은 무엇인가?", 0, "test1@gmail.com", 3, LocalDateTime.now(), LocalDateTime.now()),
-                new MyQuizDto(3L, "컴파일 언어와 스크립트 언어의 차이점은?", 2, "test1@gmail.com", 2, LocalDateTime.now(), LocalDateTime.now())
-                );
+        QuizDto.Author author = QuizDto.Author.builder()
+                .id(1L)
+                .email("test1@gmail.com")
+                .username("test1")
+                .build();
+        List<QuizDto> content = List.of(
+                QuizDto.builder()
+                        .id(1L)
+                        .title("HTTP 프로토콜의 특징은 무엇인가요?")
+                        .answerCount(5)
+                        .totalVotes(12)
+                        .createdAt(LocalDateTime.now())
+                        .modifiedAt(LocalDateTime.now())
+                        .author(
+                                author)
+                        .build(),
+                QuizDto.builder()
+                        .id(2L)
+                        .title("테스트 5 유저가 작성한 퀴즈")
+                        .answerCount(0)
+                        .totalVotes(3)
+                        .createdAt(LocalDateTime.now())
+                        .modifiedAt(LocalDateTime.now())
+                        .author(author)
+                        .build()
+        );
 
         int totalElements = 1125;
         int totalPages = 12;
@@ -85,7 +181,7 @@ class UserProfileControllerTest {
         boolean first = true;
         boolean empty = false;
 
-        given(userProfileService.getMyQuizzes(any(Pageable.class), any(UserInfo.class)))
+        given(userProfileService.getUserQuizzesByPaging(any(Pageable.class), anyLong()))
                 .willReturn(new PagingResponseDto<>(content, totalElements, totalPages, last, first, empty));
 
         // when
@@ -102,8 +198,11 @@ class UserProfileControllerTest {
                 .andExpect(jsonPath("$.content[0].id").value(1L))
                 .andExpect(jsonPath("$.content[0].title").value("HTTP 프로토콜의 특징은 무엇인가요?"))
                 .andExpect(jsonPath("$.content[0].answerCount").value(5))
-                .andExpect(jsonPath("$.content[0].author").value("test1@gmail.com"))
-                .andExpect(jsonPath("$.content[0].votes").value(12))
+                .andExpect(jsonPath("$.content[0].author").isNotEmpty())
+                .andExpect(jsonPath("$.content[0].author.id").value(1L))
+                .andExpect(jsonPath("$.content[0].author.email").value("test1@gmail.com"))
+                .andExpect(jsonPath("$.content[0].author.username").value("test1"))
+                .andExpect(jsonPath("$.content[0].totalVotes").value(12))
                 .andExpect(jsonPath("$.content[0].createdAt").isNotEmpty())
                 .andExpect(jsonPath("$.content[0].modifiedAt").isNotEmpty())
                 .andExpect(jsonPath("$.totalElements").value(totalElements))
@@ -113,11 +212,11 @@ class UserProfileControllerTest {
                 .andExpect(jsonPath("$.empty").value(empty));
 
         then(tokenService).should().extractUserInfo(any(String.class));
-        then(userProfileService).should().getMyQuizzes(any(Pageable.class), any(UserInfo.class));
+        then(userProfileService).should().getUserQuizzesByPaging(any(Pageable.class), anyLong());
 
         // API 문서화
         result
-                .andDo(document("user-profile/get-my-quizzes",
+                .andDo(document("user-profile/get-user-quizzes",
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("접근 토큰 (Access Token)")
                         ),
@@ -135,7 +234,10 @@ class UserProfileControllerTest {
                                 fieldWithPath("content[].title").description("퀴즈 제목"),
                                 fieldWithPath("content[].answerCount").description("퀴즈 답변 수"),
                                 fieldWithPath("content[].author").description("퀴즈 작성자"),
-                                fieldWithPath("content[].votes").description("이 퀴즈가 얻은 추천 수 (음수도 가능)"),
+                                fieldWithPath("content[].author.id").description("퀴즈 작성자 ID (PK값)"),
+                                fieldWithPath("content[].author.email").description("퀴즈 작성자 이메일"),
+                                fieldWithPath("content[].author.username").description("퀴즈 작성자 이름"),
+                                fieldWithPath("content[].totalVotes").description("이 퀴즈가 얻은 추천 수 (음수도 가능)"),
                                 fieldWithPath("content[].createdAt").description("퀴즈 작성 시간"),
                                 fieldWithPath("content[].modifiedAt").description("마지막 퀴즈 수정 시간"),
                                 fieldWithPath("totalElements").description("전체 퀴즈 수"),

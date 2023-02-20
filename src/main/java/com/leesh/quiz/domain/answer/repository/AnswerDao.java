@@ -2,6 +2,7 @@ package com.leesh.quiz.domain.answer.repository;
 
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDetailDto;
 import com.leesh.quiz.api.userprofile.dto.answer.MyAnswerDto;
+import com.leesh.quiz.api.userprofile.dto.user.UserProfileDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -14,4 +15,5 @@ public interface AnswerDao {
 
     Optional<List<QuizDetailDto.AnswerDto>> getAnswersWithVoteByQuizId(Long quizId);
 
+    Optional<UserProfileDto.Answers> getUserAnswerCountWithVotesSum(String email);
 }
