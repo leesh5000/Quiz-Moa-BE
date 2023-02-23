@@ -10,13 +10,17 @@ import com.leesh.quiz.api.userprofile.dto.answer.UserAnswerDto;
 import com.leesh.quiz.api.userprofile.dto.user.QUserProfileDto_Answers;
 import com.leesh.quiz.api.userprofile.dto.user.UserProfileDto;
 import com.leesh.quiz.domain.user.QUser;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,6 +62,7 @@ public class AnswerDaoImpl implements AnswerDao {
                         answer.deleted.eq(false)
                 )
                 .groupBy(answer.id)
+                .orderBy(getOrderBy(pageable.getSort()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -148,6 +153,26 @@ public class AnswerDaoImpl implements AnswerDao {
                 .fetchOne();
 
         return Optional.ofNullable(contents);
+    }
+
+    private OrderSpecifier<?>[] getOrderBy(Sort sort) {
+
+        final List<OrderSpecifier<?>> orders = new ArrayList<>();
+
+        for (Sort.Order order : sort) {
+
+            Order direction = order.isAscending() ? Order.ASC : Order.DESC;
+
+            switch (order.getProperty()) {
+                case "totalVotesSum" -> orders.add(new OrderSpecifier(direction, answerVote.value.intValue().sum()));
+                case "createdAt" -> orders.add(new OrderSpecifier(direction, answer.createdAt));
+                case "modifiedAt" -> orders.add(new OrderSpecifier(direction, answer.modifiedAt));
+                default -> {}
+            }
+
+        }
+
+        return orders.toArray(OrderSpecifier[]::new);
     }
 
 }
