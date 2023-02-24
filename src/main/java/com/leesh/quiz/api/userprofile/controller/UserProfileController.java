@@ -49,6 +49,19 @@ public class UserProfileController {
 
     }
 
+    @DeleteMapping(value = "/{user-id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable("user-id") Long userId,
+                                           @AuthenticationPrincipal UserInfo userInfo) {
+
+        // 접근 권한이 있는 사용자인지 검증
+        UserInfoValidator.validateAccessible(userId, userInfo);
+
+        userProfileService.deleteUser(userInfo);
+
+        return ResponseEntity.noContent().build();
+
+    }
+
     // Paging은 Spring Data Jpa에서 제공하는 Pageable 스펙을 사용
     // 다음과 같은 형식 /quizzes?page={page}&size={size}&sort={property,direction}
     @GetMapping(value = "/{user-id}/quizzes", produces = MediaType.APPLICATION_JSON_VALUE)

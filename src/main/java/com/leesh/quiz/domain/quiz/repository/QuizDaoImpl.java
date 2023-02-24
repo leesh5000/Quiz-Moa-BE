@@ -10,6 +10,7 @@ import com.leesh.quiz.domain.user.QUser;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.Optional;
@@ -19,9 +20,8 @@ import static com.leesh.quiz.domain.quizvote.QQuizVote.quizVote;
 import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.querydsl.core.group.GroupBy.list;
 
-
-
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class QuizDaoImpl implements QuizDao {
     private final JPAQueryFactory queryFactory;
 

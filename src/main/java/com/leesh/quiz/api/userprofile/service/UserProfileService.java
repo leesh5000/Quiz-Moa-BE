@@ -9,8 +9,12 @@ import com.leesh.quiz.api.userprofile.dto.user.UserProfileDto;
 import com.leesh.quiz.api.userprofile.dto.user.UsernameDto;
 import com.leesh.quiz.domain.answer.Answer;
 import com.leesh.quiz.domain.answer.repository.AnswerRepository;
+import com.leesh.quiz.domain.answervote.AnswerVote;
+import com.leesh.quiz.domain.answervote.AnswerVoteRepository;
 import com.leesh.quiz.domain.quiz.Quiz;
 import com.leesh.quiz.domain.quiz.repository.QuizRepository;
+import com.leesh.quiz.domain.quizvote.QuizVote;
+import com.leesh.quiz.domain.quizvote.QuizVoteRepository;
 import com.leesh.quiz.domain.user.User;
 import com.leesh.quiz.domain.user.UserRepository;
 import com.leesh.quiz.domain.user.service.UserService;
@@ -26,10 +30,10 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.leesh.quiz.global.constant.PagingRequestInfo.from;
 
@@ -43,6 +47,8 @@ public class UserProfileService {
     private final AnswerRepository answerRepository;
     private final UserService userService;
     private final UserRepository userRepository;
+    private final QuizVoteRepository quizVoteRepository;
+    private final AnswerVoteRepository answerVoteRepository;
 
     @Transactional(readOnly = true)
     public PagingResponseDto<QuizDto> getUserQuizzesByPaging(Pageable pageable, Long userId) {
@@ -83,7 +89,7 @@ public class UserProfileService {
         Quiz quiz = findQuizByIdWithUser(quizId);
 
         // 퀴즈를 삭제한다. (실제 DB에서 삭제가 아닌 논리적으로 삭제)
-        quiz.delete(userInfo.userId());
+        quiz.disable(userInfo.userId());
 
     }
 
@@ -128,56 +134,119 @@ public class UserProfileService {
         Answer answer = findAnswerByIdWithUser(answerId);
 
         // 자식 엔티티부터 차례대로 삭제한다.
-        answer.delete(userInfo.userId());
+        answer.disable(userInfo.userId());
     }
 
     public UserProfileDto getUserProfile(String email) {
-        return fetchUserProfileDto(email);
-    }
 
-    private UserProfileDto fetchUserProfileDto(String email) {
-
-        final Map<String, Object> data = new HashMap<>();
-
-        // CompletableFuture를 이용하여 멀티 스레드로 데이터를 가져온다.
-        try {
-
-            CompletableFuture.allOf(
-                    CompletableFuture.supplyAsync(() -> userService.findUserByEmail(email))
-                            .thenAccept(u -> data.put("user", u)),
-                    CompletableFuture.supplyAsync(
-                                    () -> quizRepository
-                                            .getUserQuizCountWithVotesSum(email)
-                                            .orElseGet(() -> new UserProfileDto.Quizzes(0, 0)))
-                            .thenAccept(q -> data.put("quizzes", q)),
-                    CompletableFuture.supplyAsync(
-                                    () -> answerRepository
-                                            .getUserAnswerCountWithVotesSum(email)
-                                            .orElseGet(() -> new UserProfileDto.Answers(0, 0)))
-                            .thenApply(a -> data.put("answers", a)))
-                    .get();
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        // 멀티 스레드로 데이터를 Map에 담아서 가져온다.
+        Map<String, Object> data = fetchUserDataByParallel(email);
 
         User user = (User) data.get("user");
+        UserProfileDto.Answers answers = (UserProfileDto.Answers) data.get("answers");
+        UserProfileDto.Quizzes quizzes = (UserProfileDto.Quizzes) data.get("quizzes");
 
         return UserProfileDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .profileImageUrl(user.getProfile())
-                .answers((UserProfileDto.Answers) data.get("answers"))
-                .quizzes((UserProfileDto.Quizzes) data.get("quizzes"))
+                .answers(answers)
+                .quizzes(quizzes)
                 .build();
+    }
+
+    private Map<String, Object> fetchUserDataByParallel(String email) {
+
+        final Map<String, Object> data = new ConcurrentHashMap<>();
+
+        // CompletableFuture를 이용하여 멀티 스레드로 데이터를 가져온다.
+        CompletableFuture<Void> userFuture = CompletableFuture.runAsync(() -> {
+            User user = userService.findUserByEmail(email);
+            data.put("user", user);
+        });
+        CompletableFuture<Void> quizFuture = CompletableFuture.runAsync(() -> {
+            UserProfileDto.Quizzes quizzes = quizRepository
+                    .getUserQuizCountWithVotesSum(email)
+                    .orElseGet(() -> new UserProfileDto.Quizzes(0, 0));
+            data.put("quizzes", quizzes);
+        });
+        CompletableFuture<Void> answerFuture = CompletableFuture.runAsync(() -> {
+            UserProfileDto.Answers answers = answerRepository
+                    .getUserAnswerCountWithVotesSum(email)
+                    .orElseGet(() -> new UserProfileDto.Answers(0, 0));
+            data.put("answers", answers);
+        });
+
+        CompletableFuture
+                .allOf(userFuture, quizFuture, answerFuture)
+                .exceptionally(e -> {
+                    throw new RuntimeException();
+                })
+                .join();
+
+        return data;
     }
 
     public UsernameDto.Response editUsername(UsernameDto request, UserInfo userInfo) {
 
         User user = userRepository.getReferenceById(userInfo.userId());
-        user.editUsername(request.username());
+        user.editUsername(request.username(), userInfo.userId());
 
         return new UsernameDto.Response(user.getId());
     }
+
+    public void deleteUser(UserInfo userInfo) {
+
+        // User를 가져온다. (없으면 예외 발생)
+        User user = userService.findUserById(userInfo.userId());
+
+        // 유저 데이터들을 삭제한다.
+        deleteUserDataByParallel(user);
+
+        // 예외없이 모든 유저 데이터들이 삭제되었다면, 유저를 비활성화 한다.
+        user.disable(userInfo.userId());
+
+    }
+
+    private void deleteUserDataByParallel(User user) {
+        CompletableFuture.allOf(
+                        CompletableFuture.runAsync(() -> {
+                            // 해당 유저 ID로 된 퀴즈를 모두 삭제한다. (논리적 삭제)
+                            List<Long> ids = quizRepository.findQuizzesByUserId(user.getId())
+                                    .stream()
+                                    .map(Quiz::getId)
+                                    .toList();
+                            quizRepository.deleteAllInIds(ids);
+                        }),
+                        CompletableFuture.runAsync(() -> {
+                            // 해당 유저 ID로 된 댓글을 모두 삭제한다. (논리적 삭제)
+                            List<Long> ids = answerRepository.findAnswersByUserId(user.getId())
+                                    .stream()
+                                    .map(Answer::getId)
+                                    .toList();
+                            answerRepository.deleteAllInIds(ids);
+                        }),
+                        CompletableFuture.runAsync(() -> {
+                            // 해당 유저 ID로 된 퀴즈 투표를 모두 삭제한다.
+                            List<Long> ids = quizVoteRepository.findQuizVotesByUserId(user.getId())
+                                    .stream()
+                                    .map(QuizVote::getId)
+                                    .toList();
+                            quizVoteRepository.deleteAllInIds(ids);
+                        }),
+                        CompletableFuture.runAsync(() -> {
+                            // 해당 유저 ID로 된 댓글 투표를 모두 삭제한다.
+                            List<Long> ids = answerVoteRepository.findAnswerVotesByUserId(user.getId())
+                                    .stream()
+                                    .map(AnswerVote::getId)
+                                    .toList();
+                            answerVoteRepository.deleteAllInIds(ids);
+                        }))
+                .exceptionally(e -> {
+                    throw new RuntimeException();
+                })
+                .join();
+    }
+
 }

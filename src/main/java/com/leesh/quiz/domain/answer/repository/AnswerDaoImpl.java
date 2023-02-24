@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.querydsl.core.group.GroupBy.list;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AnswerDaoImpl implements AnswerDao {
 
     private final JPAQueryFactory queryFactory;
@@ -101,6 +103,7 @@ public class AnswerDaoImpl implements AnswerDao {
                         quiz.id.eq(quizId),
                         answer.deleted.eq(false)
                 )
+                .orderBy(answer.createdAt.desc())
                 .transform(
                     groupBy(answer.id).list(
                         new QQuizDetailDto_AnswerDto(

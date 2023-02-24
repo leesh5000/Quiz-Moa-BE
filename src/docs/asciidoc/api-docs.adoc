@@ -208,7 +208,7 @@ include::{snippets}/logout/request-headers.adoc[]
 ==== *Response* ====
 include::{snippets}/logout/http-response.adoc[]
 
-== *유저 프로필* ==
+== *유저* ==
 
 유저 프로필과 관련된 API 입니다.
 

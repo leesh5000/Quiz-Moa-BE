@@ -5,6 +5,7 @@ import com.leesh.quiz.domain.answer.repository.AnswerDaoImpl;
 import com.leesh.quiz.global.constant.PagingRequestInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ import java.util.List;
  */
 @Mapper
 @Repository
+@Transactional(readOnly = true)
 public interface QuizDao {
 
     List<QuizDto> getQuizzesByPaging(PagingRequestInfo pagingInfo);
