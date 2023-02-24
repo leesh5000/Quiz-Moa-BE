@@ -133,4 +133,8 @@ public class User {
     public void expireRefreshToken() {
         this.refreshTokenExpiresIn = LocalDateTime.now();
     }
+
+    public void editUsername(String username) {
+        this.username = username;
+    }
 }

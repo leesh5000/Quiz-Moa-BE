@@ -5,6 +5,7 @@ import com.leesh.quiz.api.userprofile.dto.answer.EditMyAnswerDto;
 import com.leesh.quiz.api.userprofile.dto.answer.UserAnswerDto;
 import com.leesh.quiz.api.userprofile.dto.quiz.EditMyQuizDto;
 import com.leesh.quiz.api.userprofile.dto.user.UserProfileDto;
+import com.leesh.quiz.api.userprofile.dto.user.UsernameDto;
 import com.leesh.quiz.api.userprofile.service.UserProfileService;
 import com.leesh.quiz.global.constant.PagingResponseDto;
 import com.leesh.quiz.global.constant.UserInfo;
@@ -29,6 +30,20 @@ public class UserProfileController {
     public ResponseEntity<UserProfileDto> getUserProfile(@PathVariable("email") String email) {
 
         UserProfileDto body = userProfileService.getUserProfile(email);
+
+        return ResponseEntity.ok(body);
+
+    }
+
+    @PutMapping(value = "/{user-id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UsernameDto.Response> editUsername(@PathVariable("user-id") Long userId,
+                                                       @AuthenticationPrincipal UserInfo userInfo,
+                                                       @RequestBody @Valid UsernameDto request) {
+
+        // 접근 권한이 있는 사용자인지 검증
+        UserInfoValidator.validateAccessible(userId, userInfo);
+
+        UsernameDto.Response body = userProfileService.editUsername(request, userInfo);
 
         return ResponseEntity.ok(body);
 

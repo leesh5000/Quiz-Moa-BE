@@ -6,11 +6,13 @@ import com.leesh.quiz.api.userprofile.dto.answer.EditMyAnswerDto;
 import com.leesh.quiz.api.userprofile.dto.answer.UserAnswerDto;
 import com.leesh.quiz.api.userprofile.dto.quiz.EditMyQuizDto;
 import com.leesh.quiz.api.userprofile.dto.user.UserProfileDto;
+import com.leesh.quiz.api.userprofile.dto.user.UsernameDto;
 import com.leesh.quiz.domain.answer.Answer;
 import com.leesh.quiz.domain.answer.repository.AnswerRepository;
 import com.leesh.quiz.domain.quiz.Quiz;
 import com.leesh.quiz.domain.quiz.repository.QuizRepository;
 import com.leesh.quiz.domain.user.User;
+import com.leesh.quiz.domain.user.UserRepository;
 import com.leesh.quiz.domain.user.service.UserService;
 import com.leesh.quiz.global.constant.PagingRequestInfo;
 import com.leesh.quiz.global.constant.PagingResponseDto;
@@ -40,6 +42,7 @@ public class UserProfileService {
     private final QuizRepository quizRepository;
     private final AnswerRepository answerRepository;
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
     public PagingResponseDto<QuizDto> getUserQuizzesByPaging(Pageable pageable, Long userId) {
@@ -168,5 +171,13 @@ public class UserProfileService {
                 .answers((UserProfileDto.Answers) data.get("answers"))
                 .quizzes((UserProfileDto.Quizzes) data.get("quizzes"))
                 .build();
+    }
+
+    public UsernameDto.Response editUsername(UsernameDto request, UserInfo userInfo) {
+
+        User user = userRepository.getReferenceById(userInfo.userId());
+        user.editUsername(request.username());
+
+        return new UsernameDto.Response(user.getId());
     }
 }
