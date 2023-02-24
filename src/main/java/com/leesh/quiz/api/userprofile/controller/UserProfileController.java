@@ -35,10 +35,10 @@ public class UserProfileController {
 
     }
 
-    @PutMapping(value = "/{user-id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = "/{user-id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UsernameDto.Response> editUsername(@PathVariable("user-id") Long userId,
-                                                       @AuthenticationPrincipal UserInfo userInfo,
-                                                       @RequestBody @Valid UsernameDto request) {
+                                                             @AuthenticationPrincipal UserInfo userInfo,
+                                                             @RequestBody @Valid UsernameDto request) {
 
         // 접근 권한이 있는 사용자인지 검증
         UserInfoValidator.validateAccessible(userId, userInfo);

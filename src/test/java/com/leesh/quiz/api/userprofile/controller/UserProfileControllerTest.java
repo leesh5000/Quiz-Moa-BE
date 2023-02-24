@@ -6,6 +6,7 @@ import com.leesh.quiz.api.userprofile.dto.answer.EditMyAnswerDto;
 import com.leesh.quiz.api.userprofile.dto.answer.UserAnswerDto;
 import com.leesh.quiz.api.userprofile.dto.quiz.EditMyQuizDto;
 import com.leesh.quiz.api.userprofile.dto.user.UserProfileDto;
+import com.leesh.quiz.api.userprofile.dto.user.UsernameDto;
 import com.leesh.quiz.api.userprofile.service.UserProfileService;
 import com.leesh.quiz.domain.user.constant.Role;
 import com.leesh.quiz.global.constant.PagingResponseDto;
@@ -543,4 +544,58 @@ class UserProfileControllerTest {
                         )));
 
     }
+
+    @DisplayName("유저 이름 수정 API - 정상 호출")
+    @Test
+    void editUsername_success() throws Exception {
+
+        // given
+        AccessToken accessToken = AccessToken.of(
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q",
+                900);
+
+        long editUsernameId = 1L;
+
+        given(tokenService.extractUserInfo(any(String.class)))
+                .willReturn(UserInfo.of(editUsernameId, Role.USER));
+
+        given(userProfileService.editUsername(any(UsernameDto.class), any(UserInfo.class)))
+                .willReturn(new UsernameDto.Response(editUsernameId));
+
+        UsernameDto usernameDto = new UsernameDto("EditUsername");
+
+        // when
+        ResultActions result = mvc.perform(
+                patch("/api/users/{userId}", editUsernameId)
+                        .header(HttpHeaders.AUTHORIZATION, accessToken.grantType() + " " + accessToken.accessToken())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(usernameDto)));
+
+        // then
+        result
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.editUserId").value(1L));
+
+        then(tokenService).should().extractUserInfo(any(String.class));
+        then(userProfileService).should().editUsername(any(UsernameDto.class), any(UserInfo.class));
+
+        // document
+        result
+                .andDo(document("user-profile/edit-username",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("접근 토큰(Access Token)")
+                        ),
+                        pathParameters(
+                                parameterWithName("userId").description("유저 ID")
+                        ),
+                        requestFields(
+                                fieldWithPath("username").description("수정할 유저 이름").attributes(RestDocsConfiguration.field("constraints", "2자 이상"))
+                        ),
+                        responseFields(
+                                fieldWithPath("editUserId").description("수정된 유저 ID"))));
+
+    }
+
 }
