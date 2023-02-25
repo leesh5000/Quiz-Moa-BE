@@ -15,5 +15,5 @@ public interface AnswerDao {
 
     Optional<List<QuizDetailDto.AnswerDto>> getAnswersWithVoteByQuizId(Long quizId);
 
-    Optional<UserProfileDto.Answers> getUserAnswerCountWithVotesSum(String email);
+    Optional<UserProfileDto.Answers> getUserAnswerCountWithVotesSum(Long userId);
 }

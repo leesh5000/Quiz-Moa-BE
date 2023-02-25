@@ -72,7 +72,6 @@ class UserProfileControllerTest {
                 900);
 
         long userId = 1L;
-        String email = "test1@gmail.com";
         given(tokenService.extractUserInfo(any(String.class)))
                 .willReturn(UserInfo.of(userId, Role.USER));
 
@@ -88,12 +87,12 @@ class UserProfileControllerTest {
                 .answers(answers)
                 .build();
 
-        given(userProfileService.getUserProfile(anyString()))
+        given(userProfileService.getUserProfile(anyLong()))
                 .willReturn(userProfileDto);
 
         // when
         ResultActions result = mvc.perform(
-                get("/api/users/{email}", email)
+                get("/api/users/{user-id}", userId)
                         .header(HttpHeaders.AUTHORIZATION, accessToken.grantType() + " " + accessToken.accessToken())
                         .accept(MediaType.APPLICATION_JSON)
         );
@@ -112,7 +111,7 @@ class UserProfileControllerTest {
                 .andExpect(jsonPath("$.answers.totalVotesSum").value(22));
 
         then(tokenService).should(times(1)).extractUserInfo(any(String.class));
-        then(userProfileService).should(times(1)).getUserProfile(anyString());
+        then(userProfileService).should(times(1)).getUserProfile(anyLong());
 
         // API 문서화
         result
@@ -121,7 +120,7 @@ class UserProfileControllerTest {
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("접근 토큰 (Access Token)")
                         ),
                         pathParameters(
-                                parameterWithName("email").description("프로필 조회하려는 유저 이메일")
+                                parameterWithName("user-id").description("프로필 조회하려는 유저 ID")
                         ),
                         responseFields(
                                 fieldWithPath("id").description("유저 ID (PK값)"),
@@ -596,6 +595,46 @@ class UserProfileControllerTest {
                         responseFields(
                                 fieldWithPath("editUserId").description("수정된 유저 ID"))));
 
+    }
+
+    @DisplayName("유저 회원 탈퇴 API - 정상 호출")
+    @Test
+    void deleteUser_success() throws Exception {
+
+        // given
+        AccessToken accessToken = AccessToken.of(
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q",
+                900);
+
+        long deleteUserId = 1L;
+
+        given(tokenService.extractUserInfo(any(String.class)))
+                .willReturn(UserInfo.of(deleteUserId, Role.USER));
+
+        willDoNothing().given(userProfileService).deleteUser(any(UserInfo.class));
+
+        // when
+        ResultActions result = mvc.perform(
+                delete("/api/users/{userId}", deleteUserId)
+                        .header(HttpHeaders.AUTHORIZATION, accessToken.grantType() + " " + accessToken.accessToken())
+                        .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        result
+                .andExpect(status().isNoContent());
+
+        then(tokenService).should().extractUserInfo(any(String.class));
+        then(userProfileService).should().deleteUser(any(UserInfo.class));
+
+        // docement
+        result
+                .andDo(document("user-profile/delete-user",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("접근 토큰(Access Token)")
+                        ),
+                        pathParameters(
+                                parameterWithName("userId").description("유저 ID")
+                        )));
     }
 
 }

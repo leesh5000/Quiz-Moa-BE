@@ -21,21 +21,21 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/users/{user-id}")
 public class UserProfileController {
 
     private final UserProfileService userProfileService;
 
-    @GetMapping(value = "/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserProfileDto> getUserProfile(@PathVariable("email") String email) {
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserProfileDto> getUserProfile(@PathVariable("user-id") Long userId) {
 
-        UserProfileDto body = userProfileService.getUserProfile(email);
+        UserProfileDto body = userProfileService.getUserProfile(userId);
 
         return ResponseEntity.ok(body);
 
     }
 
-    @PatchMapping(value = "/{user-id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UsernameDto.Response> editUsername(@PathVariable("user-id") Long userId,
                                                              @AuthenticationPrincipal UserInfo userInfo,
                                                              @RequestBody @Valid UsernameDto request) {
@@ -49,7 +49,7 @@ public class UserProfileController {
 
     }
 
-    @DeleteMapping(value = "/{user-id}")
+    @DeleteMapping()
     public ResponseEntity<Void> deleteUser(@PathVariable("user-id") Long userId,
                                            @AuthenticationPrincipal UserInfo userInfo) {
 
@@ -64,7 +64,7 @@ public class UserProfileController {
 
     // Paging은 Spring Data Jpa에서 제공하는 Pageable 스펙을 사용
     // 다음과 같은 형식 /quizzes?page={page}&size={size}&sort={property,direction}
-    @GetMapping(value = "/{user-id}/quizzes", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/quizzes", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagingResponseDto<QuizDto>> getUserQuizzes(@PathVariable("user-id") Long userId,
                                                                      @PageableDefault(size = 20) Pageable pageable) {
 
@@ -74,7 +74,7 @@ public class UserProfileController {
 
     }
 
-    @PutMapping(value = "/{user-id}/quizzes/{quiz-id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/quizzes/{quiz-id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EditMyQuizDto.Response> editMyQuiz(@PathVariable("user-id") Long userId,
                                                              @PathVariable("quiz-id") Long quizId,
                                                              @AuthenticationPrincipal UserInfo userInfo,
@@ -89,7 +89,7 @@ public class UserProfileController {
 
     }
 
-    @DeleteMapping(value = "/{user-id}/quizzes/{quiz-id}")
+    @DeleteMapping(value = "/quizzes/{quiz-id}")
     public ResponseEntity<Void> deleteMyQuiz(@PathVariable("user-id") Long userId,
                                                         @PathVariable("quiz-id") Long quizId,
                                                         @AuthenticationPrincipal UserInfo userInfo) {
@@ -103,7 +103,7 @@ public class UserProfileController {
 
     }
 
-    @GetMapping(value = "/{user-id}/answers", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/answers", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagingResponseDto<UserAnswerDto>> getUserAnswers(@PathVariable("user-id") Long userId,
                                                                            @PageableDefault(size = 20) Pageable pageable) {
 
@@ -113,11 +113,11 @@ public class UserProfileController {
 
     }
 
-    @PutMapping(value = "/{user-id}/answers/{answer-id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/answers/{answer-id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EditMyAnswerDto.Response> editMyAnswer(@PathVariable("user-id") Long userId,
-                                                                @PathVariable("answer-id") Long answerId,
-                                                                @AuthenticationPrincipal UserInfo userInfo,
-                                                                @RequestBody @Valid EditMyAnswerDto.Request request) {
+                                                                 @PathVariable("answer-id") Long answerId,
+                                                                 @AuthenticationPrincipal UserInfo userInfo,
+                                                                 @RequestBody @Valid EditMyAnswerDto.Request request) {
 
         // 접근 권한이 있는 사용자인지 검증
         UserInfoValidator.validateAccessible(userId, userInfo);
@@ -128,10 +128,10 @@ public class UserProfileController {
 
     }
 
-    @DeleteMapping(value = "/{user-id}/answers/{answer-id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/answers/{answer-id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> deleteMyAnswer(@PathVariable("user-id") Long userId,
-                                                           @PathVariable("answer-id") Long answerId,
-                                                           @AuthenticationPrincipal UserInfo userInfo) {
+                                               @PathVariable("answer-id") Long answerId,
+                                               @AuthenticationPrincipal UserInfo userInfo) {
 
         // 접근 권한이 있는 사용자인지 검증
         UserInfoValidator.validateAccessible(userId, userInfo);

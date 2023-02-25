@@ -137,10 +137,10 @@ public class UserProfileService {
         answer.disable(userInfo.userId());
     }
 
-    public UserProfileDto getUserProfile(String email) {
+    public UserProfileDto getUserProfile(Long userId) {
 
         // 멀티 스레드로 데이터를 Map에 담아서 가져온다.
-        Map<String, Object> data = fetchUserDataByParallel(email);
+        Map<String, Object> data = fetchUserDataByParallel(userId);
 
         User user = (User) data.get("user");
         UserProfileDto.Answers answers = (UserProfileDto.Answers) data.get("answers");
@@ -156,24 +156,24 @@ public class UserProfileService {
                 .build();
     }
 
-    private Map<String, Object> fetchUserDataByParallel(String email) {
+    private Map<String, Object> fetchUserDataByParallel(Long userId) {
 
         final Map<String, Object> data = new ConcurrentHashMap<>();
 
         // CompletableFuture를 이용하여 멀티 스레드로 데이터를 가져온다.
         CompletableFuture<Void> userFuture = CompletableFuture.runAsync(() -> {
-            User user = userService.findUserByEmail(email);
+            User user = userService.findUserById(userId);
             data.put("user", user);
         });
         CompletableFuture<Void> quizFuture = CompletableFuture.runAsync(() -> {
             UserProfileDto.Quizzes quizzes = quizRepository
-                    .getUserQuizCountWithVotesSum(email)
+                    .getUserQuizCountWithVotesSum(userId)
                     .orElseGet(() -> new UserProfileDto.Quizzes(0, 0));
             data.put("quizzes", quizzes);
         });
         CompletableFuture<Void> answerFuture = CompletableFuture.runAsync(() -> {
             UserProfileDto.Answers answers = answerRepository
-                    .getUserAnswerCountWithVotesSum(email)
+                    .getUserAnswerCountWithVotesSum(userId)
                     .orElseGet(() -> new UserProfileDto.Answers(0, 0));
             data.put("answers", answers);
         });

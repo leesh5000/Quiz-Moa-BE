@@ -9,6 +9,6 @@ public interface QuizDao {
 
     Optional<QuizDetailDto> getQuizDetailByQuizId(Long id);
 
-    Optional<UserProfileDto.Quizzes> getUserQuizCountWithVotesSum(String email);
+    Optional<UserProfileDto.Quizzes> getUserQuizCountWithVotesSum(Long userId);
 
 }

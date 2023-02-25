@@ -87,7 +87,7 @@ public class QuizDaoImpl implements QuizDao {
 
     }
 
-    public Optional<UserProfileDto.Quizzes> getUserQuizCountWithVotesSum(String email) {
+    public Optional<UserProfileDto.Quizzes> getUserQuizCountWithVotesSum(Long userId) {
 
         UserProfileDto.Quizzes contents = queryFactory
                 .select(new QUserProfileDto_Quizzes(
@@ -97,7 +97,7 @@ public class QuizDaoImpl implements QuizDao {
                 .from(quiz)
                 .leftJoin(quiz.votes, quizVote)
                 .where(
-                        quiz.user.email.eq(email),
+                        quiz.user.id.eq(userId),
                         quiz.deleted.eq(false)
                 )
                 .fetchOne();

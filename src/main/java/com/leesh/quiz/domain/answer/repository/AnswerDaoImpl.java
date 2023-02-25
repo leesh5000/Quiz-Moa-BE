@@ -140,7 +140,7 @@ public class AnswerDaoImpl implements AnswerDao {
     }
 
     @Override
-    public Optional<UserProfileDto.Answers> getUserAnswerCountWithVotesSum(String email) {
+    public Optional<UserProfileDto.Answers> getUserAnswerCountWithVotesSum(Long userId) {
 
         UserProfileDto.Answers contents = queryFactory
                 .select(new QUserProfileDto_Answers(
@@ -150,7 +150,7 @@ public class AnswerDaoImpl implements AnswerDao {
                 .from(answer)
                 .leftJoin(answer.votes, answerVote)
                 .where(
-                        answer.user.email.eq(email),
+                        answer.user.id.eq(userId),
                         answer.deleted.eq(false)
                 )
                 .fetchOne();
