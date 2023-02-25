@@ -1,5 +1,6 @@
 package com.leesh.quiz.global.jwt.service;
 
+import com.leesh.quiz.domain.user.User;
 import com.leesh.quiz.domain.user.constant.Role;
 import com.leesh.quiz.global.constant.UserInfo;
 import com.leesh.quiz.global.error.ErrorCode;
@@ -24,12 +25,12 @@ import java.util.Date;
 @Service
 public class JwtTokenService implements TokenService {
 
-    private final String accessTokenExpirationTime;
-    private final String refreshTokenExpirationTime;
+    private final Long accessTokenExpirationTime;
+    private final Long refreshTokenExpirationTime;
     private final String tokenSecret;
 
-    public JwtTokenService(@Value("${token.access-token-expiration-time}") String accessTokenExpirationTime,
-                           @Value("${token.refresh-token-expiration-time}") String refreshTokenExpirationTime,
+    public JwtTokenService(@Value("${token.access-token-expiration-time}") Long accessTokenExpirationTime,
+                           @Value("${token.refresh-token-expiration-time}") Long refreshTokenExpirationTime,
                            @Value("${token.secret}") String tokenSecret) {
         this.accessTokenExpirationTime = accessTokenExpirationTime;
         this.refreshTokenExpirationTime = refreshTokenExpirationTime;
@@ -48,7 +49,7 @@ public class JwtTokenService implements TokenService {
 
         // 현재 로그인 유저 정보 반환
         return UserInfo.of(
-                claims.get("userId", Long.class),
+                claims.get("id", Long.class),
                 Role.valueOf(claims.get("role", String.class)));
     }
 
@@ -71,46 +72,40 @@ public class JwtTokenService implements TokenService {
     }
 
     @Override
-    public AccessToken createAccessToken(Long userId, Role role) {
+    public AccessToken createAccessToken(User user) {
 
-        Date expirationTime = createAccessTokenExpireTime();
+        Date expirationTime = new Date(System.currentTimeMillis() + accessTokenExpirationTime);
 
         String accessToken = Jwts.builder()
-                .setSubject(TokenType.ACCESS.name())    // 토큰 제목
-                .setIssuedAt(new Date())                // 토큰 발급 시간
-                .setExpiration(expirationTime)          // 토큰 만료 시간
-                .claim("userId", userId)          // 회원 아이디
-                .claim("role", role)              // 유저 role
+                .setSubject(TokenType.ACCESS.name())        // 토큰 제목
+                .setIssuedAt(new Date())                    // 토큰 발급 시간
+                .setExpiration(expirationTime)              // 토큰 만료 시간
+                .claim("id", user.getId())            // 회원 아이디 (PK값)
+                .claim("username", user.getUsername())    // 회원 이름
+                .claim("email", user.getEmail())      // 회원 이메일
+                .claim("role", user.getRole())        // 유저 role
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512)
                 .setHeaderParam("typ", "JWT")
                 .compact();
 
-        return AccessToken.of(accessToken, expirationTime);
+        return AccessToken.of(accessToken, (int) (accessTokenExpirationTime / 1000));
     }
 
     @Override
     public RefreshToken createRefreshToken(Long userId) {
 
-        Date expirationTime = createRefreshTokenExpireTime();
+        Date expirationTime = new Date(System.currentTimeMillis() + refreshTokenExpirationTime);
 
         String refreshToken = Jwts.builder()
-                .setSubject(TokenType.REFRESH.name())    // 토큰 제목
+                .setSubject(TokenType.REFRESH.name())   // 토큰 제목
                 .setIssuedAt(new Date())                // 토큰 발급 시간
                 .setExpiration(expirationTime)          // 토큰 만료 시간
-                .claim("userId", userId)          // 회원 아이디
+                .claim("id", userId)              // 회원 아이디 (PK값)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512)
                 .setHeaderParam("typ", "JWT")
                 .compact();
 
-        return RefreshToken.of(refreshToken, expirationTime);
-    }
-
-    private Date createAccessTokenExpireTime() {
-        return new Date(System.currentTimeMillis() + Long.parseLong(accessTokenExpirationTime));
-    }
-
-    private Date createRefreshTokenExpireTime() {
-        return new Date(System.currentTimeMillis() + Long.parseLong(refreshTokenExpirationTime));
+        return RefreshToken.of(refreshToken, (int) (refreshTokenExpirationTime / 1000));
     }
 
     // 이 메소드의 파라미터인 토큰은 해당 시점에서는 Access Token 또는 Refresh Token 인지 알 수 없다.

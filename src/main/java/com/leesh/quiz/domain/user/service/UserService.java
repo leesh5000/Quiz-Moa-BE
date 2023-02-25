@@ -20,9 +20,9 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User findUserOrRegister(Oauth2Attributes userInfo) {
+    public User findUserOrRegister(Oauth2Attributes oauth2Attributes) {
 
-        Optional<User> optionalUser = userRepository.findByEmail(userInfo.getEmail());
+        Optional<User> optionalUser = userRepository.findByEmail(oauth2Attributes.getEmail());
         User user;
 
         // 해당 이메일로 이미 가입된 회원이라면,
@@ -30,20 +30,32 @@ public class UserService {
 
             user = optionalUser.get();
             // 현재 로그인 시도한 oauth2 타입과 가입된 회원의 oauth2 타입이 올바른지 검증한다.
-            user.isValidOauth2(userInfo.getOauth2Type());
+            user.isValidOauth2(oauth2Attributes.getOauth2Type());
 
-        } else {
-            // 해당 이메일로 가입된 회원이 없다면, 신규 가입을 한다.
-            isDuplicatedUser(userInfo.getEmail());
-            user = userRepository.save(userInfo.toEntity());
+            // 이전에 탈퇴했다가 재가입 하였으니, 탈퇴 상태를 해제한다.
+            if (user.isDeleted()) {
+                user.enable(oauth2Attributes);
+            }
+
+            return user;
         }
 
+        // 해당 이메일로 가입된 회원이 없다면, 신규 가입을 한다.
+        isDuplicatedUser(oauth2Attributes.getEmail());
+        user = userRepository.save(oauth2Attributes.toEntity());
         return user;
+
     }
 
     @Transactional(readOnly = true)
     public User findUserById(Long id) {
         return userRepository.findById(id)
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_USER));
+    }
+
+    @Transactional(readOnly = true)
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_USER));
     }
 

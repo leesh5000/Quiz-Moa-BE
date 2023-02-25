@@ -19,13 +19,13 @@ import java.util.stream.Collectors;
  */
 public record PagingRequestInfo(boolean sorted, List<Sort.Order> orders, long offset, int pageSize, @Nullable Long userId) {
 
-    public static PagingRequestInfo from(Pageable pageable, UserInfo userInfo) {
+    public static PagingRequestInfo from(Pageable pageable, Long userId) {
         return new PagingRequestInfo(
                 pageable.getSort().isSorted(),
                 pageable.getSort().stream().collect(Collectors.toList()),
                 pageable.getOffset(),
                 pageable.getPageSize(),
-                userInfo.userId()
+                userId
         );
     }
 

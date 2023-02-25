@@ -30,7 +30,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.leesh.quiz.api.quiz.dto.quiz.QuizDetailDto.AnswerDto;
@@ -73,7 +72,7 @@ class QuizControllerTest {
         // given
         AccessToken accessToken = AccessToken.of(
                 "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q",
-                new Date());
+                900);
 
         long userId = 1L;
         given(tokenService.extractUserInfo(any(String.class)))
@@ -125,9 +124,34 @@ class QuizControllerTest {
 
         // given
         List<QuizDto> content = List.of(
-                new QuizDto(1L, "HTTP 프로토콜의 특징은 무엇인가요?", 5, "test1@gmail.com", 12, LocalDateTime.now(), LocalDateTime.now()),
-                new QuizDto(2L, "테스트 5 유저가 작성한 퀴즈", 0, "test5@gmail.com", 3, LocalDateTime.now(), LocalDateTime.now()),
-                new QuizDto(3L, "HTTP, HTTPS의 차이점에 대해...", 2, "leesh", 2, LocalDateTime.now(), LocalDateTime.now())
+                QuizDto.builder()
+                        .id(1L)
+                        .title("HTTP 프로토콜의 특징은 무엇인가요?")
+                        .answerCount(5)
+                        .totalVotesSum(12)
+                        .createdAt(LocalDateTime.now())
+                        .modifiedAt(LocalDateTime.now())
+                        .author(
+                                QuizDto.Author.builder()
+                                        .id(1L)
+                                        .email("test1@gmail.com")
+                                        .username("test1")
+                                        .build())
+                        .build(),
+                QuizDto.builder()
+                        .id(2L)
+                        .title("테스트 5 유저가 작성한 퀴즈")
+                        .answerCount(0)
+                        .totalVotesSum(3)
+                        .createdAt(LocalDateTime.now())
+                        .modifiedAt(LocalDateTime.now())
+                        .author(
+                                QuizDto.Author.builder()
+                                        .id(5L)
+                                        .email("test5@gmail.com")
+                                        .username("test5")
+                                        .build())
+                        .build()
         );
 
         int totalElements = 1125;
@@ -152,8 +176,11 @@ class QuizControllerTest {
                 .andExpect(jsonPath("$.content[0].id").value(1L))
                 .andExpect(jsonPath("$.content[0].title").value("HTTP 프로토콜의 특징은 무엇인가요?"))
                 .andExpect(jsonPath("$.content[0].answerCount").value(5))
-                .andExpect(jsonPath("$.content[0].author").value("test1@gmail.com"))
-                .andExpect(jsonPath("$.content[0].votes").value(12))
+                .andExpect(jsonPath("$.content[0].author").isNotEmpty())
+                .andExpect(jsonPath("$.content[0].author.id").value(1L))
+                .andExpect(jsonPath("$.content[0].author.email").value("test1@gmail.com"))
+                .andExpect(jsonPath("$.content[0].author.username").value("test1"))
+                .andExpect(jsonPath("$.content[0].totalVotesSum").value(12))
                 .andExpect(jsonPath("$.content[0].createdAt").isNotEmpty())
                 .andExpect(jsonPath("$.content[0].modifiedAt").isNotEmpty())
                 .andExpect(jsonPath("$.totalElements").value(totalElements))
@@ -178,7 +205,10 @@ class QuizControllerTest {
                                 fieldWithPath("content[].title").description("퀴즈 제목"),
                                 fieldWithPath("content[].answerCount").description("퀴즈 답변 수"),
                                 fieldWithPath("content[].author").description("퀴즈 작성자"),
-                                fieldWithPath("content[].votes").description("이 퀴즈가 얻은 추천 수 (음수도 가능)"),
+                                fieldWithPath("content[].author.id").description("퀴즈 작성자 ID (PK값)"),
+                                fieldWithPath("content[].author.email").description("퀴즈 작성자 이메일"),
+                                fieldWithPath("content[].author.username").description("퀴즈 작성자 이름"),
+                                fieldWithPath("content[].totalVotesSum").description("좋아요 수 - 싫어요 수"),
                                 fieldWithPath("content[].createdAt").description("퀴즈 작성 시간"),
                                 fieldWithPath("content[].modifiedAt").description("마지막 퀴즈 수정 시간"),
                                 fieldWithPath("totalElements").description("전체 퀴즈 수"),
@@ -196,19 +226,23 @@ class QuizControllerTest {
         // given
         List<AnswerDto> answers = new ArrayList<>();
 
+        QuizDetailDto.AuthorDto test1 = new QuizDetailDto.AuthorDto(1L, "test1", "test1@gmail.com");
+        QuizDetailDto.AuthorDto test2 = new QuizDetailDto.AuthorDto(2L, "test2", "test2@gmail.com");
+        QuizDetailDto.AuthorDto test3 = new QuizDetailDto.AuthorDto(3L, "test3", "test3@gmail.com");
+
         List<QuizDetailDto.AnswerVoteDto> answerVotes = new ArrayList<>();
-        answerVotes.add(new QuizDetailDto.AnswerVoteDto(1L, 1, 1L, "test1@gmail.com"));
-        answerVotes.add(new QuizDetailDto.AnswerVoteDto(2L, 1, 1L, "test2@gmail.com"));
-        answerVotes.add(new QuizDetailDto.AnswerVoteDto(3L, 1, 1L, "test3@gmail.com"));
+        answerVotes.add(new QuizDetailDto.AnswerVoteDto(1L, 1, test1));
+        answerVotes.add(new QuizDetailDto.AnswerVoteDto(2L, 1, test2));
+        answerVotes.add(new QuizDetailDto.AnswerVoteDto(3L, 1, test3));
 
         List<QuizDetailDto.QuizVoteDto> quizVotes = new ArrayList<>();
-        quizVotes.add(new QuizDetailDto.QuizVoteDto(1L, 1, 1L, "test1@gmail.com"));
-        quizVotes.add(new QuizDetailDto.QuizVoteDto(2L, 1, 2L, "test2@gmail.com"));
-        quizVotes.add(new QuizDetailDto.QuizVoteDto(3L, 1, 3L, "test3@gmail.com"));
+        quizVotes.add(new QuizDetailDto.QuizVoteDto(1L, 1, test1));
+        quizVotes.add(new QuizDetailDto.QuizVoteDto(2L, 1, test2));
+        quizVotes.add(new QuizDetailDto.QuizVoteDto(3L, 1, test3));
 
-        answers.add(new AnswerDto(1L, "먼저, 빈 주입 방식과 수정자 주입 방식이 있습니다. 빈 주입 방식은 @Autowired를 통해 주입하는 방식을 말합니다.", 2L, "test2@gmail.com", answerVotes, LocalDateTime.now(), LocalDateTime.now()));
-        answers.add(new AnswerDto(2L, "한 가지가 더 있는듯 합니다.", 3L, "test3@gmail.com", answerVotes, LocalDateTime.now(), LocalDateTime.now()));
-        answers.add(new AnswerDto(3L, "생성자 주입 방식이 있습니다. 불변성을 유지할 수 있기 때문에 주로 생성자 주입 방식을 사용합니다.", 5L, "test5@gmail.com", answerVotes, LocalDateTime.now(), LocalDateTime.now()));
+        answers.add(new AnswerDto(1L, "먼저, 빈 주입 방식과 수정자 주입 방식이 있습니다. 빈 주입 방식은 @Autowired를 통해 주입하는 방식을 말합니다.", test1, answerVotes, LocalDateTime.now(), LocalDateTime.now()));
+        answers.add(new AnswerDto(2L, "한 가지가 더 있는듯 합니다.", test2, answerVotes, LocalDateTime.now(), LocalDateTime.now()));
+        answers.add(new AnswerDto(3L, "생성자 주입 방식이 있습니다. 불변성을 유지할 수 있기 때문에 주로 생성자 주입 방식을 사용합니다.", test3, answerVotes, LocalDateTime.now(), LocalDateTime.now()));
 
         long quizId = 1L;
         given(quizService.getQuizDetail(anyLong()))
@@ -216,7 +250,7 @@ class QuizControllerTest {
                         quizId,
                         "스프링의 빈 주입 방식에 대해...",
                         "스프링이 빈 주입을 하는 방법에 대해 모두 설명해주세요. 그리고, 우리가 흔히 사용하는 방식은 무엇이며, 각각 어떤 장점이 있는지에 대해 설명해주세요.",
-                        1L, "leesh@gmail.com",
+                        test1,
                         answers, quizVotes,
                         LocalDateTime.now(), LocalDateTime.now()));
 
@@ -232,27 +266,35 @@ class QuizControllerTest {
                 .andExpect(jsonPath("$.id").value(quizId))
                 .andExpect(jsonPath("$.title").value("스프링의 빈 주입 방식에 대해..."))
                 .andExpect(jsonPath("$.contents").value("스프링이 빈 주입을 하는 방법에 대해 모두 설명해주세요. 그리고, 우리가 흔히 사용하는 방식은 무엇이며, 각각 어떤 장점이 있는지에 대해 설명해주세요."))
-                .andExpect(jsonPath("$.authorId").value(1L))
-                .andExpect(jsonPath("$.author").value("leesh@gmail.com"))
+                .andExpect(jsonPath("$.author").isNotEmpty())
+                .andExpect(jsonPath("$.author.id").value(1L))
+                .andExpect(jsonPath("$.author.username").value("test1"))
+                .andExpect(jsonPath("$.author.email").value("test1@gmail.com"))
                 .andExpect(jsonPath("$.createdAt").isNotEmpty())
                 .andExpect(jsonPath("$.modifiedAt").isNotEmpty())
                 .andExpect(jsonPath("$.votes").isArray())
                 .andExpect(jsonPath("$.votes[0].id").value(1L))
                 .andExpect(jsonPath("$.votes[0].value").value(1))
-                .andExpect(jsonPath("$.votes[0].voterId").value(1L))
-                .andExpect(jsonPath("$.votes[0].voter").value("test1@gmail.com"))
+                .andExpect(jsonPath("$.votes[0].voter").isNotEmpty())
+                .andExpect(jsonPath("$.votes[0].voter.id").value(1L))
+                .andExpect(jsonPath("$.votes[0].voter.username").value("test1"))
+                .andExpect(jsonPath("$.votes[0].voter.email").value("test1@gmail.com"))
                 .andExpect(jsonPath("$.answers").isArray())
                 .andExpect(jsonPath("$.answers[0].id").value(1L))
                 .andExpect(jsonPath("$.answers[0].contents").value("먼저, 빈 주입 방식과 수정자 주입 방식이 있습니다. 빈 주입 방식은 @Autowired를 통해 주입하는 방식을 말합니다."))
-                .andExpect(jsonPath("$.answers[0].authorId").value(2L))
-                .andExpect(jsonPath("$.answers[0].author").value("test2@gmail.com"))
+                .andExpect(jsonPath("$.answers[0].author").isNotEmpty())
+                .andExpect(jsonPath("$.answers[0].author.id").value(1L))
+                .andExpect(jsonPath("$.answers[0].author.username").value("test1"))
+                .andExpect(jsonPath("$.answers[0].author.email").value("test1@gmail.com"))
                 .andExpect(jsonPath("$.answers[0].createdAt").isNotEmpty())
                 .andExpect(jsonPath("$.answers[0].modifiedAt").isNotEmpty())
                 .andExpect(jsonPath("$.answers[0].votes").isArray())
                 .andExpect(jsonPath("$.answers[0].votes[0].id").value(1L))
                 .andExpect(jsonPath("$.answers[0].votes[0].value").value(1))
-                .andExpect(jsonPath("$.answers[0].votes[0].voterId").value(1L))
-                .andExpect(jsonPath("$.answers[0].votes[0].voter").value("test1@gmail.com"));
+                .andExpect(jsonPath("$.answers[0].votes[0].voter").isNotEmpty())
+                .andExpect(jsonPath("$.answers[0].votes[0].voter.id").value(1L))
+                .andExpect(jsonPath("$.answers[0].votes[0].voter.username").value("test1"))
+                .andExpect(jsonPath("$.answers[0].votes[0].voter.email").value("test1@gmail.com"));
 
         then(quizService).should().getQuizDetail(anyLong());
 
@@ -266,27 +308,35 @@ class QuizControllerTest {
                                 fieldWithPath("id").description("퀴즈 ID"),
                                 fieldWithPath("title").description("퀴즈 제목"),
                                 fieldWithPath("contents").description("퀴즈 내용"),
-                                fieldWithPath("authorId").description("퀴즈 작성자 ID"),
                                 fieldWithPath("author").description("퀴즈 작성자"),
+                                fieldWithPath("author.id").description("퀴즈 작성자 ID"),
+                                fieldWithPath("author.username").description("퀴즈 작성자 이름"),
+                                fieldWithPath("author.email").description("퀴즈 작성자 이메일"),
                                 fieldWithPath("createdAt").description("퀴즈 생성 시간"),
                                 fieldWithPath("modifiedAt").description("퀴즈 수정 시간"),
                                 fieldWithPath("votes").description("현재 퀴즈에 대한 투표 정보 (추천 정보)"),
                                 fieldWithPath("votes[].id").description("투표 ID"),
                                 fieldWithPath("votes[].value").description("투표 값"),
-                                fieldWithPath("votes[].voterId").description("투표자 ID"),
                                 fieldWithPath("votes[].voter").description("투표자"),
+                                fieldWithPath("votes[].voter.id").description("투표자 ID"),
+                                fieldWithPath("votes[].voter.username").description("투표자 이름"),
+                                fieldWithPath("votes[].voter.email").description("투표자 이메일"),
                                 fieldWithPath("answers").description("퀴즈에 대한 답변 정보"),
                                 fieldWithPath("answers[].id").description("답변 ID"),
                                 fieldWithPath("answers[].contents").description("답변 내용"),
-                                fieldWithPath("answers[].authorId").description("답변 작성자 ID"),
                                 fieldWithPath("answers[].author").description("답변 작성자"),
+                                fieldWithPath("answers[].author.id").description("답변 작성자 ID"),
+                                fieldWithPath("answers[].author.username").description("답변 작성자 이름"),
+                                fieldWithPath("answers[].author.email").description("답변 작성자 이메일"),
                                 fieldWithPath("answers[].createdAt").description("답변 생성 시간"),
                                 fieldWithPath("answers[].modifiedAt").description("답변 수정 시간"),
                                 fieldWithPath("answers[].votes").description("답변에 대한 투표 정보"),
                                 fieldWithPath("answers[].votes[].id").description("투표 ID"),
                                 fieldWithPath("answers[].votes[].value").description("투표 값"),
-                                fieldWithPath("answers[].votes[].voterId").description("투표자 ID"),
-                                fieldWithPath("answers[].votes[].voter").description("투표자")
+                                fieldWithPath("answers[].votes[].voter").description("투표자"),
+                                fieldWithPath("answers[].votes[].voter.id").description("투표자 ID"),
+                                fieldWithPath("answers[].votes[].voter.username").description("투표자 이름"),
+                                fieldWithPath("answers[].votes[].voter.email").description("투표자 이메일")
                         )));
 
     }
@@ -298,7 +348,7 @@ class QuizControllerTest {
         // given
         AccessToken accessToken = AccessToken.of(
                 "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q",
-                new Date());
+                900);
 
         long userId = 1L;
         given(tokenService.extractUserInfo(any(String.class)))
@@ -354,7 +404,7 @@ class QuizControllerTest {
         // given
         AccessToken accessToken = AccessToken.of(
                 "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q",
-                new Date());
+                900);
 
         long userId = 1L;
         given(tokenService.extractUserInfo(any(String.class)))

@@ -6,7 +6,10 @@ import com.leesh.quiz.domain.quiz.Quiz;
 import com.leesh.quiz.domain.quizvote.QuizVote;
 import com.leesh.quiz.domain.user.constant.Oauth2Type;
 import com.leesh.quiz.domain.user.constant.Role;
+import com.leesh.quiz.external.oauth2.Oauth2Attributes;
 import com.leesh.quiz.external.oauth2.Oauth2ValidationUtils;
+import com.leesh.quiz.global.error.ErrorCode;
+import com.leesh.quiz.global.error.exception.BusinessException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -45,6 +48,9 @@ public class User {
 
     @Column(name = "password", length = 255, nullable = true)
     private String password;
+
+    @Column(nullable = false)
+    private boolean deleted = false;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 10)
@@ -127,10 +133,41 @@ public class User {
 
     public void isValidOauth2(Oauth2Type userInput) {
         // 외부 코드와 의존하지 않기 위해 유틸 클래스를 사용한다.
-        Oauth2ValidationUtils.isValidOauth2(this.oauth2Type, userInput);
+        Oauth2ValidationUtils.isValidOauth2Type(this.oauth2Type, userInput);
     }
 
     public void expireRefreshToken() {
         this.refreshTokenExpiresIn = LocalDateTime.now();
+    }
+
+    public void editUsername(String username, Long userId) {
+        // 요청을 보낸 유저가 이 리소스의 유저인지 검증한다.
+        validate(userId);
+        this.username = username;
+    }
+
+    public void disable(Long userId) {
+        // 요청을 보낸 유저가 이 리소스의 유저인지 검증한다.
+        validate(userId);
+        this.deleted = true;
+    }
+
+    public void enable(Oauth2Attributes oauth2Attributes) {
+        // 요청을 보낸 유저가 이 리소스의 유저인지 검증한다.
+        this.deleted = false;
+        // 유저를 최초 상태로 초기화한다.
+        initialize(oauth2Attributes);
+    }
+
+    private void initialize(Oauth2Attributes oauth2Attributes) {
+        this.email = oauth2Attributes.getEmail();
+        this.username = oauth2Attributes.getName();
+        this.profile = oauth2Attributes.getProfile();
+    }
+
+    private void validate(Long inputId) {
+        if (!Objects.equals(this.id, inputId)) {
+            throw new BusinessException(ErrorCode.NOT_ACCESSIBLE_USER);
+        }
     }
 }

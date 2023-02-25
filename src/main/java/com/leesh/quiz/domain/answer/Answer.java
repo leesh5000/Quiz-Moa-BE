@@ -16,7 +16,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -106,7 +108,7 @@ public class Answer {
         }
     }
 
-    public void delete(Long userId) {
+    public void disable(Long userId) {
 
         // 답변 작성자인지 검증한다.
         validateAnswerOwner(userId);

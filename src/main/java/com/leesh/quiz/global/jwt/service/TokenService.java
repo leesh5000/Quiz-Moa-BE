@@ -1,6 +1,6 @@
 package com.leesh.quiz.global.jwt.service;
 
-import com.leesh.quiz.domain.user.constant.Role;
+import com.leesh.quiz.domain.user.User;
 import com.leesh.quiz.global.constant.UserInfo;
 import com.leesh.quiz.global.error.exception.AuthenticationException;
 import com.leesh.quiz.global.jwt.dto.AccessToken;
@@ -12,7 +12,7 @@ public interface TokenService {
 
     void validateRefreshToken(String token) throws AuthenticationException;
 
-    AccessToken createAccessToken(Long id, Role role);
+    AccessToken createAccessToken(User user);
 
     RefreshToken createRefreshToken(Long id);
 

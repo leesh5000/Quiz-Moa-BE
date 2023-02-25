@@ -106,7 +106,7 @@ public class Quiz {
         this.contents = contents;
     }
 
-    public void delete(Long userId) {
+    public void disable(Long userId) {
 
         // 퀴즈 작성자인지 검증한다.
         validateQuizOwner(userId);

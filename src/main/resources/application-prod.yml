@@ -5,4 +5,3 @@ logging:
         SQL: debug
         type.descriptor.sql.BasicBinder: debug
         com.leesh: debug
-    com.leesh.quiz.api.userprofile.dao.UserProfileDao: debug

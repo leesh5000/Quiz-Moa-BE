@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 import static com.leesh.quiz.external.oauth2.Oauth2ApiServiceFactory.getOauth2ApiService;
 import static com.leesh.quiz.global.util.DateTimeUtils.convertToLocalDateTime;
 
@@ -34,12 +36,16 @@ public class Oauth2LoginService {
         User user = userService.findUserOrRegister(userInfo);
 
         // jwt 토큰을 생성한다.
-        AccessToken accessToken = tokenService.createAccessToken(user.getId(), user.getRole());
+        AccessToken accessToken = tokenService.createAccessToken(user);
         RefreshToken refreshToken = tokenService.createRefreshToken(user.getId());
 
         // 유저의 refresh token을 업데이트한다.
-        user.updateRefreshToken(refreshToken.refreshToken(),
-                convertToLocalDateTime(refreshToken.refreshTokenExpiresIn()));
+        user.updateRefreshToken(
+                refreshToken.refreshToken(),
+                convertToLocalDateTime(
+                        new Date(System.currentTimeMillis() + refreshToken.refreshTokenExpiresIn() * 1000)
+                )
+        );
 
         return Oauth2LoginDto.Response.from(accessToken, refreshToken);
     }

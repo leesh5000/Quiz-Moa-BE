@@ -7,21 +7,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public record QuizDetailDto(Long id, String title, String contents,
-                            Long authorId, String author,
+                            AuthorDto author,
                             List<AnswerDto> answers, List<QuizVoteDto> votes,
                             LocalDateTime createdAt, LocalDateTime modifiedAt) {
 
     @QueryProjection
     public QuizDetailDto(Long id, String title, String contents,
-                         Long authorId, String author,
+                         AuthorDto authorDto,
                          List<QuizVoteDto> votes,
                          LocalDateTime createdAt, LocalDateTime modifiedAt) {
 
-        this(id, title, contents, authorId, author, new ArrayList<>(), votes, createdAt, modifiedAt);
+        this(id, title, contents, authorDto, new ArrayList<>(), votes, createdAt, modifiedAt);
+    }
+
+    public record AuthorDto(Long id, String username, String email) {
+
+        @QueryProjection
+        public AuthorDto {}
+
     }
 
     public record AnswerDto(Long id, String contents,
-                            Long authorId, String author,
+                            AuthorDto author,
                             List<AnswerVoteDto> votes,
                             LocalDateTime createdAt, LocalDateTime modifiedAt) {
 
@@ -30,8 +37,7 @@ public record QuizDetailDto(Long id, String title, String contents,
 
     }
 
-    public record QuizVoteDto(Long id, int value,
-                              Long voterId, String voter) {
+    public record QuizVoteDto(Long id, int value, AuthorDto voter) {
 
         @QueryProjection
         public QuizVoteDto {}
@@ -39,7 +45,7 @@ public record QuizDetailDto(Long id, String title, String contents,
     }
 
     public record AnswerVoteDto(Long id, int value,
-                                Long voterId, String voter) {
+                                AuthorDto voter) {
 
         @QueryProjection
         public AnswerVoteDto {}

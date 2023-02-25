@@ -1,11 +1,13 @@
 package com.leesh.quiz.api.userprofile.controller;
 
+import com.leesh.quiz.api.quiz.dto.quiz.QuizDto;
 import com.leesh.quiz.api.userprofile.dto.answer.EditMyAnswerDto;
-import com.leesh.quiz.api.userprofile.dto.answer.MyAnswerDto;
-import com.leesh.quiz.global.constant.PagingResponseDto;
+import com.leesh.quiz.api.userprofile.dto.answer.UserAnswerDto;
 import com.leesh.quiz.api.userprofile.dto.quiz.EditMyQuizDto;
-import com.leesh.quiz.api.userprofile.dto.quiz.MyQuizDto;
+import com.leesh.quiz.api.userprofile.dto.user.UserProfileDto;
+import com.leesh.quiz.api.userprofile.dto.user.UsernameDto;
 import com.leesh.quiz.api.userprofile.service.UserProfileService;
+import com.leesh.quiz.global.constant.PagingResponseDto;
 import com.leesh.quiz.global.constant.UserInfo;
 import com.leesh.quiz.global.validator.UserInfoValidator;
 import jakarta.validation.Valid;
@@ -24,17 +26,49 @@ public class UserProfileController {
 
     private final UserProfileService userProfileService;
 
-    // Paging은 Spring Data Jpa에서 제공하는 Pageable 스펙을 사용
-    // 다음과 같은 형식 /quizzes?page={page}&size={size}&sort={property,direction}
-    @GetMapping(value = "/quizzes", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PagingResponseDto<MyQuizDto>> getMyQuizzes(@PathVariable("user-id") Long userId,
-                                                                     @AuthenticationPrincipal UserInfo userInfo,
-                                                                     @PageableDefault(size = 20) Pageable pageable) {
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserProfileDto> getUserProfile(@PathVariable("user-id") Long userId) {
+
+        UserProfileDto body = userProfileService.getUserProfile(userId);
+
+        return ResponseEntity.ok(body);
+
+    }
+
+    @PatchMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UsernameDto.Response> editUsername(@PathVariable("user-id") Long userId,
+                                                             @AuthenticationPrincipal UserInfo userInfo,
+                                                             @RequestBody @Valid UsernameDto request) {
 
         // 접근 권한이 있는 사용자인지 검증
         UserInfoValidator.validateAccessible(userId, userInfo);
 
-        PagingResponseDto<MyQuizDto> body = userProfileService.getMyQuizzes(pageable, userInfo);
+        UsernameDto.Response body = userProfileService.editUsername(request, userInfo);
+
+        return ResponseEntity.ok(body);
+
+    }
+
+    @DeleteMapping()
+    public ResponseEntity<Void> deleteUser(@PathVariable("user-id") Long userId,
+                                           @AuthenticationPrincipal UserInfo userInfo) {
+
+        // 접근 권한이 있는 사용자인지 검증
+        UserInfoValidator.validateAccessible(userId, userInfo);
+
+        userProfileService.deleteUser(userInfo);
+
+        return ResponseEntity.noContent().build();
+
+    }
+
+    // Paging은 Spring Data Jpa에서 제공하는 Pageable 스펙을 사용
+    // 다음과 같은 형식 /quizzes?page={page}&size={size}&sort={property,direction}
+    @GetMapping(value = "/quizzes", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PagingResponseDto<QuizDto>> getUserQuizzes(@PathVariable("user-id") Long userId,
+                                                                     @PageableDefault(size = 20) Pageable pageable) {
+
+        PagingResponseDto<QuizDto> body = userProfileService.getUserQuizzesByPaging(pageable, userId);
 
         return ResponseEntity.ok(body);
 
@@ -70,14 +104,10 @@ public class UserProfileController {
     }
 
     @GetMapping(value = "/answers", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PagingResponseDto<MyAnswerDto>> getMyAnswers(@PathVariable("user-id") Long userId,
-                                                                       @AuthenticationPrincipal UserInfo userInfo,
-                                                                       @PageableDefault(size = 20) Pageable pageable) {
+    public ResponseEntity<PagingResponseDto<UserAnswerDto>> getUserAnswers(@PathVariable("user-id") Long userId,
+                                                                           @PageableDefault(size = 20) Pageable pageable) {
 
-        // 접근 권한이 있는 사용자인지 검증
-        UserInfoValidator.validateAccessible(userId, userInfo);
-
-        PagingResponseDto<MyAnswerDto> body = userProfileService.getMyAnswers(pageable, userInfo);
+        PagingResponseDto<UserAnswerDto> body = userProfileService.getUserAnswers(pageable, userId);
 
         return ResponseEntity.ok(body);
 
@@ -85,9 +115,9 @@ public class UserProfileController {
 
     @PutMapping(value = "/answers/{answer-id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EditMyAnswerDto.Response> editMyAnswer(@PathVariable("user-id") Long userId,
-                                                                @PathVariable("answer-id") Long answerId,
-                                                                @AuthenticationPrincipal UserInfo userInfo,
-                                                                @RequestBody @Valid EditMyAnswerDto.Request request) {
+                                                                 @PathVariable("answer-id") Long answerId,
+                                                                 @AuthenticationPrincipal UserInfo userInfo,
+                                                                 @RequestBody @Valid EditMyAnswerDto.Request request) {
 
         // 접근 권한이 있는 사용자인지 검증
         UserInfoValidator.validateAccessible(userId, userInfo);
@@ -100,8 +130,8 @@ public class UserProfileController {
 
     @DeleteMapping(value = "/answers/{answer-id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> deleteMyAnswer(@PathVariable("user-id") Long userId,
-                                                           @PathVariable("answer-id") Long answerId,
-                                                           @AuthenticationPrincipal UserInfo userInfo) {
+                                               @PathVariable("answer-id") Long answerId,
+                                               @AuthenticationPrincipal UserInfo userInfo) {
 
         // 접근 권한이 있는 사용자인지 검증
         UserInfoValidator.validateAccessible(userId, userInfo);

@@ -19,8 +19,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Date;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -52,7 +50,7 @@ class LogoutControllerTest {
         // given
         AccessToken accessToken = AccessToken.of(
                 "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q",
-                new Date());
+                900);
 
         given(tokenService.extractUserInfo(any(String.class)))
                 .willReturn(UserInfo.of(1L, Role.USER));

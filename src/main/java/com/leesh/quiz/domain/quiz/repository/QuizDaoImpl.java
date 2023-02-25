@@ -1,12 +1,16 @@
 package com.leesh.quiz.domain.quiz.repository;
 
 import com.leesh.quiz.api.quiz.dto.quiz.QQuizDetailDto;
+import com.leesh.quiz.api.quiz.dto.quiz.QQuizDetailDto_AuthorDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QQuizDetailDto_QuizVoteDto;
 import com.leesh.quiz.api.quiz.dto.quiz.QuizDetailDto;
+import com.leesh.quiz.api.userprofile.dto.user.QUserProfileDto_Quizzes;
+import com.leesh.quiz.api.userprofile.dto.user.UserProfileDto;
 import com.leesh.quiz.domain.user.QUser;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.Optional;
@@ -16,9 +20,8 @@ import static com.leesh.quiz.domain.quizvote.QQuizVote.quizVote;
 import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.querydsl.core.group.GroupBy.list;
 
-;
-
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class QuizDaoImpl implements QuizDao {
     private final JPAQueryFactory queryFactory;
 
@@ -55,13 +58,19 @@ public class QuizDaoImpl implements QuizDao {
                                 quiz.id,
                                 quiz.title,
                                 quiz.contents,
-                                author.id.as("authorId"),
-                                author.email.as("author"),
+                                new QQuizDetailDto_AuthorDto(
+                                        author.id,
+                                        author.username,
+                                        author.email
+                                ),
                                 list(new QQuizDetailDto_QuizVoteDto(
                                         quizVote.id,
                                         quizVote.value.intValue(),
-                                        voter.id.as("voterId"),
-                                        voter.email.as("voter")
+                                        new QQuizDetailDto_AuthorDto(
+                                                voter.id,
+                                                voter.username,
+                                                voter.email
+                                        )
                                 ).as("votes")),
                                 quiz.createdAt,
                                 quiz.modifiedAt
@@ -76,6 +85,24 @@ public class QuizDaoImpl implements QuizDao {
 
         return Optional.ofNullable(content.get(id));
 
+    }
+
+    public Optional<UserProfileDto.Quizzes> getUserQuizCountWithVotesSum(Long userId) {
+
+        UserProfileDto.Quizzes contents = queryFactory
+                .select(new QUserProfileDto_Quizzes(
+                        quiz.id.countDistinct().intValue().as("totalCount"),
+                        quizVote.value.intValue().sum().as("totalVotesSum")
+                ))
+                .from(quiz)
+                .leftJoin(quiz.votes, quizVote)
+                .where(
+                        quiz.user.id.eq(userId),
+                        quiz.deleted.eq(false)
+                )
+                .fetchOne();
+
+        return Optional.ofNullable(contents);
     }
 
     private BooleanExpression quizIdEq(Long id) {
