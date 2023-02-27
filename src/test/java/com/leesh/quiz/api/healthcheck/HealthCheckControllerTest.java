@@ -1,5 +1,6 @@
 package com.leesh.quiz.api.healthcheck;
 
+import com.leesh.quiz.global.error.ErrorCode;
 import com.leesh.quiz.testconfiguration.MvcTestConfiguration;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("Health check API 테스트")
 @WebMvcTest(HealthCheckController.class)
-@Import(MvcTestConfiguration.class)
+@Import({MvcTestConfiguration.class, ErrorCode.ErrorMessageInjector.class})
 @ActiveProfiles("test")
 @AutoConfigureRestDocs
 class HealthCheckControllerTest {
@@ -52,4 +53,18 @@ class HealthCheckControllerTest {
                 ));
     }
 
+    @Test
+    void createErrorSnippets() throws Exception {
+
+        mvc.perform(get("/api/home"))
+                .andExpect(status().is4xxClientError())
+                .andDo(document("error-example",
+                        responseFields(
+                                fieldWithPath("errorCode").type(JsonFieldType.STRING).description("에러 코드"),
+                                fieldWithPath("errorMessage").type(JsonFieldType.STRING).description("에러 메시지")
+                        )
+                ));
+
+
+    }
 }
