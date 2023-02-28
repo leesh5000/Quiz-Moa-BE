@@ -38,8 +38,8 @@ mybatis:
 
 token:
   secret: ENC(ZWPxWyobK729VrfW9s8GAqg5yAiHA6Cl7w7P3PQbc9QP9b0BZU0yJLLaRsKZKT45tFwrt/LFNoPeAI6fqRIh5IHDOTtwVEErnRzQsU1zIgIQ/SRzcFA2ZBIQIcgEAAywfbi6GVtRGvykI/W//LsZ1LFVb8WWBRZwc6WrAzxKyUmRrrbUdkl5lGg7FegQHm9W)
-  access-token-expiration-time: 10000  # 15분 1000(ms) x 60(s) x 15(m)
-  refresh-token-expiration-time: 1209600000 # 2주 1000(ms) x 60 (s) x 60(m) x 24(h) x 14(d)
+  access-token-expiration-time: 10000  # 15분 : 1000(ms) x 60(s) x 15(m)
+  refresh-token-expiration-time: 1209600000 # 2주 : 1000(ms) x 60 (s) x 60(m) x 24(h) x 14(d)
 
 oauth2:
   kakao:
