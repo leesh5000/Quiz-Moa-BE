@@ -48,8 +48,8 @@ jobs:
         cd ./resources
         echo "resources directory"
         echo -e "`ls -al`"
-        cd ./message
-        echo "message directory"
+        cd ./messages
+        echo "messages directory"
         echo -e "`ls -al`"
         cat ./messages_ko_KR.properties 
         mkdir -p ./src/main/resource/messages 
