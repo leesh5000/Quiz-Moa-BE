@@ -9,7 +9,7 @@ env:
   AWS_REGION: ap-northeast-2
   S3_BUCKET_NAME: quiz-github-actions
   CODE_DEPLOY_APPLICATION_NAME: quiz-codedeploy
-  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: quiz-deployment-group
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: quiz-codedeploy-temp
 
 permissions:
   contents: read
