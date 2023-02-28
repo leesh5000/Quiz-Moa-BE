@@ -6,10 +6,10 @@ on:
       - main
 
 env:
-  AWS_REGION: ap-northeast-2
-  IMAGE_TAG: ${{ github.sha }}
-  ECR_REPOSITORY: quiz
-  JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
+#  AWS_REGION: ap-northeast-2
+#  IMAGE_TAG: ${{ github.sha }}
+#  ECR_REPOSITORY: quiz
+#  JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
   S3_BUCKET_NAME: quiz-github-actions
   CODE_DEPLOY_APPLICATION_NAME: quiz-codedeploy
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: quiz-codedeploy-temp
@@ -51,6 +51,10 @@ jobs:
     - name: build docker file and setting deploy files
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        AWS_REGION: ap-northeast-2
+        ECR_REPOSITORY: quiz
+        JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
+        IMAGE_TAG: ${{ github.sha }}
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
