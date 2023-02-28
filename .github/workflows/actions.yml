@@ -34,33 +34,6 @@ jobs:
         distribution: 'corretto'
         java-version: '17'
 
-    # 3. Create MessageProperties
-    - name: Create MessageProperties
-      run: |
-        echo "root directory"
-        echo -e "`ls -al`"
-        cd ./src
-        echo "src directory"
-        echo -e "`ls -al`"
-        cd ./main
-        echo "main directory"
-        echo -e "`ls -al`"
-        cd ./resources
-        echo "resources directory"
-        echo -e "`ls -al`"
-        cd ./messages
-        echo "messages directory"
-        echo -e "`ls -al`"
-        cat ./messages_ko_KR.properties 
-        mkdir -p ./src/main/resource/messages 
-        cd ./src/main/resource/messages
-        echo "message directory"
-        echo -e "`ls -al`"
-        touch ./messages_ko_KR.properties
-        echo ${{ secrets.MESSAGE_PROPERTIES }} > ./messages_ko_KR.properties
-        cat ./messages_ko_KR.properties
-      shell: bash
-
     # 4. Gradle Build
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
