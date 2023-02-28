@@ -37,8 +37,12 @@ jobs:
     # 3. Create MessageProperties
     - name: Create MessageProperties
       run: |
-        mkdir ./src/main/resource/messages 
+        echo "root directory"
+        echo -e "`ls -al`"
+        mkdir -p ./src/main/resource/messages 
         cd ./src/main/resource/messages
+        echo "message directory"
+        echo -e "`ls -al`"
         touch ./messages_ko_KR.properties
         echo ${{ secrets.MESSAGE_PROPERTIES }} > ./messages_ko_KR.properties
         cat ./messages_ko_KR.properties
