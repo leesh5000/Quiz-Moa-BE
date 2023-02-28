@@ -8,7 +8,6 @@ on:
 env:
   AWS_REGION: ap-northeast-2
   IMAGE_TAG: ${{ github.sha }}
-  ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
   ECR_REPOSITORY: quiz
   JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
   S3_BUCKET_NAME: quiz-github-actions
@@ -50,6 +49,8 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v1
 
     - name: build docker file and setting deploy files
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
