@@ -5,7 +5,6 @@ COPY settings.gradle .
 COPY build.gradle .
 COPY gradle gradle
 COPY src src
-COPY backend-config backend-config
 RUN chmod +x ./gradlew
 RUN ./gradlew build
 
