@@ -65,11 +65,8 @@ jobs:
 
     - name: upload to s3
       run: |
-        aws deploy push \
-        --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
-        --ignore-hidden-files \
-        --s3-location s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip \
-        --source ./scripts appspec.yml
+        zip -r deploy.zip ./scripts appspec.yml
+        aws s3 cp --acl private ./deploy.zip s3://$S3_BUCKET_NAME/$IMAGE_TAG.zip
 #
 #    - name: deploy
 #      run: |
