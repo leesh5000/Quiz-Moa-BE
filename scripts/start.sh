@@ -3,9 +3,9 @@
 PROJECT_ROOT="/home/ec2-user/app"
 JAR_FILE="$PROJECT_ROOT/spring-webapp.jar"
 
-APP_LOG="$PROJECT_ROOT/application.log"
-ERROR_LOG="$PROJECT_ROOT/error.log"
-DEPLOY_LOG="$PROJECT_ROOT/deploy.log"
+APP_LOG="$PROJECT_ROOT/logs/application.log"
+ERROR_LOG="$PROJECT_ROOT/logs/error.log"
+DEPLOY_LOG="$PROJECT_ROOT/logs/deploy.log"
 
 TIME_NOW=$(date +%c)
 
