@@ -5,3 +5,11 @@ logging:
         SQL: debug
         type.descriptor.sql.BasicBinder: debug
         com.leesh: debug
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
