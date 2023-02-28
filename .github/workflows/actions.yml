@@ -39,6 +39,9 @@ jobs:
       run: |
         echo "root directory"
         echo -e "`ls -al`"
+        cd ./src/main/resource
+        echo "resource directory"
+        echo -e "`ls -al`"
         mkdir -p ./src/main/resource/messages 
         cd ./src/main/resource/messages
         echo "message directory"
