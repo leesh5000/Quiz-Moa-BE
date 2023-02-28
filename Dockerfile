@@ -6,7 +6,7 @@ COPY build.gradle .
 COPY gradle gradle
 COPY src src
 RUN chmod +x ./gradlew
-RUN ./gradlew build
+RUN ./gradlew clean build
 
 FROM amazoncorretto:17-alpine
 RUN mkdir /app
