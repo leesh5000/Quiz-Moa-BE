@@ -7,7 +7,6 @@ on:
 
 env:
   AWS_REGION: ap-northeast-2
-  S3_BUCKET_NAME: quiz-github-actions
   CODE_DEPLOY_APPLICATION_NAME: quiz-codedeploy
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: quiz-codedeploy-temp
 
@@ -56,13 +55,14 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         mkdir scripts
         touch scripts/deploy.sh
-        echo "aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin $ECR_REGISTRY" >> scripts/deploy.sh
+        AWS_REGION=${{ env.AWS_REGION }} && $ echo "aws ecr get-login-password --region "$AWS_REGION" | docker login --username AWS --password-stdin $ECR_REGISTRY" >> scripts/deploy.sh
         echo "docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> scripts/deploy.sh
         PASSWORD=$JASYPT_ENCRYPTOR_PASSWORD && echo "docker run -p 8080:8080 -e JASYPT_ENCRYPTOR_PASSWORD="$PASSWORD" -d --restart always --name quiz-api-server $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> scripts/deploy.sh
 
     - name: upload to s3
       env:
         IMAGE_TAG: ${{ github.sha }}
+        S3_BUCKET_NAME: quiz-github-actions
       run: |
         zip -r deploy-$IMAGE_TAG.zip ./scripts appspec.yml
         aws s3 cp --region $AWS_REGION --acl private ./deploy-$IMAGE_TAG.zip s3://$S3_BUCKET_NAME
