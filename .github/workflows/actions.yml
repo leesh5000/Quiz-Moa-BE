@@ -45,6 +45,13 @@ jobs:
         cd ./main
         echo "main directory"
         echo -e "`ls -al`"
+        cd ./resources
+        echo "resources directory"
+        echo -e "`ls -al`"
+        cd ./message
+        echo "message directory"
+        echo -e "`ls -al`"
+        cat ./messages_ko_KR.properties 
         mkdir -p ./src/main/resource/messages 
         cd ./src/main/resource/messages
         echo "message directory"
