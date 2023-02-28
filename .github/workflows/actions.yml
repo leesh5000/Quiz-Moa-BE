@@ -65,13 +65,11 @@ jobs:
 
     - name: upload to s3
       run: |
-#        zip -r deploy-$IMAGE_TAG.zip ./scripts appspec.yml
-#        aws s3 cp --region $AWS_REGION --acl private ./deploy-$IMAGE_TAG.zip s3://$S3_BUCKET_NAME
-         aws deploy push \
-         --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
-         --ignore-hidden-files \
-         --s3-location s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip \
-         --source ./scripts appspec.yml
+        aws deploy push \
+        --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
+        --ignore-hidden-files \
+        --s3-location s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip \
+        --source ./scripts appspec.yml
 #
 #    - name: deploy
 #      run: |
