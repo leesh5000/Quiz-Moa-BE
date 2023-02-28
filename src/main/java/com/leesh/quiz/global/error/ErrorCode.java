@@ -6,6 +6,8 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import java.util.Locale;
+
 import static org.springframework.http.HttpStatus.*;
 
 @Getter
@@ -68,7 +70,7 @@ public enum ErrorCode {
         @PostConstruct
         private void init() {
             for (ErrorCode errorCode : ErrorCode.values()) {
-                errorCode.message = messageSource.getMessage(errorCode.code);
+                errorCode.message = messageSource.getMessage(errorCode.code, Locale.getDefault());
             }
         }
     }
