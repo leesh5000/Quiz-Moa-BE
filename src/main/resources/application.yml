@@ -1,7 +1,7 @@
 server:
-  port: 8082
+  port: 8080
   servlet:
-    context-path: /prod
+    context-path: /
 
 logging:
   level:
@@ -59,3 +59,9 @@ oauth2:
     client-id: ENC(T9U9GbshI2M2rxHtb0q1szQ1gWYsaN/z2aDhwabsSOw=)
     client-secret: ENC(rosNjvu/3I1sS9RkH1WlG/dA/JlS5Kgk)
     redirect-uri: ENC(CZZFpqwoEZqTXGqOuejBFSENIQaz1bkBGMMPlShljzyP45fLu9O+EbWWAo5QcRtZfdnDIMOgVQ4=)
+
+jasypt:
+  encryptor:
+    password: ${PASSWORD}
+
+locale: "ko_KR"

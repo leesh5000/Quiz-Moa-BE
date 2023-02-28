@@ -1,31 +1,37 @@
 package com.leesh.quiz.global.configuration;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.server.Encoding;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
-import java.util.Locale;
-
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Configuration
 public class MessageConfiguration implements WebMvcConfigurer {
+
+//    private final String defaultLocale;
+//
+//    protected MessageConfiguration(@Value("${locale}") String defaultLocale) {
+//        this.defaultLocale = defaultLocale;
+//    }
+
+    @Value("${locale}")
+    private String defaultLocale;
 
     @Bean
     public LocaleResolver defaultLocaleResolver() {
 
         AcceptHeaderLocaleResolver localeResolver = new AcceptHeaderLocaleResolver();
-        localeResolver.setDefaultLocale(Locale.KOREAN);
+        localeResolver.setDefaultLocale(StringUtils.parseLocale(defaultLocale));
 
         return localeResolver;
     }
@@ -44,7 +50,7 @@ public class MessageConfiguration implements WebMvcConfigurer {
 
         messageSource.setBasename("classpath:/messages/messages");
         messageSource.setDefaultEncoding(Encoding.DEFAULT_CHARSET.toString());
-        messageSource.setDefaultLocale(Locale.KOREAN);
+        messageSource.setDefaultLocale(StringUtils.parseLocale(defaultLocale));
         messageSource.setCacheSeconds(600);
 
         return messageSource;

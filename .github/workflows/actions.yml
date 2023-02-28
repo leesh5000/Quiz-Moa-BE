@@ -30,39 +30,48 @@ jobs:
         distribution: 'corretto'
         java-version: '17'
 
-    - name: make secret properties
-      run: |
-        echo ${{ secrets.JASYPT_PASSWORD }} > ./src/main/resources/application-secret.yml
+    - name: add permission to gradlew
+      run: chmod +x ./gradlew
+      shell: bash
 
-#    - name: Build with Gradle
-#      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
-#      with:
-#        arguments: clean build
-
-    - name: Build with Gradle
-      run: |
-        chmod +x ./gradlew
-        ./gradlew clean build
-
-    - name: Configure AWS credentials
+    - name: aws configure
       uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
-        aws-region: ${{ env.AWS_REGION }}
+        aws-region: $AWS_REGION
 
-    - name: Upload to AWS S3
-      run: |
-        aws deploy push \
-          --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
-          --ignore-hidden-files \
-          --s3-location s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip \
-          --source .
+    - name: Login to ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Deploy to AWS EC2 from S3
+    - name: build docker file and setting deploy files
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: quiz
+        IMAGE_TAG: ${{ github.sha }}
+        JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
       run: |
-        aws deploy create-deployment \
-          --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
-          --deployment-config-name CodeDeployDefault.AllAtOnce \
-          --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
-          --s3-location bucket=$S3_BUCKET_NAME,key=$GITHUB_SHA.zip,bundleType=zip
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        mkdir scripts
+        touch scripts/deploy.sh
+        echo "aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin $ECR_REGISTRY" >> scripts/deploy.sh
+        echo "docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> scripts/deploy.sh
+        PASSWORD=$JASYPT_ENCRYPTOR_PASSWORD && echo "docker run -p 8080:8080 -e JASYPT_ENCRYPTOR_PASSWORD="$PASSWORD" -d --restart always --name quiz-api-server $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> scripts/deploy.sh
+
+    - name: upload to s3
+      env:
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        zip -r deploy-$IMAGE_TAG.zip ./scripts appspec.yml
+        aws s3 cp --region $AWS_REGION --acl private ./deploy-$IMAGE_TAG.zip s3://$S3_BUCKET_NAME
+
+#    - name: start deploy
+#      env:
+#        IMAGE_TAG: ${{ github.sha }}
+#      run: |
+#        aws deploy create-deployment --application-name csbroker-dev-api-codedeploy \
+#        --deployment-config-name CodeDeployDefault.OneAtATime \
+#        --deployment-group-name csbroker-dev-api \
+#        --s3-location bucket=cs-broker-bucket,bundleType=zip,key=deploy-$IMAGE_TAG.zip

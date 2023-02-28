@@ -1,0 +1,19 @@
+FROM amazoncorretto:17-alpine AS builder
+
+COPY gradlew .
+COPY settings.gradle .
+COPY build.gradle .
+COPY gradle gradle
+COPY src src
+COPY backend-config backend-config
+RUN chmod +x ./gradlew
+RUN ./gradlew build
+
+FROM amazoncorretto:17-alpine
+RUN mkdir /app
+COPY --from=builder /build/libs/*.jar /app/quiz-api-server.jar
+EXPOSE 8080
+ENV PROFILE prod
+ENV JASYPT_PASSWORD ""
+
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=${PROFILE}", "-Djasypt.encryptor.passowrd=${JASYPT_PASSWORD}", "/app/quiz-api-server.jar"]

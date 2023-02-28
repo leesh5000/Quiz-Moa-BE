@@ -1,6 +1,7 @@
 package com.leesh.quiz.api.common;
 
 import com.leesh.quiz.api.HomeController;
+import com.leesh.quiz.global.error.ErrorCode;
 import com.leesh.quiz.testconfiguration.MvcTestConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(HomeController.class)
-@Import({MvcTestConfiguration.class})
+@Import({MvcTestConfiguration.class, ErrorCode.ErrorMessageInjector.class})
 @ActiveProfiles("test")
 @AutoConfigureRestDocs
 public class ErrorExampleTest {
