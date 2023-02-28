@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-#  AWS_REGION: ap-northeast-2
+  AWS_REGION: ap-northeast-2
 #  IMAGE_TAG: ${{ github.sha }}
 #  ECR_REPOSITORY: quiz
 #  JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
