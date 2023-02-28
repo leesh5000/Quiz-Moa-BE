@@ -7,9 +7,9 @@ on:
 
 env:
   AWS_REGION: ap-northeast-2
-#  IMAGE_TAG: ${{ github.sha }}
-#  ECR_REPOSITORY: quiz
-#  JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
+  IMAGE_TAG: ${{ github.sha }}
+  ECR_REPOSITORY: quiz
+  JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
   S3_BUCKET_NAME: quiz-github-actions
   CODE_DEPLOY_APPLICATION_NAME: quiz-codedeploy
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: quiz-codedeploy-temp
@@ -48,29 +48,30 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: build docker file and setting deploy files
+    - name: build docker file
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        AWS_REGION: ap-northeast-2
-        ECR_REPOSITORY: quiz
-        JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
-        IMAGE_TAG: ${{ github.sha }}
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+    - name: create scripts files
+      run: |
         mkdir scripts
         touch scripts/deploy.sh
-#        REGION=$AWS_REGION && $ echo "aws ecr get-login-password --region "$REGION" | docker login --username AWS --password-stdin $ECR_REGISTRY" >> scripts/deploy.sh
-#        echo "docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> scripts/deploy.sh
-#        PASSWORD=$JASYPT_ENCRYPTOR_PASSWORD && echo "docker run -p 8080:8080 -e JASYPT_ENCRYPTOR_PASSWORD="$PASSWORD" -d --restart always --name quiz-api-server $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> scripts/deploy.sh
+        REGION=$AWS_REGION && echo "aws ecr get-login-password --region "$REGION" | docker login --username AWS --password-stdin $ECR_REGISTRY" >> scripts/deploy.sh
+        echo "docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> scripts/deploy.sh
+        PASSWORD=$JASYPT_ENCRYPTOR_PASSWORD && echo "docker run -p 8080:8080 -e JASYPT_ENCRYPTOR_PASSWORD="$PASSWORD" -d --restart always --name quiz-api-server $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> scripts/deploy.sh
 
-#    - name: upload to s3
-#      env:
-#        IMAGE_TAG: ${{ github.sha }}
-#
-#      run: |
+    - name: upload to s3
+      run: |
 #        zip -r deploy-$IMAGE_TAG.zip ./scripts appspec.yml
 #        aws s3 cp --region $AWS_REGION --acl private ./deploy-$IMAGE_TAG.zip s3://$S3_BUCKET_NAME
+         aws deploy push \
+         --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
+         --ignore-hidden-files \
+         --s3-location s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip \
+         --source ./scripts appspec.yml
 #
 #    - name: deploy
 #      run: |
