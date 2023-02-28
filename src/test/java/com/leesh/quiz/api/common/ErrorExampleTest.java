@@ -1,15 +1,12 @@
 package com.leesh.quiz.api.common;
 
 import com.leesh.quiz.api.HomeController;
-import com.leesh.quiz.global.configuration.MessageConfiguration;
-import com.leesh.quiz.global.error.ErrorCode;
 import com.leesh.quiz.testconfiguration.MvcTestConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -20,7 +17,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(HomeController.class)
-@Import({MvcTestConfiguration.class, ErrorCode.ErrorMessageInjector.class, MessageConfiguration.class})
+@Import({MvcTestConfiguration.class})
 @ActiveProfiles("test")
 @AutoConfigureRestDocs
 public class ErrorExampleTest {
@@ -35,8 +32,8 @@ public class ErrorExampleTest {
                 .andExpect(status().is4xxClientError())
                 .andDo(document("error-example",
                         responseFields(
-                                fieldWithPath("errorCode").type(JsonFieldType.STRING).description("에러 코드"),
-                                fieldWithPath("errorMessage").type(JsonFieldType.STRING).description("에러 메시지")
+                                fieldWithPath("errorCode").description("에러 코드"),
+                                fieldWithPath("errorMessage").description("에러 메시지")
                         )
                 ));
 
