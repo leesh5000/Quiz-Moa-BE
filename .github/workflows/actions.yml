@@ -35,10 +35,13 @@ jobs:
         java-version: '17'
 
     # (3) Gradle build
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+      shell: bash
+
     - name: Build with Gradle
-      uses: gradle/gradle-build-action@v2.4.0
-      with:
-        arguments: clean build
+      run: ./gradlew clean build
+      shell: bash
 
 #     # (4) AWS 인증 (IAM 사용자 Access Key, Secret Key 활용)
 #     - name: Configure AWS credentials
