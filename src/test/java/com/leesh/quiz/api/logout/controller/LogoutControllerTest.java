@@ -52,8 +52,16 @@ class LogoutControllerTest {
                 "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSRUZSRVNIIiwiaWF0IjoxNjc1MjEwODc5LCJleHAiOjE2NzY0MjA0NzksInVzZXJJZCI6MX0.Fae1uwS2RPmSad_Uf7pWA8lNqW-MZtm6wP-MDIHwnp8dQpKgaDms3URZBnAG53V8uU-J1Tl0wPFVR6j5wIQS_Q",
                 900);
 
+        Long userId = 1L;
+        UserInfo user = UserInfo.builder()
+                .userId(userId)
+                .email("test1@gmail.com")
+                .username("test1")
+                .role(Role.USER)
+                .build();
+
         given(tokenService.extractUserInfo(any(String.class)))
-                .willReturn(UserInfo.of(1L, Role.USER));
+                .willReturn(user);
 
         willDoNothing().given(logoutService)
                 .logout(any(UserInfo.class));

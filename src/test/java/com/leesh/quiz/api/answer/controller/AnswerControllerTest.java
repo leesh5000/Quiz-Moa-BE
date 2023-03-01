@@ -65,7 +65,14 @@ class AnswerControllerTest {
 
         long userId = 1L;
         given(tokenService.extractUserInfo(any(String.class)))
-                .willReturn(UserInfo.of(userId, Role.USER));
+                .willReturn(
+                        UserInfo.builder()
+                                .userId(userId)
+                                .email("test1@gmail.com")
+                                .username("test1")
+                                .role(Role.USER)
+                                .build()
+                );
 
         long createAnswerVoteId = 1L;
         CreateAnswerVoteDto.Request request = new CreateAnswerVoteDto.Request(Byte.valueOf("1"));

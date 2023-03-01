@@ -75,8 +75,16 @@ class QuizControllerTest {
                 900);
 
         long userId = 1L;
+
+        UserInfo user = UserInfo.builder()
+                .userId(userId)
+                .email("test1@gmail.com")
+                .username("test1")
+                .role(Role.USER)
+                .build();
+
         given(tokenService.extractUserInfo(any(String.class)))
-                .willReturn(UserInfo.of(userId, Role.USER));
+                .willReturn(user);
 
         long createQuizId = 1L;
         CreateQuizDto.Request request = new CreateQuizDto.Request("배열과 연결리스트의 차이에 대해 설명하시오.", "추가적으로, 스택과 큐 그 외의 자료구조도 좋습니다.");
@@ -351,8 +359,16 @@ class QuizControllerTest {
                 900);
 
         long userId = 1L;
+
+        UserInfo user = UserInfo.builder()
+                .userId(userId)
+                .email("test1@gmail.com")
+                .username("test1")
+                .role(Role.USER)
+                .build();
+
         given(tokenService.extractUserInfo(any(String.class)))
-                .willReturn(UserInfo.of(userId, Role.USER));
+                .willReturn(user);
 
         long createAnswerId = 1L;
         CreateAnswerDto.Request request = new CreateAnswerDto.Request("배열은 물리적으로 인접해 위치하며 인덱스로 접근 가능한 동일한 데이터 타입을 저장하는 자료구조이며, 연결리스트는 다음 노드의 주소와 데이터를 저장하는 자료구조입니다.");
@@ -407,8 +423,16 @@ class QuizControllerTest {
                 900);
 
         long userId = 1L;
+
+        UserInfo user = UserInfo.builder()
+                .userId(userId)
+                .email("test1@gmail.com")
+                .username("test1")
+                .role(Role.USER)
+                .build();
+
         given(tokenService.extractUserInfo(any(String.class)))
-                .willReturn(UserInfo.of(userId, Role.USER));
+                .willReturn(user);
 
         long createQuizVoteId = 1L;
         CreateQuizVoteDto.Request request = new CreateQuizVoteDto.Request(Byte.valueOf("1"));

@@ -72,8 +72,15 @@ class UserProfileControllerTest {
                 900);
 
         long userId = 1L;
+        UserInfo user = UserInfo.builder()
+                .userId(userId)
+                .email("test1@gmail.com")
+                .username("test1")
+                .role(Role.USER)
+                .build();
+
         given(tokenService.extractUserInfo(any(String.class)))
-                .willReturn(UserInfo.of(userId, Role.USER));
+                .willReturn(user);
 
         UserProfileDto.Answers answers = new UserProfileDto.Answers(13, 22);
         UserProfileDto.Quizzes quizzes = new UserProfileDto.Quizzes(3, 5);
@@ -145,8 +152,15 @@ class UserProfileControllerTest {
                 900);
 
         long userId = 1L;
+        UserInfo user = UserInfo.builder()
+                .userId(userId)
+                .email("test1@gmail.com")
+                .username("test1")
+                .role(Role.USER)
+                .build();
+
         given(tokenService.extractUserInfo(any(String.class)))
-                .willReturn(UserInfo.of(userId, Role.USER));
+                .willReturn(user);
 
         QuizDto.Author author = QuizDto.Author.builder()
                 .id(1L)
@@ -259,8 +273,16 @@ class UserProfileControllerTest {
 
         long quizWriterId = 1L;
         long editQuizId = 1L;
+        long userId = 1L;
+        UserInfo user = UserInfo.builder()
+                .userId(userId)
+                .email("test1@gmail.com")
+                .username("test1")
+                .role(Role.USER)
+                .build();
+
         given(tokenService.extractUserInfo(any(String.class)))
-                .willReturn(UserInfo.of(quizWriterId, Role.USER));
+                .willReturn(user);
 
         given(userProfileService.editMyQuiz(any(EditMyQuizDto.Request.class), any(UserInfo.class), anyLong()))
                 .willReturn(EditMyQuizDto.Response.from(editQuizId));
@@ -317,8 +339,16 @@ class UserProfileControllerTest {
 
         long quizWriterId = 1L;
         long deleteQuizId = 1L;
+        long userId = 1L;
+        UserInfo user = UserInfo.builder()
+                .userId(userId)
+                .email("test1@gmail.com")
+                .username("test1")
+                .role(Role.USER)
+                .build();
+
         given(tokenService.extractUserInfo(any(String.class)))
-                .willReturn(UserInfo.of(quizWriterId, Role.USER));
+                .willReturn(user);
 
         willDoNothing().given(userProfileService).deleteMyQuiz(anyLong(), any(UserInfo.class));
 
@@ -358,8 +388,14 @@ class UserProfileControllerTest {
                 900);
 
         long userId = 1L;
+        UserInfo user = UserInfo.builder()
+                .userId(userId)
+                .email("test1@gmail.com")
+                .username("test1")
+                .role(Role.USER)
+                .build();
         given(tokenService.extractUserInfo(any(String.class)))
-                .willReturn(UserInfo.of(userId, Role.USER));
+                .willReturn(user);
 
         UserAnswerDto.AuthorDto author = new UserAnswerDto.AuthorDto(
                 1L,
@@ -457,8 +493,17 @@ class UserProfileControllerTest {
 
         long answerWriterId = 1L;
         long editAnswerId = 1L;
+        long userId = 1L;
+
+        UserInfo user = UserInfo.builder()
+                .userId(userId)
+                .email("test1@gmail.com")
+                .username("test1")
+                .role(Role.USER)
+                .build();
+
         given(tokenService.extractUserInfo(any(String.class)))
-                .willReturn(UserInfo.of(answerWriterId, Role.USER));
+                .willReturn(user);
 
         given(userProfileService.editMyAnswer(any(EditMyAnswerDto.Request.class), any(UserInfo.class), anyLong()))
                 .willReturn(EditMyAnswerDto.Response.from(editAnswerId));
@@ -513,8 +558,17 @@ class UserProfileControllerTest {
 
         long answerWriterId = 1L;
         long deleteAnswerId = 1L;
+        long userId = 1L;
+
+        UserInfo user = UserInfo.builder()
+                .userId(userId)
+                .email("test1@gmail.com")
+                .username("test1")
+                .role(Role.USER)
+                .build();
+
         given(tokenService.extractUserInfo(any(String.class)))
-                .willReturn(UserInfo.of(answerWriterId, Role.USER));
+                .willReturn(user);
 
         willDoNothing().given(userProfileService).deleteMyAnswer(anyLong(), any(UserInfo.class));
 
@@ -529,7 +583,7 @@ class UserProfileControllerTest {
                 .andExpect(status().isNoContent());
 
         then(tokenService).should().extractUserInfo(accessToken.accessToken());
-        then(userProfileService).should().deleteMyAnswer(deleteAnswerId, UserInfo.of(answerWriterId, Role.USER));
+        then(userProfileService).should().deleteMyAnswer(deleteAnswerId, user);
 
         // API 문서화
         result
@@ -554,9 +608,16 @@ class UserProfileControllerTest {
                 900);
 
         long editUsernameId = 1L;
+        long userId = 1L;
+        UserInfo user = UserInfo.builder()
+                .userId(userId)
+                .email("test1@gmail.com")
+                .username("test1")
+                .role(Role.USER)
+                .build();
 
         given(tokenService.extractUserInfo(any(String.class)))
-                .willReturn(UserInfo.of(editUsernameId, Role.USER));
+                .willReturn(user);
 
         given(userProfileService.editUsername(any(UsernameDto.class), any(UserInfo.class)))
                 .willReturn(new UsernameDto.Response(editUsernameId));
@@ -607,9 +668,16 @@ class UserProfileControllerTest {
                 900);
 
         long deleteUserId = 1L;
+        long userId = 1L;
+        UserInfo user = UserInfo.builder()
+                .userId(userId)
+                .email("test1@gmail.com")
+                .username("test1")
+                .role(Role.USER)
+                .build();
 
         given(tokenService.extractUserInfo(any(String.class)))
-                .willReturn(UserInfo.of(deleteUserId, Role.USER));
+                .willReturn(user);
 
         willDoNothing().given(userProfileService).deleteUser(any(UserInfo.class));
 
