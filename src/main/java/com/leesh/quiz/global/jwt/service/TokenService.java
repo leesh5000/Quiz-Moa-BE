@@ -12,6 +12,8 @@ public interface TokenService {
 
     void validateRefreshToken(String token) throws AuthenticationException;
 
+    void validateAccessToken(String token) throws AuthenticationException;
+
     AccessToken createAccessToken(User user);
 
     RefreshToken createRefreshToken(Long id);

@@ -48,9 +48,12 @@ public class JwtTokenService implements TokenService {
         }
 
         // 현재 로그인 유저 정보 반환
-        return UserInfo.of(
-                claims.get("id", Long.class),
-                Role.valueOf(claims.get("role", String.class)));
+        return UserInfo.builder()
+                .userId(claims.get("id", Long.class))
+                .email(claims.get("email", String.class))
+                .username(claims.get("username", String.class))
+                .role(Role.valueOf(claims.get("role", String.class)))
+                .build();
     }
 
     @Override
@@ -64,11 +67,21 @@ public class JwtTokenService implements TokenService {
         }
 
         // 토큰 만료 시간이 지났으면, 예외 던지기
-        Date expiration = claims.getExpiration();
-        Date now = new Date();
-        if (now.after(expiration)) {
-            throw new AuthenticationException(ErrorCode.EXPIRED_REFRESH_TOKEN);
+        validateExpiration(claims, ErrorCode.EXPIRED_REFRESH_TOKEN);
+    }
+
+    @Override
+    public void validateAccessToken(String token) throws AuthenticationException {
+
+        Claims claims = extractAllClaims(token);
+
+        // 접근 토큰이 아니면, 예외 던지기
+        if (!TokenType.isAccessToken(claims.getSubject())) {
+            throw new AuthenticationException(ErrorCode.NOT_ACCESS_TOKEN_TYPE);
         }
+
+        // 토큰 만료 시간이 지났으면, 예외 던지기
+        validateExpiration(claims, ErrorCode.EXPIRED_ACCESS_TOKEN);
     }
 
     @Override
@@ -120,6 +133,14 @@ public class JwtTokenService implements TokenService {
             throw new AuthenticationException(ErrorCode.EXPIRED_TOKEN);
         } catch (Exception e) {
             throw new AuthenticationException(ErrorCode.INVALID_TOKEN);
+        }
+    }
+
+    private void validateExpiration(Claims claims, ErrorCode expiredRefreshToken) {
+        Date expiration = claims.getExpiration();
+        Date now = new Date();
+        if (now.after(expiration)) {
+            throw new AuthenticationException(expiredRefreshToken);
         }
     }
 

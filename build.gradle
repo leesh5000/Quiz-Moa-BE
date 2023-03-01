@@ -65,8 +65,8 @@ dependencies {
 	// JWT END
 
 	// Spring Security Start
-	implementation 'org.springframework.boot:spring-boot-starter-security:3.0.1'
-	testImplementation 'org.springframework.security:spring-security-test:6.0.0'
+//	implementation 'org.springframework.boot:spring-boot-starter-security:3.0.1'
+//	testImplementation 'org.springframework.security:spring-security-test:6.0.0'
 	// Spring Security End
 
 	// Jasypt Start

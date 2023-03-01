@@ -2,9 +2,9 @@ package com.leesh.quiz.api.logout.controller;
 
 import com.leesh.quiz.api.logout.service.LogoutService;
 import com.leesh.quiz.global.constant.UserInfo;
+import com.leesh.quiz.global.resolver.LoginUser.LoginUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +17,7 @@ public class LogoutController {
     private final LogoutService logoutService;
 
     @GetMapping(path = "/logout")
-    public ResponseEntity<?> logout(@AuthenticationPrincipal UserInfo userInfo) {
+    public ResponseEntity<?> logout(@LoginUser UserInfo userInfo) {
 
         logoutService.logout(userInfo);
 

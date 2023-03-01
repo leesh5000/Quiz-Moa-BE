@@ -1,11 +1,9 @@
 package com.leesh.quiz.global.constant;
 
 import com.leesh.quiz.domain.user.constant.Role;
+import lombok.Builder;
 
-public record UserInfo(Long userId, Role role) {
-
-    public static UserInfo of(Long userId, Role role) {
-        return new UserInfo(userId, role);
-    }
+@Builder
+public record UserInfo(Long userId, String email, String username, Role role) {
 
 }

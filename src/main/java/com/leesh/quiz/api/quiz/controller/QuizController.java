@@ -8,6 +8,7 @@ import com.leesh.quiz.api.quiz.dto.vote.CreateQuizVoteDto;
 import com.leesh.quiz.api.quiz.service.QuizService;
 import com.leesh.quiz.global.constant.PagingResponseDto;
 import com.leesh.quiz.global.constant.UserInfo;
+import com.leesh.quiz.global.resolver.LoginUser.LoginUser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +16,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -26,7 +26,7 @@ public class QuizController {
     private final QuizService quizService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CreateQuizDto.Response> createQuiz(@AuthenticationPrincipal UserInfo userInfo,
+    public ResponseEntity<CreateQuizDto.Response> createQuiz(@LoginUser UserInfo userInfo,
                                                              @RequestBody @Valid CreateQuizDto.Request request) {
 
         CreateQuizDto.Response body = quizService.createQuiz(userInfo, request);
@@ -54,7 +54,7 @@ public class QuizController {
     }
 
     @PostMapping(value = "/{quiz-id}/answers", consumes = MediaType.APPLICATION_JSON_VALUE ,produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CreateAnswerDto.Response> createAnswer(@AuthenticationPrincipal UserInfo userInfo,
+    public ResponseEntity<CreateAnswerDto.Response> createAnswer(@LoginUser UserInfo userInfo,
                                                                  @PathVariable("quiz-id") Long quizId,
                                                                  @RequestBody @Valid CreateAnswerDto.Request request) {
 
@@ -65,7 +65,7 @@ public class QuizController {
     }
 
     @PostMapping(value = "/{quiz-id}/votes", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CreateQuizVoteDto.Response> createQuizVote(@AuthenticationPrincipal UserInfo userInfo,
+    public ResponseEntity<CreateQuizVoteDto.Response> createQuizVote(@LoginUser UserInfo userInfo,
                                                                      @PathVariable("quiz-id") Long quizId,
                                                                      @RequestBody @Valid CreateQuizVoteDto.Request request) {
 
