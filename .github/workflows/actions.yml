@@ -55,6 +55,9 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         mkdir -p infra/scripts
+        echo $(pwd)
+        echo $(ls)
+        echo $(ll)
         touch infra/scripts/deploy.sh
         REGION=$AWS_REGION && echo "aws ecr get-login-password --region "$REGION" | docker login --username AWS --password-stdin $ECR_REGISTRY" >> scripts/deploy.sh
         echo "docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> scripts/deploy.sh
