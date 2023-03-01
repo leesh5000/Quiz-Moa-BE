@@ -68,7 +68,7 @@ jobs:
 
     - name: upload to s3
       run: |
-        zip -r deploy.zip ./infra/scripts ./infra/appspec.yml
+        zip -r deploy.zip ./scripts appspec.yml
         aws s3 cp --acl private ./deploy.zip s3://$S3_BUCKET_NAME/$IMAGE_TAG.zip
 
     - name: deploy
