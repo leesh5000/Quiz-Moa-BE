@@ -50,7 +50,8 @@ public enum ErrorCode {
     ALREADY_EXIST_VOTER(CONFLICT, "V-001"),
 
     /* Common */
-    BAD_REQUEST(HttpStatus.BAD_REQUEST, "C-001");
+    BAD_REQUEST(HttpStatus.BAD_REQUEST, "C-001"),
+    INTERNAL_ERROR(INTERNAL_SERVER_ERROR, "C-002");
 
     private final HttpStatus httpStatus;
     private final String code;

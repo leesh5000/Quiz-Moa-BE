@@ -85,9 +85,11 @@ public class GlobalExceptionHandler {
 
         log.error("Exception", e);
 
-        var body = ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR.toString(), e.getMessage());
+        ErrorCode errorCode = ErrorCode.INTERNAL_ERROR;
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+        var body = ErrorResponse.of(errorCode.getCode(), e.getMessage());
+
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(body);
     }
 
 }
