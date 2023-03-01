@@ -1,15 +1,22 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  datasource:
+    url: ENC(gRkpVF052rIZdPjZyoN2LZRC467QOUrmwYGlDjWnU5laBs7BZv4Y9W6zhHJO4j/8+y7rmdaNQdGBA8r9xJvUxJoUPeIfNY92uQrQLiZG4oGdxzh0AK4A+dIk7vDPQ6Tf)
+    username: ENC(JsP+sNA/b6NH7+qDkpKRRg==)
+    password: ENC(HzuBGSDMO/a0VwSfYYw/D8HYeACU4za2)
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
 logging:
   level:
     org:
       hibernate:
-        SQL: debug
-        type.descriptor.sql.BasicBinder: debug
-        com.leesh: debug
-spring:
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    defer-datasource-initialization: true
-  sql:
-    init:
-      mode: always
+        SQL: warn
+        type.descriptor.sql.BasicBinder: warn
+        com.leesh: warn
