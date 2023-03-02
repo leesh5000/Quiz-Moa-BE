@@ -13,6 +13,10 @@ permissions:
     mode: 755
 
 hooks:
+  BeforeInstall:
+    - location: scripts/stop.sh
+      timeout: 60
+      runas: ec2-user
   AfterInstall:
     - location: scripts/deploy.sh
       timeout: 60
