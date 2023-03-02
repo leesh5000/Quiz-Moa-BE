@@ -5,6 +5,8 @@ import com.leesh.quiz.global.configuration.MessageConfiguration;
 import com.leesh.quiz.global.jwt.service.JwtTokenService;
 import com.leesh.quiz.global.xss.HtmlCharacterEscapes;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 
@@ -17,6 +19,9 @@ import java.util.Locale;
         MessageConfiguration.class
 })
 public class MvcTestConfiguration {
+
+    @MockBean
+    MessageSource messageSource;
 
     @Bean
     public LocaleConfiguration localeConfiguration() {
