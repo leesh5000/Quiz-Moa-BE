@@ -59,4 +59,6 @@ jasypt:
   encryptor:
     password: ${PASSWORD}
 
-locale: "ko_KR"
+custom:
+  locale: ko_KR
+  timezone: Asia/Seoul

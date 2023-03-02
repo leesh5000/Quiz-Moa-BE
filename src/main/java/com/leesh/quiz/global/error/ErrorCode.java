@@ -2,11 +2,9 @@ package com.leesh.quiz.global.error;
 
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -67,17 +65,15 @@ public enum ErrorCode {
     @Component
     public static class ErrorMessageInjector {
         private final MessageSourceAccessor messageSource;
-        private final String defaultLocale;
 
-        private ErrorMessageInjector(MessageSourceAccessor messageSource, @Value("${locale}") String defaultLocale) {
+        private ErrorMessageInjector(MessageSourceAccessor messageSource) {
             this.messageSource = messageSource;
-            this.defaultLocale = defaultLocale;
         }
 
         @PostConstruct
         private void init() {
             for (ErrorCode errorCode : ErrorCode.values()) {
-                errorCode.message = messageSource.getMessage(errorCode.code, StringUtils.parseLocale(defaultLocale));
+                errorCode.message = messageSource.getMessage(errorCode.code);
             }
         }
     }
