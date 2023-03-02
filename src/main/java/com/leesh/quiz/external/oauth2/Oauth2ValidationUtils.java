@@ -4,8 +4,6 @@ import com.leesh.quiz.domain.user.constant.Oauth2Type;
 import com.leesh.quiz.global.error.ErrorCode;
 import com.leesh.quiz.global.error.exception.AuthenticationException;
 
-import java.util.Arrays;
-
 public interface Oauth2ValidationUtils {
     static void isValidOauth2Type(Oauth2Type userOauth2Type, Oauth2Type requestOauth2Type) {
         if (userOauth2Type != requestOauth2Type) {

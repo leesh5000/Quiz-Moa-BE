@@ -1,7 +1,10 @@
 package com.leesh.quiz.external.oauth2.google.dto;
 
 import com.leesh.quiz.external.oauth2.Oauth2Token;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GoogleOauth2TokenDto {
