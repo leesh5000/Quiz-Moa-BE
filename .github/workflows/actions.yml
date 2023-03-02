@@ -72,6 +72,5 @@ jobs:
     - name: deploy
       run: |
         aws deploy create-deployment --application-name $CODE_DEPLOY_APPLICATION_NAME \
-        --deployment-config-name CodeDeployDefault.OneAtATime \
         --deployment-group-name $CODE_DEPLOY_DEPLOYMENT_GROUP_NAME \
         --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$IMAGE_TAG.zip
