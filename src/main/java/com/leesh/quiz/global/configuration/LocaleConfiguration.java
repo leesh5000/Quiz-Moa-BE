@@ -9,7 +9,7 @@ import java.util.Locale;
 @Configuration
 public class LocaleConfiguration {
 
-    protected LocaleConfiguration(@Value("${custom.locale}") String locale) {
+    public LocaleConfiguration(@Value("${custom.locale}") String locale) {
         Locale defaultLocale = StringUtils.parseLocale(locale);
         assert defaultLocale != null;
         Locale.setDefault(defaultLocale);
