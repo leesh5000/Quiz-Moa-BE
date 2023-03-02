@@ -689,11 +689,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 401 Unauthorized
 Content-Type: application/json
-Content-Length: 52
+Content-Length: 100
 
 {
   "errorCode" : "A-004",
-  "errorMessage" : null
+  "errorMessage" : "Authorization 헤더가 존재하지 않습니다."
 }</code></pre>
 </div>
 </div>
@@ -721,7 +721,7 @@ Content-Length: 52
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>errorMessage</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">에러 메시지</p></td>
 </tr>
 </tbody>
@@ -1502,8 +1502,8 @@ Content-Length: 778
     "title" : "HTTP 프로토콜의 특징은 무엇인가요?",
     "answerCount" : 5,
     "totalVotesSum" : 12,
-    "createdAt" : "2023-03-01T17:55:30.957648",
-    "modifiedAt" : "2023-03-01T17:55:30.957677",
+    "createdAt" : "2023-03-03T02:37:55.074501",
+    "modifiedAt" : "2023-03-03T02:37:55.074523",
     "author" : {
       "id" : 1,
       "username" : "test1",
@@ -1514,8 +1514,8 @@ Content-Length: 778
     "title" : "테스트 5 유저가 작성한 퀴즈",
     "answerCount" : 0,
     "totalVotesSum" : 3,
-    "createdAt" : "2023-03-01T17:55:30.957695",
-    "modifiedAt" : "2023-03-01T17:55:30.957703",
+    "createdAt" : "2023-03-03T02:37:55.074546",
+    "modifiedAt" : "2023-03-03T02:37:55.074575",
     "author" : {
       "id" : 1,
       "username" : "test1",
@@ -1941,7 +1941,7 @@ Host: docs.api.com</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 1166
+Content-Length: 1165
 
 {
   "content" : [ {
@@ -1954,8 +1954,8 @@ Content-Length: 1166
       "email" : "test1@gmail.com"
     },
     "totalVotesSum" : 5,
-    "createdAt" : "2023-03-01T17:55:30.926178",
-    "modifiedAt" : "2023-03-01T17:55:30.926195"
+    "createdAt" : "2023-03-03T02:37:55.011754",
+    "modifiedAt" : "2023-03-03T02:37:55.011772"
   }, {
     "id" : 2,
     "contents" : "저는 모르겠네요; 다른 분이 알려주세요",
@@ -1966,8 +1966,8 @@ Content-Length: 1166
       "email" : "test1@gmail.com"
     },
     "totalVotesSum" : 0,
-    "createdAt" : "2023-03-01T17:55:30.926208",
-    "modifiedAt" : "2023-03-01T17:55:30.926214"
+    "createdAt" : "2023-03-03T02:37:55.011784",
+    "modifiedAt" : "2023-03-03T02:37:55.01179"
   }, {
     "id" : 3,
     "contents" : "test2번 분 답변 감사합니다.",
@@ -1978,8 +1978,8 @@ Content-Length: 1166
       "email" : "test1@gmail.com"
     },
     "totalVotesSum" : 2,
-    "createdAt" : "2023-03-01T17:55:30.926221",
-    "modifiedAt" : "2023-03-01T17:55:30.926225"
+    "createdAt" : "2023-03-03T02:37:55.011796",
+    "modifiedAt" : "2023-03-03T02:37:55.011799"
   } ],
   "totalElements" : 1125,
   "totalPages" : 12,
@@ -2471,7 +2471,7 @@ Host: docs.api.com</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 775
+Content-Length: 778
 
 {
   "content" : [ {
@@ -2479,8 +2479,8 @@ Content-Length: 775
     "title" : "HTTP 프로토콜의 특징은 무엇인가요?",
     "answerCount" : 5,
     "totalVotesSum" : 12,
-    "createdAt" : "2023-03-01T17:55:30.238129",
-    "modifiedAt" : "2023-03-01T17:55:30.23815",
+    "createdAt" : "2023-03-03T02:37:53.576368",
+    "modifiedAt" : "2023-03-03T02:37:53.576389",
     "author" : {
       "id" : 1,
       "username" : "test1",
@@ -2491,8 +2491,8 @@ Content-Length: 775
     "title" : "테스트 5 유저가 작성한 퀴즈",
     "answerCount" : 0,
     "totalVotesSum" : 3,
-    "createdAt" : "2023-03-01T17:55:30.238586",
-    "modifiedAt" : "2023-03-01T17:55:30.2386",
+    "createdAt" : "2023-03-03T02:37:53.576812",
+    "modifiedAt" : "2023-03-03T02:37:53.576824",
     "author" : {
       "id" : 5,
       "username" : "test5",
@@ -2651,7 +2651,7 @@ Host: docs.api.com</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 3412
+Content-Length: 3411
 
 {
   "id" : 1,
@@ -2695,8 +2695,8 @@ Content-Length: 3412
         "email" : "test3@gmail.com"
       }
     } ],
-    "createdAt" : "2023-03-01T17:55:30.107626",
-    "modifiedAt" : "2023-03-01T17:55:30.107657"
+    "createdAt" : "2023-03-03T02:37:53.359526",
+    "modifiedAt" : "2023-03-03T02:37:53.359554"
   }, {
     "id" : 2,
     "contents" : "한 가지가 더 있는듯 합니다.",
@@ -2730,8 +2730,8 @@ Content-Length: 3412
         "email" : "test3@gmail.com"
       }
     } ],
-    "createdAt" : "2023-03-01T17:55:30.107679",
-    "modifiedAt" : "2023-03-01T17:55:30.107686"
+    "createdAt" : "2023-03-03T02:37:53.359568",
+    "modifiedAt" : "2023-03-03T02:37:53.359574"
   }, {
     "id" : 3,
     "contents" : "생성자 주입 방식이 있습니다. 불변성을 유지할 수 있기 때문에 주로 생성자 주입 방식을 사용합니다.",
@@ -2765,8 +2765,8 @@ Content-Length: 3412
         "email" : "test3@gmail.com"
       }
     } ],
-    "createdAt" : "2023-03-01T17:55:30.107697",
-    "modifiedAt" : "2023-03-01T17:55:30.107703"
+    "createdAt" : "2023-03-03T02:37:53.35958",
+    "modifiedAt" : "2023-03-03T02:37:53.359584"
   } ],
   "votes" : [ {
     "id" : 1,
@@ -2793,8 +2793,8 @@ Content-Length: 3412
       "email" : "test3@gmail.com"
     }
   } ],
-  "createdAt" : "2023-03-01T17:55:30.108149",
-  "modifiedAt" : "2023-03-01T17:55:30.108163"
+  "createdAt" : "2023-03-03T02:37:53.359859",
+  "modifiedAt" : "2023-03-03T02:37:53.359876"
 }</code></pre>
 </div>
 </div>
