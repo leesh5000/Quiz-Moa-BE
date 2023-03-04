@@ -2,6 +2,7 @@ package com.leesh.quiz.global.error;
 
 import com.leesh.quiz.global.error.dto.ErrorResponse;
 import com.leesh.quiz.global.error.exception.BusinessException;
+import com.leesh.quiz.global.logging.Logging;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -81,6 +82,7 @@ public class GlobalExceptionHandler {
      * 나머지 예외 발생
      */
     @ExceptionHandler(Exception.class)
+    @Logging
     protected ResponseEntity<ErrorResponse> handleException(Exception e) {
 
         log.error("Exception", e);

@@ -41,7 +41,6 @@ public class UserService {
         }
 
         // 해당 이메일로 가입된 회원이 없다면, 신규 가입을 한다.
-        isDuplicatedUser(oauth2Attributes.getEmail());
         user = userRepository.save(oauth2Attributes.toEntity());
         return user;
 
@@ -50,12 +49,6 @@ public class UserService {
     @Transactional(readOnly = true)
     public User findUserById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_USER));
-    }
-
-    @Transactional(readOnly = true)
-    public User findUserByEmail(String email) {
-        return userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_USER));
     }
 
@@ -74,12 +67,5 @@ public class UserService {
         }
 
         return user;
-    }
-
-    private void isDuplicatedUser(String email) {
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-        if(optionalUser.isPresent()) {
-            throw new BusinessException(ErrorCode.DUPLICATED_USER);
-        }
     }
 }

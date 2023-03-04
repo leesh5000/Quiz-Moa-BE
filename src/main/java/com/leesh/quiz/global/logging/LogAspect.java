@@ -24,7 +24,7 @@ public class LogAspect {
     @Pointcut("@annotation(com.leesh.quiz.global.logging.Logging)")
     public void logging() {}
 
-    @Around("allControllers() && logging()")
+    @Around("allControllers() || logging()")
     public Object logging(ProceedingJoinPoint pjp) throws Throwable {
 
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
@@ -35,7 +35,7 @@ public class LogAspect {
         Object result = pjp.proceed();
 
         long end = System.currentTimeMillis();
-        log.info("[Response] URI : {}, Method : {} , Results = {} , elapsed = {}ms", request.getRequestURI(), pjp.getSignature().toShortString(), end - start);
+        log.info("[Response] URI : {}, Method : {} , elapsed = {}ms", request.getRequestURI(), pjp.getSignature().toShortString(), end - start);
 
         return result;
 
