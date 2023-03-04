@@ -25,25 +25,24 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findByEmail(oauth2Attributes.getEmail());
         User user;
 
-        // 해당 이메일로 이미 가입된 회원이라면,
-        if (optionalUser.isPresent()) {
-
-            user = optionalUser.get();
-            // 현재 로그인 시도한 oauth2 타입과 가입된 회원의 oauth2 타입이 올바른지 검증한다.
-            user.isValidOauth2(oauth2Attributes.getOauth2Type());
-
-            // 이전에 탈퇴했다가 재가입 하였으니, 탈퇴 상태를 해제한다.
-            if (user.isDeleted()) {
-                user.enable(oauth2Attributes);
-            }
-
-            return user;
+        // 해당 이메일로 가입된 회원이 없다면, 신규 가입을 한다.
+        if (optionalUser.isEmpty()) {
+            User newUser = User.register(oauth2Attributes);
+            return userRepository.save(newUser);
         }
 
-        // 해당 이메일로 가입된 회원이 없다면, 신규 가입을 한다.
-        user = userRepository.save(oauth2Attributes.toEntity());
-        return user;
+        // 해당 이메일로 이미 가입된 회원이라면,
+        user = optionalUser.get();
 
+        // 탈퇴한 회원이 아니라면, 로그인 처리 한다.
+        if (!user.isDeleted()) {
+            user.login(oauth2Attributes);
+        } else {
+            // 탈퇴했다가 재가입하는 것이라면, 재가입 로직을 수행한다.
+            user.reRegister(oauth2Attributes);
+        }
+
+        return user;
     }
 
     @Transactional(readOnly = true)
