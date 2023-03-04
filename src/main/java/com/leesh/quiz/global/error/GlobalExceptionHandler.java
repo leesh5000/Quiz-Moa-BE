@@ -87,7 +87,7 @@ public class GlobalExceptionHandler {
 
         ErrorCode errorCode = ErrorCode.INTERNAL_ERROR;
 
-        var body = ErrorResponse.of(errorCode.getCode(), e.getMessage());
+        var body = ErrorResponse.of(errorCode.getCode(), errorCode.getMessage());
 
         return ResponseEntity.status(errorCode.getHttpStatus()).body(body);
     }
