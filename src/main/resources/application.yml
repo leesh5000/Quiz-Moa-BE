@@ -41,20 +41,6 @@ token:
   access-token-expiration-time: 10000  # 15분 : 1000(ms) x 60(s) x 15(m)
   refresh-token-expiration-time: 1209600000 # 2주 : 1000(ms) x 60 (s) x 60(m) x 24(h) x 14(d)
 
-oauth2:
-  kakao:
-    client-id: ENC(+qwXTMtp0ldynQquCCT5E3saeJ8wGyZt8qc8oErTQfidIU/k68jpHgyUbr/Z6vSD)
-    client-secret: ENC(/Ti7JS3XCc9dXqianikAXLkVnYW62cdrgd5MP6VpxuSkuSOKK5BRnwJBu+yMcRPK)
-    redirect-uri: ENC(4Zg4YUEW+LzOewjfdwVW0bppr6uJ6X8JQtKj5K7j/PXptC4VTS0AVjmRNYyZ5Oaij/CAIYkrNik=)
-  google:
-    client-id: ENC(RbSPR65Q5gbvHn6v8qCjOjbo/rPoU/iVZAWx1o0O6JCWzWfs54JLBkV4i7/OOY0pSY1MY9gSb6abUdL2kJ5pzovFCYZ3H8QBnwOGmLLehUFaNs3N4cSGyA==)
-    client-secret: ENC(3tgUQVepvdHtsXkzm+yGtAFh/X6Wf8l7N0bcODBW5FyPxfG+T203zdzEYFLtE8FS)
-    redirect-uri: ENC(GgtjtBX7wmi16BzD4g0zaevr7gFDlDayLh4iR+ShTQFGHZ9tG/yK9EDdcoUn1kVZFTb7baG1B+E=)
-  naver:
-    client-id: ENC(T9U9GbshI2M2rxHtb0q1szQ1gWYsaN/z2aDhwabsSOw=)
-    client-secret: ENC(rosNjvu/3I1sS9RkH1WlG/dA/JlS5Kgk)
-    redirect-uri: ENC(/YFX705itbg+Ldt9EfMfmSnRT5JKopFmD6f4vPAg4INFNtK/zH9kE6ORlgifKBrGQET4vDmICu4=)
-
 jasypt:
   encryptor:
     password: ${PASSWORD}

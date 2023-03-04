@@ -16,3 +16,17 @@ spring:
 #  sql:
 #    init:
 #      mode: always
+
+oauth2:
+  kakao:
+    client-id: ENC(+qwXTMtp0ldynQquCCT5E3saeJ8wGyZt8qc8oErTQfidIU/k68jpHgyUbr/Z6vSD)
+    client-secret: ENC(/Ti7JS3XCc9dXqianikAXLkVnYW62cdrgd5MP6VpxuSkuSOKK5BRnwJBu+yMcRPK)
+    redirect-uri: ENC(Q/xHiaIH9MdG3SZ1V+8TN0kurPNNm8zZgBzCNHyv4bcI5M1O+rYS/hmR9yyj5zvq+aeQibnYKSI=)
+  google:
+    client-id: ENC(RbSPR65Q5gbvHn6v8qCjOjbo/rPoU/iVZAWx1o0O6JCWzWfs54JLBkV4i7/OOY0pSY1MY9gSb6abUdL2kJ5pzovFCYZ3H8QBnwOGmLLehUFaNs3N4cSGyA==)
+    client-secret: ENC(3tgUQVepvdHtsXkzm+yGtAFh/X6Wf8l7N0bcODBW5FyPxfG+T203zdzEYFLtE8FS)
+    redirect-uri: ENC(Q/TUiycA/lXt2zV+1JJb7zp1Ct518DxL6uaX8eXi8opWaMtamiHN3c0d9OWrWv0az5tttfslkJ0=)
+  naver:
+    client-id: ENC(T9U9GbshI2M2rxHtb0q1szQ1gWYsaN/z2aDhwabsSOw=)
+    client-secret: ENC(rosNjvu/3I1sS9RkH1WlG/dA/JlS5Kgk)
+    redirect-uri: ENC(CZZFpqwoEZqTXGqOuejBFSENIQaz1bkBGMMPlShljzyP45fLu9O+EbWWAo5QcRtZfdnDIMOgVQ4=)
