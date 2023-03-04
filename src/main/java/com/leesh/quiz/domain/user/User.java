@@ -131,11 +131,6 @@ public class User {
         this.refreshTokenExpiresIn = expiredAt;
     }
 
-    public void isValidOauth2(Oauth2Type userInput) {
-        // 외부 코드와 의존하지 않기 위해 유틸 클래스를 사용한다.
-        Oauth2ValidationUtils.isValidOauth2Type(this.oauth2Type, userInput);
-    }
-
     public void expireRefreshToken() {
         this.refreshTokenExpiresIn = LocalDateTime.now();
     }
@@ -152,13 +147,6 @@ public class User {
         this.deleted = true;
     }
 
-    public void enable(Oauth2Attributes oauth2Attributes) {
-        // 요청을 보낸 유저가 이 리소스의 유저인지 검증한다.
-        this.deleted = false;
-        // 유저를 최초 상태로 초기화한다.
-        initialize(oauth2Attributes);
-    }
-
     private void initialize(Oauth2Attributes oauth2Attributes) {
         this.email = oauth2Attributes.getEmail();
         this.username = oauth2Attributes.getName();
@@ -169,5 +157,32 @@ public class User {
         if (!Objects.equals(this.id, inputId)) {
             throw new BusinessException(ErrorCode.NOT_ACCESSIBLE_USER);
         }
+    }
+
+    public void reRegister(Oauth2Attributes oauth2Attributes) {
+        // 이메일을 같은데, 다른 소셜 로그인을 통해 재가입을 한 것이라면, 재가입 한 소셜 로그인 공급업체로 변경한다.
+        if (this.oauth2Type != oauth2Attributes.getOauth2Type()) {
+            this.oauth2Type = oauth2Attributes.getOauth2Type();
+        }
+
+        this.deleted = false;
+        // 유저를 최초 상태로 초기화한다.
+        initialize(oauth2Attributes);
+    }
+
+    public static User register(Oauth2Attributes oauth2Attributes) {
+        return User.builder()
+                .username(oauth2Attributes.getName())
+                .email(oauth2Attributes.getEmail())
+                .role(Role.USER)
+                .oauth2Type(oauth2Attributes.getOauth2Type())
+                .profile(oauth2Attributes.getProfile())
+                .build();
+    }
+
+    public void login(Oauth2Attributes oauth2Attributes) {
+        // 현재 유저의 소셜 로그인 공급업체 필드와 요청 값으로 받은 소셜 로그인 공급업체 필드가 같은지 검증한다.
+        // 외부 코드와 의존하지 않기 위해 유틸 클래스를 사용한다.
+        Oauth2ValidationUtils.isValidOauth2Type(this.oauth2Type, oauth2Attributes.getOauth2Type());
     }
 }
