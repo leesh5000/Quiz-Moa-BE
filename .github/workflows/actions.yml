@@ -8,6 +8,7 @@ on:
 env:
   AWS_REGION: ap-northeast-2
   IMAGE_TAG: ${{ github.sha }}
+  S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
 
 permissions:
   contents: read
@@ -57,16 +58,14 @@ jobs:
         PASSWORD=$JASYPT_ENCRYPTOR_PASSWORD && echo "docker run -p 8080:8080 -e JASYPT_ENCRYPTOR_PASSWORD="$PASSWORD" -d --restart always --name quiz-api-server $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> scripts/deploy.sh
 
     - name: upload to s3
-      env:
-        S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
       run: |
         zip -r deploy.zip ./scripts appspec.yml
         aws s3 cp --acl private ./deploy.zip s3://$S3_BUCKET_NAME/$IMAGE_TAG.zip
 
     - name: deploy
       env:
-        CODE_DEPLOY_APPLICATION_NAME: $ {{ secrets.CODE_DEPLOY_APPLICATION_NAME }}
-        CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: $ {{ secrets.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }}
+        CODE_DEPLOY_APPLICATION_NAME: ${{ secrets.CODE_DEPLOY_APPLICATION_NAME }}
+        CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: ${{ secrets.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }}
       run: |
         aws deploy create-deployment --application-name $CODE_DEPLOY_APPLICATION_NAME \
         --deployment-group-name $CODE_DEPLOY_DEPLOYMENT_GROUP_NAME \
