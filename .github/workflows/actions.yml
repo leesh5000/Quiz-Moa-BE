@@ -8,11 +8,11 @@ on:
 env:
   AWS_REGION: ap-northeast-2
   IMAGE_TAG: ${{ github.sha }}
-  ECR_REPOSITORY: quiz
+  ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
   JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
-  S3_BUCKET_NAME: quiz-github-actions
-  CODE_DEPLOY_APPLICATION_NAME: quiz-codedeploy
-  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: quiz-codedeploy-deployment-group
+  S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+  CODE_DEPLOY_APPLICATION_NAME: $ {{ secrets.CODE_DEPLOY_APPLICATION_NAME }}
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: $ {{ secrets.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }}
 
 permissions:
   contents: read
