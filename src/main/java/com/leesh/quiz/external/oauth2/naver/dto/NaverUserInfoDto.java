@@ -15,7 +15,7 @@ public record NaverUserInfoDto(@JsonProperty("result_code")
 
     @Override
     public String getName() {
-        return response.name;
+        return response.email.split("@")[0];
     }
 
     @Override

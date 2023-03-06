@@ -18,18 +18,17 @@ public record KakaoUserInfoDto(String id,
 
     @Override
     public String getName() {
-        return kakaoAccount.profile.nickname;
+        return !StringUtils.hasText(kakaoAccount.email) ? id : kakaoAccount.email.split("@")[0];
     }
 
     @Override
     public String getEmail() {
-        return !StringUtils.hasText(kakaoAccount.email) ?
-                id : kakaoAccount.email;
+        return !StringUtils.hasText(kakaoAccount.email) ? id : kakaoAccount.email;
     }
 
     @Override
     public String getProfile() {
-        return kakaoAccount.profile.thumbnailImageUrl;
+        return kakaoAccount.profile != null ? kakaoAccount.profile.thumbnailImageUrl : null;
     }
 
     @Override
