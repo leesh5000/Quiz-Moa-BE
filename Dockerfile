@@ -15,4 +15,4 @@ EXPOSE 8080
 ENV PROFILE prod
 ENV JASYPT_PASSWORD ""
 
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=${PROFILE}", "-Djasypt.encryptor.passowrd=${JASYPT_PASSWORD}", "/app/quiz-api-server.jar"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=${PROFILE}", "-Djasypt.encryptor.password=${JASYPT_PASSWORD}", "/app/quiz-api-server.jar"]
