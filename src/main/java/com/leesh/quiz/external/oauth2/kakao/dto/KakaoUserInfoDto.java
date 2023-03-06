@@ -28,7 +28,7 @@ public record KakaoUserInfoDto(String id,
 
     @Override
     public String getProfile() {
-        return kakaoAccount.profile.thumbnailImageUrl;
+        return kakaoAccount.profile != null ? kakaoAccount.profile.thumbnailImageUrl : null;
     }
 
     @Override
