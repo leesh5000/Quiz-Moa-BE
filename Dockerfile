@@ -13,6 +13,6 @@ RUN mkdir /app
 COPY --from=builder /build/libs/*.jar /app/quiz-api-server.jar
 EXPOSE 8080
 ENV PROFILE prod
-ENV JASYPT_PASSWORD ""
+ENV JASYPT_ENCRYPTOR_PASSWORD ""
 
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=${PROFILE}", "-Djasypt.encryptor.password=${JASYPT_PASSWORD}", "/app/quiz-api-server.jar"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=${PROFILE}", "-Djasypt.encryptor.password=${JASYPT_ENCRYPTOR_PASSWORD}", "/app/quiz-api-server.jar"]
