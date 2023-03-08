@@ -19,7 +19,7 @@
 ## 유즈케이스
 
 - 이슈 링크 : [#4](https://github.com/leesh5000/quiz-app-be/issues/4)
-- [공유 링크](https://viewer.diagrams.net/?tags=%7B%7D&highlight=0000ff&edit=_blank&layers=1&nav=1&title=usecase.svg#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fleesh5000%2FQuiz-Moa-BE%2Fenhancement%2F%252388-readme%2Fdocument%2Fusecase.svg)
+- [공유 링크](https://viewer.diagrams.net/?tags=%7B%7D&highlight=0000ff&edit=_blank&layers=1&nav=1&title=usecase.svg#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fleesh5000%2FQuiz-Moa-BE%2Fmain%2Fdocument%2Fusecase.svg)
 
 ![usecase](document/usecase.svg)
 
