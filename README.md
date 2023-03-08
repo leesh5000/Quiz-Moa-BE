@@ -26,7 +26,7 @@
 ## ERD
 
 - 이슈 링크 : [#6](https://github.com/leesh5000/quiz-app-be/issues/6)
-- [공유 링크](https://viewer.diagrams.net/?tags=%7B%7D&highlight=0000ff&edit=_blank&layers=1&nav=1&title=erd.svg#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fleesh5000%2Fquiz-app-be%2Fenhancement%2F%252388-readme%2Fdocument%2Ferd.svg)
+- [공유 링크](https://viewer.diagrams.net/?tags=%7B%7D&highlight=0000ff&edit=_blank&layers=1&nav=1&title=erd.svg#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fleesh5000%2FQuiz-Moa-BE%2Fmain%2Fdocument%2Ferd.svg)
 
 ![erd](document/erd.svg)
 
