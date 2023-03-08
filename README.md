@@ -9,24 +9,24 @@
 - 언어 : Java 17
 - 빌드 도구 : Gradle 7.5.1
 - 프레임워크 : Spring Boot 3.0.1
-- 공통 : Spring Validation, Spring AOP, Lombok
-- 유저 인증 : [JJWT](https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt)
+- 공통 : Spring Validation, Spring AOP, Lombok, Spring Rest Docs, [JJWT](https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt), [Jasypt](https://github.com/ulisesbocchio/jasypt-spring-boot), Spring Cloud OpenFeign
 - 테스트도구 : Junit5, Mockito
 - DB : H2 Database (테스트용), MariaDB (운영)
 - DB 접근 기술 : Spring Data JPA + QueryDSL, Mybatis
-- 프로퍼티 암호화 : [Jasypt](https://github.com/ulisesbocchio/jasypt-spring-boot)
-- API 문서 : Spring Rest Docs
-- oauth2 클라이언트 : Spring Cloud OpenFeign
+- CI/CD : Github Actions, AWS CodeDeploy
+- 인프라 : Docker, AWS EC2, AWS RDS, AWS S3, AWS CodeDeploy, AWS CodePipeline, AWS CloudWatch, AWS Route53
 
 ## 유즈케이스
 
 - 이슈 링크 : [#4](https://github.com/leesh5000/quiz-app-be/issues/4)
+- [공유 링크](https://viewer.diagrams.net/?tags=%7B%7D&highlight=0000ff&edit=_blank&layers=1&nav=1&title=usecase.svg#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fleesh5000%2FQuiz-Moa-BE%2Fenhancement%2F%252388-readme%2Fdocument%2Fusecase.svg)
 
 ![usecase](document/usecase.svg)
 
 ## ERD
 
 - 이슈 링크 : [#6](https://github.com/leesh5000/quiz-app-be/issues/6)
+- [공유 링크](https://viewer.diagrams.net/?tags=%7B%7D&highlight=0000ff&edit=_blank&layers=1&nav=1&title=erd.svg#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fleesh5000%2Fquiz-app-be%2Fenhancement%2F%252388-readme%2Fdocument%2Ferd.svg)
 
 ![erd](document/erd.svg)
 
@@ -139,4 +139,7 @@ create index answer_vote_quiz_id_idx on quiz_vote (quiz_id);
   - Public API가 아니므로, 추후 비공개로 전환할 예정입니다.
 
 ## 시스템 아키텍처 & CI/CD 파이프라인
+
+- [공유 링크](https://viewer.diagrams.net/?tags=%7B%7D&highlight=0000ff&edit=_blank&layers=1&nav=1&title=architecture.svg#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fleesh5000%2FQuiz-Moa-BE%2Fenhancement%2F%252388-readme%2Fdocument%2Farchitecture.svg)
+
 ![architecture](document/architecture.svg)
