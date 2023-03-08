@@ -140,6 +140,6 @@ create index answer_vote_quiz_id_idx on quiz_vote (quiz_id);
 
 ## 시스템 아키텍처 & CI/CD 파이프라인
 
-- [공유 링크](https://viewer.diagrams.net/?tags=%7B%7D&highlight=0000ff&edit=_blank&layers=1&nav=1&title=architecture.svg#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fleesh5000%2FQuiz-Moa-BE%2Fenhancement%2F%252388-readme%2Fdocument%2Farchitecture.svg)
+- [공유 링크](https://viewer.diagrams.net/?tags=%7B%7D&highlight=0000ff&edit=_blank&layers=1&nav=1&title=architecture.svg#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fleesh5000%2FQuiz-Moa-BE%2Fmain%2Fdocument%2Farchitecture.svg)
 
 ![architecture](document/architecture.svg)
