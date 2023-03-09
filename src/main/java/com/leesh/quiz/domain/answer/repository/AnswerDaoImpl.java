@@ -103,7 +103,7 @@ public class AnswerDaoImpl implements AnswerDao {
                         quiz.id.eq(quizId),
                         answer.deleted.eq(false)
                 )
-                .orderBy(answer.createdAt.desc())
+                .orderBy(answer.createdAt.asc())
                 .transform(
                     groupBy(answer.id).list(
                         new QQuizDetailDto_AnswerDto(
