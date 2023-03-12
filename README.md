@@ -138,7 +138,7 @@ create index answer_vote_quiz_id_idx on quiz_vote (quiz_id);
 
 - 이슈 링크 : [#88](https://github.com/leesh5000/quiz-app-be/issues/88)
 - API Docs 링크 : https://quiz-moa-api.com/docs/api-docs.html
-  - Public API가 아니므로, 추후 비공개로 전환할 예정입니다.
+  - Public API가 아니므로, 추후 비공개로 전환할 예정입니다
 
 ## 시스템 아키텍처 & CI/CD 파이프라인
 
